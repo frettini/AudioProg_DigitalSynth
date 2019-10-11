@@ -1,0 +1,261 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Strict//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- saved from url=(0059)http://markov.music.gla.ac.uk/AP4-NG/labs/lab6.html#complex -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Lab 6</title>
+<link rel="stylesheet" href="./Lab 6_files/eeip1.css">
+</head>
+<body>
+
+<a href="http://markov.music.gla.ac.uk/AP4-NG/index.html">Back to main</a>
+
+<h1>Audio Programming Lab 6</h1>
+
+<div class="center">
+Exercises:
+
+<ul style="list-style-type:none;">
+<li class="mines">
+13. Complex Arithmetic
+</li><li class="mines">
+14. Frequency Response
+</li>
+</ul>
+</div>
+
+
+<br style="clear:both">
+<a name="complex">
+<h2>Exercise 13: Complex Arithmetic</h2>
+
+<div class="left">
+<h3>Background</h3>
+
+<p>
+Polar coordinate vectors.  See wikipedia or your first-year
+maths textbook.
+</p>
+
+</div>
+
+<div class="right">
+<h3>Maths homework</h3>
+
+<p>
+To be able to calculate frequency responses and design
+filters easily, it is important to be fluent at vector
+arithmetic, so the the prep for this section contains
+a bit of practice at that. 
+<!--You should be able to do
+these sums "by hand" (which, these days, means using a
+calulator which can only do real numbers).
+-->
+</p>
+
+<p> Work out the following equations, expressing the
+results in polar form:
+</p><ol>
+<li>(4&#8736;&#960;/3) + (3&#8736;&#960;/2)</li>
+<li>(4&#8736;&#960;/3) + (-3&#8736;&#960;/2)</li>
+<li>(3&#8736;&#960;/2) - (4&#8736;&#960;/3)</li>
+<li>(3&#8736;&#960;/2) + (0&#8736;&#960;/3)</li>
+<li>(3&#8736;0) + (4&#8736;&#960;/3)</li>
+<li>(-4&#8736;&#960;/3) + (-3&#8736;&#960;/2)</li>
+</ol>
+
+<p>
+You should also be familiar with multiplication and division.
+</p>
+
+<ol>
+<li>(4&#8736;&#960;/3)(3&#8736;&#960;/2)</li>
+<li>(-2&#8736;&#960;/3)³</li>
+<li>(2+<i>j</i>3)(1.5&#8736;-3&#960;/2)</li>
+<li><i>j</i>(1+<i>j</i>)</li>
+<li>(3&#8736;-&#960;/4)(-2&#8736;-3&#960;/2)</li>
+<li>(3&#8736;&#960;/2)÷(4&#8736;&#960;/3)</li>
+</ol>
+<p></p>
+
+<p>
+You must express all results in polar coordinates.
+</p>
+
+<div class="info">
+You must show <em>one</em> of these problems done by hand (with a
+calculator, writing out intermediate steps); the others can be
+solved with either a computer program, or by hand.
+<br><br>
+If you write a computer program, you can just write down the
+answers, but show us the program so we know
+you didn't just use maple or the google calculator.
+</div>
+
+</div>
+
+<br style="clear:both">
+
+<div class="task">
+<h3>Your task...</h3>
+
+<p>
+Write python functions to do addition, multiplication, and
+division of polar coordinates.  Functions can return two values by
+doing
+
+</p><pre>def add(a, b, c, d):
+    ...
+    return magnitude, angle
+
+magnitude, angle = add(0, 1, 2, 3)
+print magnitude, angle
+</pre>
+<p></p>
+
+<p>
+If you use global variables for this, you will make the next 4
+exercises a lot harder for yourself.  Also, Graham will mock you
+for the rest of the year.
+</p>
+
+<h4>... show your work to a demonstrator</h4>
+</div>
+
+
+<br style="clear:both">
+</a><a name="response">
+<h2>Exercise 14: frequency response</h2>
+</a><a name="ex14homework"></a>
+<div class="left">
+<h3>Background</h3>
+
+<p>
+A few labs ago, we constructed oscillators by placing
+poles on the unit circle in the <i>z</i>-plane.
+This concept can be extended by providing the
+objects we build with an input, and implementing
+them with poles (and zeros) <em>inside</em> the
+unit circle. 
+</p>
+
+<p>
+To calculate the frequency response of such a system,
+we can follow the procedure described in the
+"Subtractive Synthesis" chapter of
+<a href="http://markov.music.gla.ac.uk/AP_Sandpit/mcm.pdf">mcm.pdf</a>. This describes an easily-rememered graphical
+method to calculate the magnitude and phase of a
+system's transfer function given the position of the
+poles and zeros. In summary:
+</p><ol>
+<li>Take a position on the unit-circle corresponding to
+the frequency of the input signal.</li>
+Construct vectors from each pole to that position.
+<li>Calculate the <em>vector product</em> of these vectors,
+producing the result <b>P</b></li>
+<li>Repeat the procedure for for the <em>zeros</em>
+yeilding <b>Z</b>. Remember that to make a causal system,
+you probably ended up with zeros at the origin.</li>
+<li>The frequency response is the result of the vector
+division of <b>Z</b> by <b>P</b></li>
+</ol>
+<p></p>
+
+</div>
+
+<div class="right">
+<h3>Maths homework</h3>
+
+<p>
+Consider
+a system is running at a sample rate of 44100Hz, 
+having two poles at
+<i>z</i>&nbsp;=&nbsp;0.995&#8736;±&#960;/10, and two
+zeros at <i>z</i>&nbsp;=&nbsp;0.9&#8736;±&#960;/10.
+</p>
+
+<p>
+What is the frequency response at alpha = 0.25 ?
+</p>
+
+<p>
+At what frequency does it have maximum gain? And what is
+that gain?
+</p>
+
+</div>
+
+<br style="clear:both">
+
+<div class="task">
+<h3>Your task...</h3>
+
+<p>
+Make some plots of the magnitude frequency response for the following systems of
+poles and zeros.  This requires you to write a function to figure
+out the frequency response at a particular point, then call that
+function a bunch of times so you have your data to plot.
+</p>
+
+<p>
+You should have a single <code>frequency_response(poles,
+zeros)</code> function.
+</p>
+
+<ul>
+<li>
+You can define the poles and zeros as either python lists or numpy
+arrays.  They can be defined directly in the code; no need to
+handle user input.
+
+<pre>def frequency_response(poles, zeros):
+    print poles
+    print zeros
+    # calculate response for a bunch of alpha,
+    # then plot them
+
+poles = numpy.array([0.995, 0.31415, 0.995, -0.31415])
+zeros = numpy.array([0.9, 0.31415, 0.9, -0.31415])
+frequency_response(poles, zeros)
+</pre>
+
+<p>
+If you're feeling cheeky, you could plot the phase response too, on the same graph.
+</p>
+
+<p>
+System sample rate 44100Hz.
+
+</p><ol>
+<li><!-- Peak at 1kHz, zero response at DC and 22050Hz -->
+    Poles at 0.99&#8736;±0.1425; zeros at ±1.
+</li>
+<li><!-- Resonator with sharpish peak at 440Hz. Not too sharp though,
+         otherwise it'll be invisible on the graph -->
+    Poles at 0.99&#8736;±0.62689; zeros at 0.9, same angles.
+</li><li><!-- As above, but a notch instead of a peak -->
+    As above, but with the poles and zeros exchanged.
+</li>
+</ol>
+<p></p>
+
+<h4>... show your work to a demonstrator</h4>
+</li></ul></div>
+
+
+
+
+
+<p><a href="http://markov.music.gla.ac.uk/AP4-NG/index.html">Back to main</a></p>
+
+<!-- footer -->
+<br style="clear:both">
+
+<p>
+<a rel="license" href="http://creativecommons.org/licenses/by-sa/2.5/scotland/"><img alt="Creative Commons License" style="border-width:0" src="./Lab 6_files/88x31.png"></a>Unless otherwise noted, all materials on these pages
+are licenced under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/2.5/scotland/">Creative
+Commons Licence</a>.
+</p>
+
+
+
+
+</body></html>
