@@ -3,34 +3,39 @@ import math
 import scipy.io.wavfile
 import numpy as np
 import matplotlib.pyplot as plt
-from modules import soundrw, sine_oscillator
+from modules import soundrw, sine_osc, rec_osc
 
 SAMPLE_RATE = 44100
 BUFFER_SIZE = 2048
 filename = "test2"
 
-#initialize waves into variables
-sineosc = sine_oscillator.SineOsc(SAMPLE_RATE)
+
 
 #initialize the sound interface to read and write 
 sound = soundrw.SoundRW()
 
-#store osc in dictionnary for user input
-input_dict = {"sine" : sineosc}
-
 combined_sample = np.array([])
 
 #specify duration of sound in second and break it in number of buffer waves
-duration = input("Specify duration of sound in seconds: ") 
+duration = 1 # input("Specify duration of sound in seconds: ") 
 buffer_counts = int(float(duration) * SAMPLE_RATE / BUFFER_SIZE)
 
 #specify the type of signal wanted for the duration
-user_signal = input("Specify Osc : sine/saw/square: ")
-osc = input_dict.get(user_signal, "Invalid input")
+user_signal = "rec" #input("Specify Osc : sine/rec: ")
+
 
 #specify the frequency and amplitude of the signal
-osc.frequency = int(input("provide frequency: "))
-osc.amplitude = float(input("provide amplitude between 0 and 1: "))
+freq = 440 #int(input("provide frequency: "))
+amp = 0.5 #float(input("provide amplitude between 0 and 1: "))
+
+#initialize waves into variables
+sineosc = sine_osc.SineOsc(freq, amp,SAMPLE_RATE)
+recosc = rec_osc.RecOsc(freq, amp, SAMPLE_RATE)
+
+#store osc in dictionnary for user input
+input_dict = {"sine" : sineosc, "rec" : recosc}
+osc = input_dict.get(user_signal, "Invalid input")
+
 
 buffer = np.zeros(BUFFER_SIZE)
 

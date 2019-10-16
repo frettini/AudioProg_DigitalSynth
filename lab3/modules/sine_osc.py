@@ -4,12 +4,12 @@ import math
 
 class SineOsc(WaveGen):
 
-    def __init__(self, sample_rate = 44100):
+    def __init__(self,  freq, amp, sample_rate = 44100):
         
         self.states = np.zeros(2)
         super().__init__(sample_rate)
-        print(self._phase)
-
+        self._frequency = freq
+        self._amplitude = amp 
 
     #properties setters and getters---------------------------------
     @property
