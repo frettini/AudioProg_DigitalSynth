@@ -23,16 +23,7 @@ class Oscillator:
         return None
 
     def calculate_phase(self):
-        phase = np.arcsin(self.last_samples[1])
-
-        if self.last_samples[1] > self.last_samples[0]:
-            #going up
-            print("going up boi")
-            return phase
-        elif self.last_samples[1] < self.last_samples[0] :
-            #going down
-            print("going down bois")
-            return np.pi - phase
+        
         
 
 
