@@ -1,4 +1,5 @@
 import math
+import numpy as np
 
 class ComplexCal:
 
@@ -16,6 +17,20 @@ class ComplexCal:
 
         magnitude = math.sqrt(x**2 + y**2)
         angle = math.atan(y/x)
+
+        return magnitude, angle
+
+    def substract(self, mag1, ang1, mag2, ang2):
+        x1 = mag1 * math.cos(ang1)
+        x2 = mag2 * math.cos(ang2)
+        y1 = mag1 * math.sin(ang1)
+        y2 = mag2 * math.sin(ang2)
+
+        x = x1 - x2
+        y = y1 - y2
+
+        magnitude = math.sqrt(x**2 + y**2)
+        angle = np.arctan(y/x)
 
         return magnitude, angle
 
