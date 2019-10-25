@@ -16,7 +16,7 @@ class ComplexCal:
         y = y1 + y2
 
         magnitude = math.sqrt(x**2 + y**2)
-        angle = math.atan(y/x)
+        angle = math.atan2(y,x)
 
         return magnitude, angle
 
@@ -30,7 +30,7 @@ class ComplexCal:
         y = y1 - y2
 
         magnitude = math.sqrt(x**2 + y**2)
-        angle = np.arctan(y/x)
+        angle = math.atan2(y,x)
 
         return magnitude, angle
 
