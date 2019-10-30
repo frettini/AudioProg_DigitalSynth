@@ -17,7 +17,7 @@ def frequency_response(poles, zeros):
     gang_arr = np.array([])
 
     #alpha ranges from 0 to 1 
-    for alpha in np.arange(0,1.0,0.01):
+    for alpha in np.arange(0,1.0,0.001):
         p1mag, p1ang = c.substract(c, 1, alpha*2*pi, poles[0], poles[1])
         p2mag, p2ang = c.substract(c, 1, alpha*2*pi, poles[2], poles[3])
 
@@ -28,12 +28,9 @@ def frequency_response(poles, zeros):
         zmag, zang = c.multiplication(c, z1mag, z1ang, z2mag, z2ang)
 
         gmag, gang = c.division(c, zmag, zang, pmag, pang)
-        print(gmag)
         gmag_arr = np.append(gmag_arr, gmag)
-        print(gmag_arr)
         gang_arr = np.append(gang_arr, gang)
 
-    print(gmag_arr)
     plot.plot(gmag_arr)
     plot.show()
         
@@ -43,6 +40,6 @@ def frequency_response(poles, zeros):
     # calculate response for a bunch of alpha,
     # then plot them
 
-poles = np.array([0.995, 0.31415, 0.995, -0.31415])
-zeros = np.array([0.9, 0.31415, 0.9, -0.31415])
+poles = np.array([0.99, 0.62689, 0.99, -0.62689])
+zeros = np.array([0.9, 0.62689, 0.9, -0.62689])
 frequency_response(poles, zeros)
