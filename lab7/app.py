@@ -1,36 +1,30 @@
-from modules import delay, rec_osc, white_noise
+from modules import delay, rec_osc, white_noise, filter
 import numpy as np
 import matplotlib.pyplot as plot
+import scipy.fftpack
 
-osc = rec_osc.RecOsc(440, 0.5)
+osc = rec_osc.RecOsc(206, 0.5)
 white = white_noise.WhiteNoise()
 
-"""
-d = delay.Delay(500)
+d = delay.Delay(10, 2)
 g = delay.Gain(2)
+f = filter.Filter(0.99, 0.62659, 0.9, 0.62659)
 
 buffer1 = np.zeros(2048)
 buffer2 = np.zeros(2048)
 
 og1 = osc.gen_buffer(2048)
-buffer1 = d.delay(og1)
-buffer1 = g.scale(buffer1)
-
 og2 = osc.gen_buffer(2048)
-buffer2 = d.delay(og2)
-buffer2 = g.scale(buffer2)
 
-original_buffer = np.concatenate((og1, og2))
-buffer = np.concatenate((buffer1,buffer2))
+og = np.concatenate((og1, og2))
 
 white_buffer = white.gen_buffer(2048)
-"""
 
-d = delay.Delay(10, 2)
-print(d.process(2.0))
-print(d.process(3.5))
-print(d.process(-1.0))
+result = f.filtering(white_buffer)
 
-#plot.plot(white_buffer)
+white_freq = scipy.fftpack.fft(white_buffer)
+result_freq = scipy.fftpack.fft(result)
 
-#plot.show()
+plot.plot(og)
+# plot.plot(white_freq)
+plot.show()
