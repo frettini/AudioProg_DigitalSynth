@@ -78,12 +78,21 @@ class RecOsc(WaveGen):
         self.states[0] = math.sin(-1*2*math.pi*self._frequency/self._sample_rate + self._phase)
         self.cos_omega_t = 2*math.cos(2*math.pi * self._frequency /self._sample_rate)
 
-    def gen_buffer(self, buffer_size):
+    def gen_buffer(self, buffer_size, end_freq = 0):
         #takes in a buffer of any size in the form of nparray
+        if end_freq == 0:
+            end_freq = self._frequency
+        
         self.buffer = np.arange(0,buffer_size)
         result = np.zeros(buffer_size)
         self._phase = self._phase % (2*math.pi)
+        chirp = False
+        
+        if end_freq != self._frequency:
+            step = (end_freq - self._frequency)/buffer_size
+            chirp = True
 
+        #generate recursive samples in the buffer
         for i in range(buffer_size):
 
             x = self.cos_omega_t*self.states[1] - self.states[0]
@@ -91,13 +100,15 @@ class RecOsc(WaveGen):
             self.states[0] = self.states[1]
             self.states[1] = x
 
-            a =  i % 5
-            
-            if a == 0 :
-                print("hello")
-                self._frequency += 10
+            #if end_freq is different, step the frequency
+            if chirp == True and i > 2:
+                
+                self.cal_phase()
+                self._frequency += step
+                self.change_freq()
+                
     
-
+        
         result = result/np.max(result)
         
         self.cal_phase()
