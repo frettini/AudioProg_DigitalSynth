@@ -25,4 +25,4 @@ class Filter():
             middle = buffer[i] - self.b1 * self.d.process_arr[0] - self.b2 * self.d.process_arr[1] 
             result[i] = middle * self.a0 + (self.a1)*self.d.process_arr[0] + (self.a2)*self.d.process_arr[1]
             self.d.process(middle)
-        return result 
+        return result
