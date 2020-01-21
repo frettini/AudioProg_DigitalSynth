@@ -78,6 +78,7 @@ class RecOsc(WaveGen):
         self.states[0] = math.sin(-1*2*math.pi*self._frequency/self._sample_rate + self._phase)
         self.cos_omega_t = 2*math.cos(2*math.pi * self._frequency /self._sample_rate)
 
+
     def gen_buffer(self, buffer_size, end_freq = 0):
         #takes in a buffer of any size in the form of nparray
         if end_freq == 0:

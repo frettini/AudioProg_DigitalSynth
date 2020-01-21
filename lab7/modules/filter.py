@@ -1,8 +1,9 @@
+from .osc import WaveGen
 import numpy as np
 from .delay import Delay
 from .complexcal import ComplexCal
 
-class Filter():
+class Filter(WaveGen):
 
     def __init__(self, pole_mag, pole_ang, zero_mag, zero_ang):
         self.c  = ComplexCal()
@@ -10,15 +11,15 @@ class Filter():
         x_p , y_p = self.c.polar_to_cart(pole_mag, pole_ang)
 
         self.a0 = 1
-        self.a1 = 2*x_z 
+        self.a1 = -2*x_z 
         self.a2 = x_z**2 + y_z**2
-        self.b1 = 2*x_p
+        self.b1 = -2*x_p
         self.b2 = x_p**2 + y_p**2
         self.gain = 1
         self.d = Delay(10,2)
 
 
-    def filtering(self, buffer):
+    def gen_buffer(self, buffer):
         result = np.zeros(len(buffer))
         
         for i in range(len(buffer)):
