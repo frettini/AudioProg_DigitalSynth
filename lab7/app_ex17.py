@@ -4,16 +4,6 @@ import matplotlib.pyplot as plot
 import scipy.fftpack
 import scipy.signal
 
-cutoff_freq = 1500
-sample_rate = 44100
-wp = 1500/44100
-ws = 10000/44100
-gpass = 1
-gstop = 40
-coefs = scipy.signal.iirdesign(wp,ws,gpass,gstop,output='sos')
-
-print(coefs)
-
 
 #read write sound file method
 rw = soundrw.SoundRW()
@@ -22,23 +12,41 @@ rw = soundrw.SoundRW()
 osc = rec_osc.RecOsc(20, 0.5)
 white = white_noise.WhiteNoise()
 
+sample_rate = 44100
+
+# initialize frequency coeffs
+wp = 1600*2/sample_rate # multiply by two for nyquist frequency
+ws = 1400*2/sample_rate
+gpass = 1
+gstop = 40
+coefs = scipy.signal.iirdesign(wp,ws,gpass,gstop,output='sos')
+
+print(coefs)
+
+#instantiate filters with calculated coefficients 
+filters = []
+for i in range(coefs.shape[0]):
+    temp_fil = filter.Filter(0.99999, 0.1, 0.9, 0.1) #inst
+    temp_fil.setcoef(coefs[i,0], coefs[i,1], coefs[i,2], coefs[i,3], coefs[i,4], coefs[i,5])
+    filters.append(temp_fil)
+
+
 # inst a delay, gain and filter object
 d = delay.Delay(10, 2)
 g = delay.Gain(2)
-f1 = filter.Filter(0.99999, 0.1, 0.9, 0.1)
-f2 = filter.Filter(0.99999, 0.1, 0.9, 0.1)
 
-f1.setcoef(coefs[0,0], coefs[0,1], coefs[0,2], coefs[0,3], coefs[0,4], coefs[0,5])
-f2.setcoef(coefs[1,0], coefs[1,1], coefs[1,2], coefs[1,3], coefs[1,4], coefs[1,5])
 # og1 = osc.gen_buffer(2048, end_freq = 15000)
 
 # Generate and filter the buffer
 white_buffer = white.gen_buffer(204800) # gen white buffer
+to_filter = white_buffer
 
-result = f1.gen_buffer(white_buffer) # filter it 
-#result = f2.gen_buffer(result) # filter it 
-norm_result = result/np.max(result) # normalize result (avoid blown filters)
-result_freq = scipy.fftpack.fft(result) # get spectrum
+for fil in filters:
+    to_filter = fil.gen_buffer(to_filter) #loop through filters
+
+
+norm_result = to_filter/np.max(to_filter) # normalize result (avoid blown filters)
+result_freq = scipy.fftpack.fft(norm_result) # get spectrum
 
 # Write noise to wav
 rw.write_wav(white_buffer, 44100, "white_noise")
@@ -50,4 +58,3 @@ plot.plot(np.real(result_freq))
 plot.show()
 
 
-#use scipy.signal.iirfilter to get coefficients "sos" mode

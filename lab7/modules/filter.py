@@ -7,6 +7,9 @@ class Filter(WaveGen):
 
     def __init__(self, pole_mag, pole_ang, zero_mag, zero_ang):
         self.c  = ComplexCal()
+        self.set_p_a_z(pole_mag, pole_ang, zero_mag, zero_ang)
+
+    def set_p_a_z(self, pole_mag, pole_ang, zero_mag, zero_ang):
         x_z , y_z = self.c.polar_to_cart(zero_mag, zero_ang)
         x_p , y_p = self.c.polar_to_cart(pole_mag, pole_ang)
 
@@ -20,13 +23,11 @@ class Filter(WaveGen):
 
     def setcoef(self, a0,a1,a2,b0,b1,b2):
         self.a0 = a0
-        self.a1 = a1 
+        self.a1 = a1
         self.a2 = a2
         self.b0 = b0
         self.b1 = b1
         self.b2 = b2
-        
-
 
     def gen_buffer(self, buffer):
         result = np.zeros(len(buffer))
