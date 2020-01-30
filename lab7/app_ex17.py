@@ -3,7 +3,8 @@ import numpy as np
 import matplotlib.pyplot as plot
 import scipy.fftpack
 import scipy.signal
-
+import os
+import time
 
 #read write sound file method
 rw = soundrw.SoundRW()
@@ -38,19 +39,22 @@ g = delay.Gain(2)
 # og1 = osc.gen_buffer(2048, end_freq = 15000)
 
 # Generate and filter the buffer
-white_buffer = white.gen_buffer(204800) # gen white buffer
+cwd = os.getcwd()
+filename = os.path.join(cwd,"voice1.wav")
+print(filename)
+white_buffer = rw.load_wav(filename) #white.gen_buffer(204800) # gen white buffer
 to_filter = white_buffer
 
+#loop through instantiated filters
 for fil in filters:
-    to_filter = fil.gen_buffer(to_filter) #loop through filters
-
+    to_filter = fil.gen_buffer(to_filter) 
 
 norm_result = to_filter/np.max(to_filter) # normalize result (avoid blown filters)
 result_freq = scipy.fftpack.fft(norm_result) # get spectrum
 
 # Write noise to wav
-rw.write_wav(white_buffer, 44100, "white_noise")
-rw.write_wav(norm_result, 44100, "white_noise_filter")
+# rw.write_wav(white_buffer, 44100, "white_noise")
+rw.write_wav(norm_result, 44100, "voice1_filter")
 
 
 plot.plot(np.real(result_freq))

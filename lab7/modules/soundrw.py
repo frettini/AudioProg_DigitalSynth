@@ -18,9 +18,9 @@ class SoundRW:
         scipy.io.wavfile.write("{}.wav".format(name), sample_rate, samples)
 
     def load_wav(self, filename):
-        sample_rate, samples = scipy.io.wavfile.read("{}".format)
+        sample_rate, samples = scipy.io.wavfile.read(filename)#"{}".format(filename))
         # scale to -1.0 -- 1.0
-        samples = samples / convert_16_bit
+        samples = samples / self.convert_16_bit
         print("Data type is now:", samples.dtype)
 
         return samples
