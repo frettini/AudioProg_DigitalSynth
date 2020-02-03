@@ -40,6 +40,6 @@ def frequency_response(poles, zeros):
     # calculate response for a bunch of alpha,
     # then plot them
 
-poles = np.array([0.99, 0.62689, 0.99, -0.62689])
-zeros = np.array([0.9, 0.62689, 0.9, -0.62689])
+poles = np.array([0.999, 0.62689, 0.999, -0.62689])
+zeros = np.array([0.998, 0.62689, 0.998, -0.62689])
 frequency_response(poles, zeros)

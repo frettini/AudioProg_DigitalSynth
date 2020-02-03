@@ -9,10 +9,8 @@ import time
 #read write sound file method
 rw = soundrw.SoundRW()
 
-# inst recursive oscillator and white noise generator
-osc = rec_osc.RecOsc(20, 0.5)
+# inst white noise generator
 white = white_noise.WhiteNoise()
-
 sample_rate = 44100
 
 # initialize frequency coeffs

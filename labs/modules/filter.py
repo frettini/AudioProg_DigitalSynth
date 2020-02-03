@@ -9,6 +9,7 @@ class Filter(Gen):
     # initialize with zeros and poles, if using coefficients 
     def __init__(self, pole_mag, pole_ang, zero_mag, zero_ang):
         self.c  = ComplexCal()
+        
         self.set_p_a_z(pole_mag, pole_ang, zero_mag, zero_ang)
 
     def set_p_a_z(self, pole_mag, pole_ang, zero_mag, zero_ang):
