@@ -1,8 +1,10 @@
 import numpy as np
 import math
+import abc
+from abc import ABC, abstractmethod
 from scipy import signal
 
-class Gen(object):
+class Gen(ABC):
     
     def __init__(self, sample_rate = 44100):
         #default sample sate is 44100
@@ -13,7 +15,7 @@ class Gen(object):
         self._sample_rate = sample_rate
         
 
-    
+    @abc.abstractmethod
     def cal_phase(self):
         pass
 
