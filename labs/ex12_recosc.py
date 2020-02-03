@@ -7,7 +7,7 @@ from modules import soundrw, sine_osc, rec_osc
 
 SAMPLE_RATE = 44100
 BUFFER_SIZE = 2048
-filename = "test2"
+filename = "assets/chirchirp"
 
 
 
@@ -25,8 +25,8 @@ user_signal = "rec" #input("Specify Osc : sine/rec: ")
 
 
 #specify the frequency and amplitude of the signal
-freq = 440 #int(input("provide frequency: "))
-amp = 0.5 #float(input("provide amplitude between 0 and 1: "))
+freq = int(input("provide frequency: "))
+amp = float(input("provide amplitude between 0 and 1: "))
 
 #initialize waves into variables
 sineosc = sine_osc.SineOsc(freq, amp,SAMPLE_RATE)
@@ -42,7 +42,7 @@ buffer = np.zeros(BUFFER_SIZE)
 print(buffer_counts)
 #generate wave for each buffer
 for i in range(buffer_counts):
-    buffer = osc.gen_buffer(BUFFER_SIZE)
+    buffer = osc.gen_buffer(BUFFER_SIZE, end_freq=1000)
     combined_sample = np.append(combined_sample, buffer)
 
 

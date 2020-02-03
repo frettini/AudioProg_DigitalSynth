@@ -1,10 +1,10 @@
-from .osc import WaveGen
+from .gen import Gen
 import numpy as np
 from .delay import Delay
 from .complexcal import ComplexCal
 
 # IIR Filter Class
-class Filter(WaveGen):
+class Filter(Gen):
 
     # initialize with zeros and poles, if using coefficients 
     def __init__(self, pole_mag, pole_ang, zero_mag, zero_ang):

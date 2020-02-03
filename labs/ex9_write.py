@@ -28,7 +28,7 @@ def write_wav(samples, sample_rate, name):
     scipy.io.wavfile.write("{}.wav".format(name), sample_rate, samples)
 
 sample_rate = 44100
-file_name = "test1"
+file_name = "assets/test1"
 
 
 samples = create_frequency(sample_rate)

@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 
 SAMPLE_RATE = 44100
 BUFFER_SIZE = 2048
-filename = "test2"
+filename = "assets/test2"
 sample_count = 0
 
 #initialize waves into variables

@@ -2,7 +2,7 @@ import numpy as np
 import math
 from scipy import signal
 
-class WaveGen(object):
+class Gen(object):
     
     def __init__(self, sample_rate = 44100):
         #default sample sate is 44100

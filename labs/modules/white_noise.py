@@ -1,8 +1,8 @@
-from .osc import WaveGen
+from .gen import Gen
 import numpy as np
 import math
 
-class WhiteNoise(WaveGen):
+class WhiteNoise(Gen):
 
     def __init__(self, sample_rate = 44100):
         super().__init__(sample_rate)

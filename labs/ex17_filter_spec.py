@@ -40,7 +40,7 @@ g = delay.Gain(2)
 
 # Generate and filter the buffer
 cwd = os.getcwd()
-filename = os.path.join(cwd,"voice1.wav")
+filename = os.path.join(cwd,"assets/voice1.wav")
 print(filename)
 white_buffer = rw.load_wav(filename) #white.gen_buffer(204800) # gen white buffer
 to_filter = white_buffer
@@ -54,7 +54,7 @@ result_freq = scipy.fftpack.fft(norm_result) # get spectrum
 
 # Write noise to wav
 # rw.write_wav(white_buffer, 44100, "white_noise")
-rw.write_wav(norm_result, 44100, "voice1_filter")
+rw.write_wav(norm_result, 44100, "assets/voice1_filter")
 
 
 plot.plot(np.real(result_freq))
