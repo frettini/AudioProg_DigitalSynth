@@ -26,7 +26,7 @@ print(coefs)
 filters = []
 for i in range(coefs.shape[0]):
     temp_fil = filter.Filter(0.99999, 0.1, 0.9, 0.1) #inst
-    temp_fil.setcoef(coefs[i,0], coefs[i,1], coefs[i,2], coefs[i,3], coefs[i,4], coefs[i,5])
+    temp_fil.setcoef(coefs[i,:])
     filters.append(temp_fil)
 
 
