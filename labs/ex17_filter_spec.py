@@ -47,7 +47,7 @@ to_filter = white_buffer
 for fil in filters:
     to_filter = fil.gen_buffer(to_filter) 
 
-norm_result = to_filter/np.max(to_filter) # normalize result (avoid blown filters)
+norm_result = to_filter/np.max(to_filter) # normalize result
 result_freq = scipy.fftpack.fft(norm_result) # get spectrum
 
 # Write noise to wav

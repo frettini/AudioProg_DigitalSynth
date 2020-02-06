@@ -39,7 +39,6 @@ osc = input_dict.get(user_signal, "Invalid input")
 
 buffer = np.zeros(BUFFER_SIZE)
 
-print(buffer_counts)
 #generate wave for each buffer
 for i in range(buffer_counts):
     buffer = osc.gen_buffer(BUFFER_SIZE, end_freq=1000)

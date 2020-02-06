@@ -16,7 +16,7 @@ class Gen(ABC):
         
 
     @abc.abstractmethod
-    def cal_phase(self):
+    def gen_buffer(self):
         pass
 
 
