@@ -15,20 +15,20 @@ if version_info >= (2, 6, 0):
         import imp
         fp = None
         try:
-            fp, pathname, description = imp.find_module('_simple_hello', [dirname(__file__)])
+            fp, pathname, description = imp.find_module('_example', [dirname(__file__)])
         except ImportError:
-            import _simple_hello
-            return _simple_hello
+            import _example
+            return _example
         if fp is not None:
             try:
-                _mod = imp.load_module('_simple_hello', fp, pathname, description)
+                _mod = imp.load_module('_example', fp, pathname, description)
             finally:
                 fp.close()
             return _mod
-    _simple_hello = swig_import_helper()
+    _example = swig_import_helper()
     del swig_import_helper
 else:
-    import _simple_hello
+    import _example
 del version_info
 try:
     _swig_property = property
@@ -91,9 +91,9 @@ except AttributeError:
 
 
 
-def hw(*args):
-    return _simple_hello.hw(*args)
-hw = _simple_hello.hw
+def fact(n):
+    return _example.fact(n)
+fact = _example.fact
 # This file is compatible with both classic and new-style classes.
 
 
