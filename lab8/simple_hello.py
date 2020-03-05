@@ -91,8 +91,8 @@ except AttributeError:
 
 
 
-def hw(*args):
-    return _simple_hello.hw(*args)
+def hw(x, y):
+    return _simple_hello.hw(x, y)
 hw = _simple_hello.hw
 # This file is compatible with both classic and new-style classes.
 

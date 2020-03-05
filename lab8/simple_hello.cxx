@@ -9,9 +9,9 @@
 
 #include "simple_hello.h"
 
-void hw(std::string who)
+int hw(int x, int y)
 {
-        std::cout << "Hello, " << who << std::endl;
+    return x + y;
 }
 
 PyMethodDef shMethods[]=

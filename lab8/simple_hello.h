@@ -5,4 +5,4 @@
 
 #include <string>
 
-void hw(std::string who = std::string("World"));
+int hw(int x, int y);
