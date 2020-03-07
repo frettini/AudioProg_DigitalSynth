@@ -16,7 +16,7 @@ static struct PyModuleDef min_max_sum_module = {
     "min_max_sum_doc", /* module documentation, may be NULL */
     -1,       /* size of per-interpreter state of the module,
                  or -1 if the module keeps state in global variables. */
-    shMethods
+    min_max_sum_Methods
 };
 
 
