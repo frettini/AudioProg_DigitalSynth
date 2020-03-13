@@ -1,6 +1,7 @@
 {
     "python.pythonPath": "audioproj4\\Scripts\\python.exe",
     "files.associations": {
-        "tuple": "c"
+        "tuple": "c",
+        "cstddef": "cpp"
     }
 }

@@ -30,7 +30,7 @@ PyInit_example(void)
 // return the min, max and sum of the given array.
 // SWIG will arrange for this to be returned as a tuple.
         
-void MMS::mms_t(const double* in, std::size_t in_size, double* min, double* max, double* sum)
+void MMS::mms_t(const double* in, std::size_t in_size, double& min, double& max, double& sum)
 {
     double temp_sum = 0;
     double temp_max = 0;
@@ -45,9 +45,9 @@ void MMS::mms_t(const double* in, std::size_t in_size, double* min, double* max,
         else if(value < temp_min) temp_min = value;
     }
 
-    *min = temp_min;
-    *max = temp_max;
-    *sum = temp_sum;
+    min = temp_min;
+    max = temp_max;
+    sum = temp_sum;
     
 };
 

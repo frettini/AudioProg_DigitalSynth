@@ -15,7 +15,7 @@ public:
         // return the min, max and sum of the given array.
         // SWIG will arrange for this to be returned as a tuple.
         static void mms_t(const double* in, std::size_t in_size,
-                          double* min, double* max, double* sum);
+                          double& min, double& max, double& sum);
 
         // return the min, max and sum of the given numpy array 'in'.
         // SWIG will write the values into the given numpy array, 'out'.

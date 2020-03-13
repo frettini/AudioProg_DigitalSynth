@@ -2967,11 +2967,13 @@ SWIG_Python_NonDynamicSetAttr(PyObject *obj, PyObject *name, PyObject *value) {
 
 /* -------- TYPES TABLE (BEGIN) -------- */
 
-#define SWIGTYPE_p_MMS swig_types[0]
-#define SWIGTYPE_p_char swig_types[1]
-#define SWIGTYPE_p_double swig_types[2]
-static swig_type_info *swig_types[4];
-static swig_module_info swig_module = {swig_types, 3, 0, 0, 0, 0};
+#define SWIGTYPE_p_Delay swig_types[0]
+#define SWIGTYPE_p_Filter swig_types[1]
+#define SWIGTYPE_p_Test swig_types[2]
+#define SWIGTYPE_p_char swig_types[3]
+#define SWIGTYPE_p_double swig_types[4]
+static swig_type_info *swig_types[6];
+static swig_module_info swig_module = {swig_types, 5, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -2982,18 +2984,24 @@ static swig_module_info swig_module = {swig_types, 3, 0, 0, 0, 0};
 #  error "This python version requires swig to be run with the '-classic' option"
 # endif
 #endif
+#if (PY_VERSION_HEX <= 0x02020000)
+# error "This python version requires swig to be run with the '-nomodern' option"
+#endif
+#if (PY_VERSION_HEX <= 0x02020000)
+# error "This python version requires swig to be run with the '-nomodernargs' option"
+#endif
 
 /*-----------------------------------------------
-              @(target):= _min_max_sum.so
+              @(target):= _swig_filter.so
   ------------------------------------------------*/
 #if PY_VERSION_HEX >= 0x03000000
-#  define SWIG_init    PyInit__min_max_sum
+#  define SWIG_init    PyInit__swig_filter
 
 #else
-#  define SWIG_init    init_min_max_sum
+#  define SWIG_init    init_swig_filter
 
 #endif
-#define SWIG_name    "_min_max_sum"
+#define SWIG_name    "_swig_filter"
 
 #define SWIGVERSION 0x030007 
 #define SWIG_VERSION SWIGVERSION
@@ -3077,7 +3085,7 @@ namespace swig {
 
 
 #define SWIG_FILE_WITH_INIT
-#include "min_max_sum.h"
+#include "swig_filter.h"
 
 
 #ifndef SWIG_FILE_WITH_INIT
@@ -3089,6 +3097,158 @@ namespace swig {
 
 
 #include <complex> 
+
+
+#include <limits.h>
+#if !defined(SWIG_NO_LLONG_MAX)
+# if !defined(LLONG_MAX) && defined(__GNUC__) && defined (__LONG_LONG_MAX__)
+#   define LLONG_MAX __LONG_LONG_MAX__
+#   define LLONG_MIN (-LLONG_MAX - 1LL)
+#   define ULLONG_MAX (LLONG_MAX * 2ULL + 1ULL)
+# endif
+#endif
+
+
+SWIGINTERN int
+SWIG_AsVal_double (PyObject *obj, double *val)
+{
+  int res = SWIG_TypeError;
+  if (PyFloat_Check(obj)) {
+    if (val) *val = PyFloat_AsDouble(obj);
+    return SWIG_OK;
+  } else if (PyInt_Check(obj)) {
+    if (val) *val = PyInt_AsLong(obj);
+    return SWIG_OK;
+  } else if (PyLong_Check(obj)) {
+    double v = PyLong_AsDouble(obj);
+    if (!PyErr_Occurred()) {
+      if (val) *val = v;
+      return SWIG_OK;
+    } else {
+      PyErr_Clear();
+    }
+  }
+#ifdef SWIG_PYTHON_CAST_MODE
+  {
+    int dispatch = 0;
+    double d = PyFloat_AsDouble(obj);
+    if (!PyErr_Occurred()) {
+      if (val) *val = d;
+      return SWIG_AddCast(SWIG_OK);
+    } else {
+      PyErr_Clear();
+    }
+    if (!dispatch) {
+      long v = PyLong_AsLong(obj);
+      if (!PyErr_Occurred()) {
+	if (val) *val = v;
+	return SWIG_AddCast(SWIG_AddCast(SWIG_OK));
+      } else {
+	PyErr_Clear();
+      }
+    }
+  }
+#endif
+  return res;
+}
+
+
+#include <float.h>
+
+
+#include <math.h>
+
+
+SWIGINTERNINLINE int
+SWIG_CanCastAsInteger(double *d, double min, double max) {
+  double x = *d;
+  if ((min <= x && x <= max)) {
+   double fx = floor(x);
+   double cx = ceil(x);
+   double rd =  ((x - fx) < 0.5) ? fx : cx; /* simple rint */
+   if ((errno == EDOM) || (errno == ERANGE)) {
+     errno = 0;
+   } else {
+     double summ, reps, diff;
+     if (rd < x) {
+       diff = x - rd;
+     } else if (rd > x) {
+       diff = rd - x;
+     } else {
+       return 1;
+     }
+     summ = rd + x;
+     reps = diff/summ;
+     if (reps < 8*DBL_EPSILON) {
+       *d = rd;
+       return 1;
+     }
+   }
+  }
+  return 0;
+}
+
+
+SWIGINTERN int
+SWIG_AsVal_long (PyObject *obj, long* val)
+{
+  if (PyInt_Check(obj)) {
+    if (val) *val = PyInt_AsLong(obj);
+    return SWIG_OK;
+  } else if (PyLong_Check(obj)) {
+    long v = PyLong_AsLong(obj);
+    if (!PyErr_Occurred()) {
+      if (val) *val = v;
+      return SWIG_OK;
+    } else {
+      PyErr_Clear();
+    }
+  }
+#ifdef SWIG_PYTHON_CAST_MODE
+  {
+    int dispatch = 0;
+    long v = PyInt_AsLong(obj);
+    if (!PyErr_Occurred()) {
+      if (val) *val = v;
+      return SWIG_AddCast(SWIG_OK);
+    } else {
+      PyErr_Clear();
+    }
+    if (!dispatch) {
+      double d;
+      int res = SWIG_AddCast(SWIG_AsVal_double (obj,&d));
+      if (SWIG_IsOK(res) && SWIG_CanCastAsInteger(&d, LONG_MIN, LONG_MAX)) {
+	if (val) *val = (long)(d);
+	return res;
+      }
+    }
+  }
+#endif
+  return SWIG_TypeError;
+}
+
+
+SWIGINTERN int
+SWIG_AsVal_int (PyObject * obj, int *val)
+{
+  long v;
+  int res = SWIG_AsVal_long (obj, &v);
+  if (SWIG_IsOK(res)) {
+    if ((v < INT_MIN || v > INT_MAX)) {
+      return SWIG_OverflowError;
+    } else {
+      if (val) *val = static_cast< int >(v);
+    }
+  }  
+  return res;
+}
+
+
+SWIGINTERNINLINE PyObject*
+  SWIG_From_int  (int value)
+{
+  return PyInt_FromLong((long) value);
+}
 
 
 #if NPY_API_VERSION < 0x00000007
@@ -3563,33 +3723,210 @@ namespace swig {
 
 
 
-
-  #define SWIG_From_double   PyFloat_FromDouble 
-
 #ifdef __cplusplus
 extern "C" {
 #endif
-SWIGINTERN PyObject *_wrap_MMS_mms_t(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_Delay_hello_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Delay *arg1 = (Delay *) 0 ;
+  int arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  int val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if(!PyArg_UnpackTuple(args,(char *)"Delay_hello_set",2,2,&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Delay, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Delay_hello_set" "', argument " "1"" of type '" "Delay *""'"); 
+  }
+  arg1 = reinterpret_cast< Delay * >(argp1);
+  ecode2 = SWIG_AsVal_int(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Delay_hello_set" "', argument " "2"" of type '" "int""'");
+  } 
+  arg2 = static_cast< int >(val2);
+  if (arg1) (arg1)->hello = arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Delay_hello_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Delay *arg1 = (Delay *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  int result;
+  
+  if(!PyArg_UnpackTuple(args,(char *)"Delay_hello_get",1,1,&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Delay, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Delay_hello_get" "', argument " "1"" of type '" "Delay *""'"); 
+  }
+  arg1 = reinterpret_cast< Delay * >(argp1);
+  result = (int) ((arg1)->hello);
+  resultobj = SWIG_From_int(static_cast< int >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Delay_m_processArr_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Delay *arg1 = (Delay *) 0 ;
+  double *arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if(!PyArg_UnpackTuple(args,(char *)"Delay_m_processArr_set",2,2,&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Delay, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Delay_m_processArr_set" "', argument " "1"" of type '" "Delay *""'"); 
+  }
+  arg1 = reinterpret_cast< Delay * >(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2,SWIGTYPE_p_double, 0 |  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Delay_m_processArr_set" "', argument " "2"" of type '" "double [2]""'"); 
+  } 
+  arg2 = reinterpret_cast< double * >(argp2);
+  {
+    if (arg2) {
+      size_t ii = 0;
+      for (; ii < (size_t)2; ++ii) *(double *)&arg1->m_processArr[ii] = *((double *)arg2 + ii);
+    } else {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in variable '""m_processArr""' of type '""double [2]""'");
+    }
+  }
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Delay_m_processArr_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Delay *arg1 = (Delay *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  double *result = 0 ;
+  
+  if(!PyArg_UnpackTuple(args,(char *)"Delay_m_processArr_get",1,1,&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Delay, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Delay_m_processArr_get" "', argument " "1"" of type '" "Delay *""'"); 
+  }
+  arg1 = reinterpret_cast< Delay * >(argp1);
+  result = (double *)(double *) ((arg1)->m_processArr);
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_double, 0 |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_new_Delay(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  int arg1 ;
+  int val1 ;
+  int ecode1 = 0 ;
+  PyObject * obj0 = 0 ;
+  Delay *result = 0 ;
+  
+  if(!PyArg_UnpackTuple(args,(char *)"new_Delay",1,1,&obj0)) SWIG_fail;
+  ecode1 = SWIG_AsVal_int(obj0, &val1);
+  if (!SWIG_IsOK(ecode1)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "new_Delay" "', argument " "1"" of type '" "int""'");
+  } 
+  arg1 = static_cast< int >(val1);
+  result = (Delay *)new Delay(arg1);
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Delay, SWIG_POINTER_NEW |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Delay_process(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Delay *arg1 = (Delay *) 0 ;
+  double arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if(!PyArg_UnpackTuple(args,(char *)"Delay_process",2,2,&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Delay, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Delay_process" "', argument " "1"" of type '" "Delay *""'"); 
+  }
+  arg1 = reinterpret_cast< Delay * >(argp1);
+  ecode2 = SWIG_AsVal_double(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Delay_process" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  (arg1)->process(arg2);
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_delete_Delay(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Delay *arg1 = (Delay *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  
+  if(!PyArg_UnpackTuple(args,(char *)"delete_Delay",1,1,&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Delay, SWIG_POINTER_DISOWN |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_Delay" "', argument " "1"" of type '" "Delay *""'"); 
+  }
+  arg1 = reinterpret_cast< Delay * >(argp1);
+  delete arg1;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *Delay_swigregister(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *obj;
+  if (!PyArg_UnpackTuple(args,(char*)"swigregister", 1, 1,&obj)) return NULL;
+  SWIG_TypeNewClientData(SWIGTYPE_p_Delay, SWIG_NewClientData(obj));
+  return SWIG_Py_Void();
+}
+
+SWIGINTERN PyObject *_wrap_new_Filter(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   double *arg1 = (double *) 0 ;
   std::size_t arg2 ;
-  double *arg3 = 0 ;
-  double *arg4 = 0 ;
-  double *arg5 = 0 ;
   PyArrayObject *array1 = NULL ;
   int is_new_object1 = 0 ;
-  double temp3 ;
-  int res3 = SWIG_TMPOBJ ;
-  double temp4 ;
-  int res4 = SWIG_TMPOBJ ;
-  double temp5 ;
-  int res5 = SWIG_TMPOBJ ;
   PyObject * obj0 = 0 ;
+  Filter *result = 0 ;
   
-  arg3 = &temp3;
-  arg4 = &temp4;
-  arg5 = &temp5;
-  if (!PyArg_ParseTuple(args,(char *)"O:MMS_mms_t",&obj0)) SWIG_fail;
+  if(!PyArg_UnpackTuple(args,(char *)"new_Filter",1,1,&obj0)) SWIG_fail;
   {
     npy_intp size[1] = {
       -1 
@@ -3602,26 +3939,8 @@ SWIGINTERN PyObject *_wrap_MMS_mms_t(PyObject *SWIGUNUSEDPARM(self), PyObject *a
     arg1 = (double*) array_data(array1);
     arg2 = (int) array_size(array1,0);
   }
-  MMS::mms_t((double const *)arg1,arg2,*arg3,*arg4,*arg5);
-  resultobj = SWIG_Py_Void();
-  if (SWIG_IsTmpObj(res3)) {
-    resultobj = SWIG_Python_AppendOutput(resultobj, SWIG_From_double((*arg3)));
-  } else {
-    int new_flags = SWIG_IsNewObj(res3) ? (SWIG_POINTER_OWN |  0 ) :  0 ;
-    resultobj = SWIG_Python_AppendOutput(resultobj, SWIG_NewPointerObj((void*)(arg3), SWIGTYPE_p_double, new_flags));
-  }
-  if (SWIG_IsTmpObj(res4)) {
-    resultobj = SWIG_Python_AppendOutput(resultobj, SWIG_From_double((*arg4)));
-  } else {
-    int new_flags = SWIG_IsNewObj(res4) ? (SWIG_POINTER_OWN |  0 ) :  0 ;
-    resultobj = SWIG_Python_AppendOutput(resultobj, SWIG_NewPointerObj((void*)(arg4), SWIGTYPE_p_double, new_flags));
-  }
-  if (SWIG_IsTmpObj(res5)) {
-    resultobj = SWIG_Python_AppendOutput(resultobj, SWIG_From_double((*arg5)));
-  } else {
-    int new_flags = SWIG_IsNewObj(res5) ? (SWIG_POINTER_OWN |  0 ) :  0 ;
-    resultobj = SWIG_Python_AppendOutput(resultobj, SWIG_NewPointerObj((void*)(arg5), SWIGTYPE_p_double, new_flags));
-  }
+  result = (Filter *)new Filter((double const *)arg1,arg2);
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Filter, SWIG_POINTER_NEW |  0 );
   {
     if (is_new_object1 && array1)
     {
@@ -3640,86 +3959,132 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_MMS_mms_a(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_Filter_setCoef(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
-  double *arg1 = (double *) 0 ;
-  std::size_t arg2 ;
-  double *arg3 = (double *) 0 ;
-  std::size_t arg4 ;
-  PyArrayObject *array1 = NULL ;
-  int i1 = 1 ;
-  PyArrayObject *array3 = NULL ;
-  int is_new_object3 = 0 ;
+  Filter *arg1 = (Filter *) 0 ;
+  double *arg2 = (double *) 0 ;
+  std::size_t arg3 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyArrayObject *array2 = NULL ;
+  int is_new_object2 = 0 ;
   PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:MMS_mms_a",&obj0,&obj1)) SWIG_fail;
+  if(!PyArg_UnpackTuple(args,(char *)"Filter_setCoef",2,2,&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Filter, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Filter_setCoef" "', argument " "1"" of type '" "Filter *""'"); 
+  }
+  arg1 = reinterpret_cast< Filter * >(argp1);
   {
-    array1 = obj_to_array_no_conversion(obj0, NPY_DOUBLE);
-    if (!array1 || !require_dimensions(array1,1) || !require_contiguous(array1)
-      || !require_native(array1)) SWIG_fail;
-    arg1 = (double*) array_data(array1);
-    arg2 = 1;
-    for (i1=0; i1 < array_numdims(array1); ++i1) arg2 *= array_size(array1,i1);
+    npy_intp size[1] = {
+      -1 
+    };
+    array2 = obj_to_array_contiguous_allow_conversion(obj1,
+      NPY_DOUBLE,
+      &is_new_object2);
+    if (!array2 || !require_dimensions(array2, 1) ||
+      !require_size(array2, size, 1)) SWIG_fail;
+    arg2 = (double*) array_data(array2);
+    arg3 = (int) array_size(array2,0);
+  }
+  (arg1)->setCoef((double const *)arg2,arg3);
+  resultobj = SWIG_Py_Void();
+  {
+    if (is_new_object2 && array2)
+    {
+      Py_DECREF(array2); 
+    }
+  }
+  return resultobj;
+fail:
+  {
+    if (is_new_object2 && array2)
+    {
+      Py_DECREF(array2); 
+    }
+  }
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Filter_genBuffer(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Filter *arg1 = (Filter *) 0 ;
+  double *arg2 = (double *) 0 ;
+  std::size_t arg3 ;
+  double *arg4 = (double *) 0 ;
+  std::size_t arg5 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyArrayObject *array2 = NULL ;
+  int i2 = 1 ;
+  PyArrayObject *array4 = NULL ;
+  int is_new_object4 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  
+  if(!PyArg_UnpackTuple(args,(char *)"Filter_genBuffer",3,3,&obj0,&obj1,&obj2)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Filter, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Filter_genBuffer" "', argument " "1"" of type '" "Filter *""'"); 
+  }
+  arg1 = reinterpret_cast< Filter * >(argp1);
+  {
+    array2 = obj_to_array_no_conversion(obj1, NPY_DOUBLE);
+    if (!array2 || !require_dimensions(array2,1) || !require_contiguous(array2)
+      || !require_native(array2)) SWIG_fail;
+    arg2 = (double*) array_data(array2);
+    arg3 = 1;
+    for (i2=0; i2 < array_numdims(array2); ++i2) arg3 *= array_size(array2,i2);
   }
   {
     npy_intp size[1] = {
       -1 
     };
-    array3 = obj_to_array_contiguous_allow_conversion(obj1,
+    array4 = obj_to_array_contiguous_allow_conversion(obj2,
       NPY_DOUBLE,
-      &is_new_object3);
-    if (!array3 || !require_dimensions(array3, 1) ||
-      !require_size(array3, size, 1)) SWIG_fail;
-    arg3 = (double*) array_data(array3);
-    arg4 = (int) array_size(array3,0);
+      &is_new_object4);
+    if (!array4 || !require_dimensions(array4, 1) ||
+      !require_size(array4, size, 1)) SWIG_fail;
+    arg4 = (double*) array_data(array4);
+    arg5 = (int) array_size(array4,0);
   }
-  MMS::mms_a(arg1,arg2,(double const *)arg3,arg4);
+  (arg1)->genBuffer(arg2,arg3,(double const *)arg4,arg5);
   resultobj = SWIG_Py_Void();
   {
-    if (is_new_object3 && array3)
+    if (is_new_object4 && array4)
     {
-      Py_DECREF(array3); 
+      Py_DECREF(array4); 
     }
   }
   return resultobj;
 fail:
   {
-    if (is_new_object3 && array3)
+    if (is_new_object4 && array4)
     {
-      Py_DECREF(array3); 
+      Py_DECREF(array4); 
     }
   }
   return NULL;
 }
 
 
-SWIGINTERN PyObject *_wrap_new_MMS(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_delete_Filter(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
-  MMS *result = 0 ;
-  
-  if (!PyArg_ParseTuple(args,(char *)":new_MMS")) SWIG_fail;
-  result = (MMS *)new MMS();
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_MMS, SWIG_POINTER_NEW |  0 );
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap_delete_MMS(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *resultobj = 0;
-  MMS *arg1 = (MMS *) 0 ;
+  Filter *arg1 = (Filter *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
   PyObject * obj0 = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:delete_MMS",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_MMS, SWIG_POINTER_DISOWN |  0 );
+  if(!PyArg_UnpackTuple(args,(char *)"delete_Filter",1,1,&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Filter, SWIG_POINTER_DISOWN |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_MMS" "', argument " "1"" of type '" "MMS *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_Filter" "', argument " "1"" of type '" "Filter *""'"); 
   }
-  arg1 = reinterpret_cast< MMS * >(argp1);
+  arg1 = reinterpret_cast< Filter * >(argp1);
   delete arg1;
   resultobj = SWIG_Py_Void();
   return resultobj;
@@ -3728,42 +4093,131 @@ fail:
 }
 
 
-SWIGINTERN PyObject *MMS_swigregister(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *Filter_swigregister(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *obj;
-  if (!PyArg_ParseTuple(args,(char*)"O:swigregister", &obj)) return NULL;
-  SWIG_TypeNewClientData(SWIGTYPE_p_MMS, SWIG_NewClientData(obj));
+  if (!PyArg_UnpackTuple(args,(char*)"swigregister", 1, 1,&obj)) return NULL;
+  SWIG_TypeNewClientData(SWIGTYPE_p_Filter, SWIG_NewClientData(obj));
+  return SWIG_Py_Void();
+}
+
+SWIGINTERN PyObject *_wrap_new_Test(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  double *arg1 = (double *) 0 ;
+  std::size_t arg2 ;
+  PyArrayObject *array1 = NULL ;
+  int is_new_object1 = 0 ;
+  PyObject * obj0 = 0 ;
+  Test *result = 0 ;
+  
+  if(!PyArg_UnpackTuple(args,(char *)"new_Test",1,1,&obj0)) SWIG_fail;
+  {
+    npy_intp size[1] = {
+      -1 
+    };
+    array1 = obj_to_array_contiguous_allow_conversion(obj0,
+      NPY_DOUBLE,
+      &is_new_object1);
+    if (!array1 || !require_dimensions(array1, 1) ||
+      !require_size(array1, size, 1)) SWIG_fail;
+    arg1 = (double*) array_data(array1);
+    arg2 = (int) array_size(array1,0);
+  }
+  result = (Test *)new Test((double const *)arg1,arg2);
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Test, SWIG_POINTER_NEW |  0 );
+  {
+    if (is_new_object1 && array1)
+    {
+      Py_DECREF(array1); 
+    }
+  }
+  return resultobj;
+fail:
+  {
+    if (is_new_object1 && array1)
+    {
+      Py_DECREF(array1); 
+    }
+  }
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_delete_Test(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Test *arg1 = (Test *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  
+  if(!PyArg_UnpackTuple(args,(char *)"delete_Test",1,1,&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Test, SWIG_POINTER_DISOWN |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_Test" "', argument " "1"" of type '" "Test *""'"); 
+  }
+  arg1 = reinterpret_cast< Test * >(argp1);
+  delete arg1;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *Test_swigregister(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *obj;
+  if (!PyArg_UnpackTuple(args,(char*)"swigregister", 1, 1,&obj)) return NULL;
+  SWIG_TypeNewClientData(SWIGTYPE_p_Test, SWIG_NewClientData(obj));
   return SWIG_Py_Void();
 }
 
 static PyMethodDef SwigMethods[] = {
 	 { (char *)"SWIG_PyInstanceMethod_New", (PyCFunction)SWIG_PyInstanceMethod_New, METH_O, NULL},
-	 { (char *)"MMS_mms_t", _wrap_MMS_mms_t, METH_VARARGS, NULL},
-	 { (char *)"MMS_mms_a", _wrap_MMS_mms_a, METH_VARARGS, NULL},
-	 { (char *)"new_MMS", _wrap_new_MMS, METH_VARARGS, NULL},
-	 { (char *)"delete_MMS", _wrap_delete_MMS, METH_VARARGS, NULL},
-	 { (char *)"MMS_swigregister", MMS_swigregister, METH_VARARGS, NULL},
+	 { (char *)"Delay_hello_set", _wrap_Delay_hello_set, METH_VARARGS, NULL},
+	 { (char *)"Delay_hello_get", _wrap_Delay_hello_get, METH_VARARGS, NULL},
+	 { (char *)"Delay_m_processArr_set", _wrap_Delay_m_processArr_set, METH_VARARGS, NULL},
+	 { (char *)"Delay_m_processArr_get", _wrap_Delay_m_processArr_get, METH_VARARGS, NULL},
+	 { (char *)"new_Delay", _wrap_new_Delay, METH_VARARGS, NULL},
+	 { (char *)"Delay_process", _wrap_Delay_process, METH_VARARGS, NULL},
+	 { (char *)"delete_Delay", _wrap_delete_Delay, METH_VARARGS, NULL},
+	 { (char *)"Delay_swigregister", Delay_swigregister, METH_VARARGS, NULL},
+	 { (char *)"new_Filter", _wrap_new_Filter, METH_VARARGS, NULL},
+	 { (char *)"Filter_setCoef", _wrap_Filter_setCoef, METH_VARARGS, NULL},
+	 { (char *)"Filter_genBuffer", _wrap_Filter_genBuffer, METH_VARARGS, NULL},
+	 { (char *)"delete_Filter", _wrap_delete_Filter, METH_VARARGS, NULL},
+	 { (char *)"Filter_swigregister", Filter_swigregister, METH_VARARGS, NULL},
+	 { (char *)"new_Test", _wrap_new_Test, METH_VARARGS, NULL},
+	 { (char *)"delete_Test", _wrap_delete_Test, METH_VARARGS, NULL},
+	 { (char *)"Test_swigregister", Test_swigregister, METH_VARARGS, NULL},
 	 { NULL, NULL, 0, NULL }
 };
 
 
 /* -------- TYPE CONVERSION AND EQUIVALENCE RULES (BEGIN) -------- */
 
-static swig_type_info _swigt__p_MMS = {"_p_MMS", "MMS *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_Delay = {"_p_Delay", "Delay *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_Filter = {"_p_Filter", "Filter *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_Test = {"_p_Test", "Test *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_char = {"_p_char", "char *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_double = {"_p_double", "double *", 0, 0, (void*)0, 0};
 
 static swig_type_info *swig_type_initial[] = {
-  &_swigt__p_MMS,
+  &_swigt__p_Delay,
+  &_swigt__p_Filter,
+  &_swigt__p_Test,
   &_swigt__p_char,
   &_swigt__p_double,
 };
 
-static swig_cast_info _swigc__p_MMS[] = {  {&_swigt__p_MMS, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_Delay[] = {  {&_swigt__p_Delay, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_Filter[] = {  {&_swigt__p_Filter, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_Test[] = {  {&_swigt__p_Test, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_char[] = {  {&_swigt__p_char, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_double[] = {  {&_swigt__p_double, 0, 0, 0},{0, 0, 0, 0}};
 
 static swig_cast_info *swig_cast_initial[] = {
-  _swigc__p_MMS,
+  _swigc__p_Delay,
+  _swigc__p_Filter,
+  _swigc__p_Test,
   _swigc__p_char,
   _swigc__p_double,
 };

@@ -9,18 +9,42 @@
 #define swig_filter_H
 
 #include <cstddef>
+#include <vector>
+#include <iostream>
 
-class MMS {
+
+class Delay{
+private:
+        int m_n = 2;
 public:
-        // return the min, max and sum of the given array.
-        // SWIG will arrange for this to be returned as a tuple.
-        static void mms_t(const double* in, std::size_t in_size,
-                          double* min, double* max, double* sum);
+        int hello = 1;
+        double m_processArr[2];
+        Delay(int delaySize);
+        void process(double audioSample);
+};
 
-        // return the min, max and sum of the given numpy array 'in'.
-        // SWIG will write the values into the given numpy array, 'out'.
-        static void mms_a(double* out, std::size_t out_size,
+class Filter{
+        
+public:
+                
+        // define constructor
+        Filter(const double* in, std::size_t in_size);
+        
+        // set coefficient at any time
+        void setCoef(const double* in, std::size_t in_size);
+        
+        // generate the buffer (should derive from gen)
+        void genBuffer(double* out, std::size_t out_size,
                           const double* in, std::size_t in_size);
+private:
+        double m_a[3];
+        double m_b[3];
+        Delay d;
+};
+
+class Test{
+public:
+        Test(const double* in, std::size_t in_size);
 };
 
 

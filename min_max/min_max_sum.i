@@ -23,7 +23,7 @@ import_array();
 
 /* Match the arguments of our various C++ methods */
 %apply (double* IN_ARRAY1, int DIM1) { (const double* in, std::size_t in_size) };
-%apply double *OUTPUT { double* min, double* max, double* sum };
+%apply double& OUTPUT { double& min, double& max, double& sum };
 %apply (double* INPLACE_ARRAY1, int DIM1) { (double* out, std::size_t out_size) };
 
 /* Parse the c++ header file and generate the output file */
