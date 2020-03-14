@@ -14,13 +14,12 @@
 
 
 class Delay{
-private:
-        int m_n = 2;
 public:
-        int hello = 1;
-        double m_processArr[2];
+        std::vector<double> m_processVect;
+
         Delay(int delaySize);
         void process(double audioSample);
+        void printArray();
 };
 
 class Filter{
@@ -42,10 +41,7 @@ private:
         Delay d;
 };
 
-class Test{
-public:
-        Test(const double* in, std::size_t in_size);
-};
+
 
 
 #endif

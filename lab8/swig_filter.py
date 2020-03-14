@@ -102,8 +102,9 @@ def _swig_setattr_nondynamic_method(set):
 class Delay(object):
     thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
     __repr__ = _swig_repr
-    hello = _swig_property(_swig_filter.Delay_hello_get, _swig_filter.Delay_hello_set)
+    size_test = _swig_property(_swig_filter.Delay_size_test_get, _swig_filter.Delay_size_test_set)
     m_processArr = _swig_property(_swig_filter.Delay_m_processArr_get, _swig_filter.Delay_m_processArr_set)
+    m_processVect = _swig_property(_swig_filter.Delay_m_processVect_get, _swig_filter.Delay_m_processVect_set)
 
     def __init__(self, delaySize):
         this = _swig_filter.new_Delay(delaySize)
@@ -114,6 +115,9 @@ class Delay(object):
 
     def process(self, audioSample):
         return _swig_filter.Delay_process(self, audioSample)
+
+    def printArray(self):
+        return _swig_filter.Delay_printArray(self)
     __swig_destroy__ = _swig_filter.delete_Delay
     __del__ = lambda self: None
 Delay_swigregister = _swig_filter.Delay_swigregister
