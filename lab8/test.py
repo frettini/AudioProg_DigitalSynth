@@ -39,15 +39,15 @@ f.genBuffer(result, np.array(white_buffer)) # filter it
 
 norm_result = result/np.max(result) # normalize result (avoid blown filters)
 result_freq = scipy.fftpack.fft(norm_result) # get spectrum
-print("test3")
+print(result)
 # Write noise to wav
 rw.write_wav(white_buffer, 44100, "white_noise")
 rw.write_wav(norm_result, 44100, "white_noise_filter")
-print("test4")
+
 
 plot.plot(np.real(result_freq))
 # plot.plot(norm_result)
 plot.show()
 
-
+print("test4")
 #use scipy.signal.iirfilter to get coefficients "sos" mode

@@ -15,16 +15,24 @@
 
 class Delay{
 public:
-        std::vector<double> m_processVect;
+        
 
-        Delay(int delaySize);
+        Delay(int delaySize);           // constructor
+        Delay(const Delay &obj);        // copy constructor
+        ~Delay();                       // destructor
+
         void process(double audioSample);
+        double get(int ind);
         void printArray();
+private:
+        int size;
+        double* m_processArr;
 };
 
+
 class Filter{
-        
 public:
+        Delay d; //cant be private for some reason
                 
         // define constructor
         Filter(const double* in, std::size_t in_size);
@@ -35,10 +43,11 @@ public:
         // generate the buffer (should derive from gen)
         void genBuffer(double* out, std::size_t out_size,
                           const double* in, std::size_t in_size);
+
 private:
         double m_a[3];
         double m_b[3];
-        Delay d;
+        
 };
 
 

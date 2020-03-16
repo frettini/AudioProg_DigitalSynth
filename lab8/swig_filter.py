@@ -102,30 +102,31 @@ def _swig_setattr_nondynamic_method(set):
 class Delay(object):
     thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
     __repr__ = _swig_repr
-    size_test = _swig_property(_swig_filter.Delay_size_test_get, _swig_filter.Delay_size_test_set)
-    m_processArr = _swig_property(_swig_filter.Delay_m_processArr_get, _swig_filter.Delay_m_processArr_set)
-    m_processVect = _swig_property(_swig_filter.Delay_m_processVect_get, _swig_filter.Delay_m_processVect_set)
 
-    def __init__(self, delaySize):
-        this = _swig_filter.new_Delay(delaySize)
+    def __init__(self, *args):
+        this = _swig_filter.new_Delay(*args)
         try:
             self.this.append(this)
         except:
             self.this = this
+    __swig_destroy__ = _swig_filter.delete_Delay
+    __del__ = lambda self: None
 
     def process(self, audioSample):
         return _swig_filter.Delay_process(self, audioSample)
 
+    def get(self, ind):
+        return _swig_filter.Delay_get(self, ind)
+
     def printArray(self):
         return _swig_filter.Delay_printArray(self)
-    __swig_destroy__ = _swig_filter.delete_Delay
-    __del__ = lambda self: None
 Delay_swigregister = _swig_filter.Delay_swigregister
 Delay_swigregister(Delay)
 
 class Filter(object):
     thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
     __repr__ = _swig_repr
+    d = _swig_property(_swig_filter.Filter_d_get, _swig_filter.Filter_d_set)
 
     def __init__(self, arg2):
         this = _swig_filter.new_Filter(arg2)
@@ -143,21 +144,6 @@ class Filter(object):
     __del__ = lambda self: None
 Filter_swigregister = _swig_filter.Filter_swigregister
 Filter_swigregister(Filter)
-
-class Test(object):
-    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
-    __repr__ = _swig_repr
-
-    def __init__(self, arg2):
-        this = _swig_filter.new_Test(arg2)
-        try:
-            self.this.append(this)
-        except:
-            self.this = this
-    __swig_destroy__ = _swig_filter.delete_Test
-    __del__ = lambda self: None
-Test_swigregister = _swig_filter.Test_swigregister
-Test_swigregister(Test)
 
 
 

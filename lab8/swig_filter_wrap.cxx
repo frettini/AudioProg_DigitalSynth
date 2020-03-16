@@ -2969,12 +2969,9 @@ SWIG_Python_NonDynamicSetAttr(PyObject *obj, PyObject *name, PyObject *value) {
 
 #define SWIGTYPE_p_Delay swig_types[0]
 #define SWIGTYPE_p_Filter swig_types[1]
-#define SWIGTYPE_p_Test swig_types[2]
-#define SWIGTYPE_p_char swig_types[3]
-#define SWIGTYPE_p_double swig_types[4]
-#define SWIGTYPE_p_std__vectorT_double_t swig_types[5]
-static swig_type_info *swig_types[7];
-static swig_module_info swig_module = {swig_types, 6, 0, 0, 0, 0};
+#define SWIGTYPE_p_char swig_types[2]
+static swig_type_info *swig_types[4];
+static swig_module_info swig_module = {swig_types, 3, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -3245,11 +3242,7 @@ SWIG_AsVal_int (PyObject * obj, int *val)
 }
 
 
-SWIGINTERNINLINE PyObject*
-  SWIG_From_int  (int value)
-{
-  return PyInt_FromLong((long) value);
-}
+  #define SWIG_From_double   PyFloat_FromDouble 
 
 
 #if NPY_API_VERSION < 0x00000007
@@ -3727,178 +3720,7 @@ SWIGINTERNINLINE PyObject*
 #ifdef __cplusplus
 extern "C" {
 #endif
-SWIGINTERN PyObject *_wrap_Delay_size_test_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *resultobj = 0;
-  Delay *arg1 = (Delay *) 0 ;
-  int arg2 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  int val2 ;
-  int ecode2 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
-  
-  if(!PyArg_UnpackTuple(args,(char *)"Delay_size_test_set",2,2,&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Delay, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Delay_size_test_set" "', argument " "1"" of type '" "Delay *""'"); 
-  }
-  arg1 = reinterpret_cast< Delay * >(argp1);
-  ecode2 = SWIG_AsVal_int(obj1, &val2);
-  if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Delay_size_test_set" "', argument " "2"" of type '" "int""'");
-  } 
-  arg2 = static_cast< int >(val2);
-  if (arg1) (arg1)->size_test = arg2;
-  resultobj = SWIG_Py_Void();
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap_Delay_size_test_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *resultobj = 0;
-  Delay *arg1 = (Delay *) 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  PyObject * obj0 = 0 ;
-  int result;
-  
-  if(!PyArg_UnpackTuple(args,(char *)"Delay_size_test_get",1,1,&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Delay, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Delay_size_test_get" "', argument " "1"" of type '" "Delay *""'"); 
-  }
-  arg1 = reinterpret_cast< Delay * >(argp1);
-  result = (int) ((arg1)->size_test);
-  resultobj = SWIG_From_int(static_cast< int >(result));
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap_Delay_m_processArr_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *resultobj = 0;
-  Delay *arg1 = (Delay *) 0 ;
-  double *arg2 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  void *argp2 = 0 ;
-  int res2 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
-  
-  if(!PyArg_UnpackTuple(args,(char *)"Delay_m_processArr_set",2,2,&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Delay, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Delay_m_processArr_set" "', argument " "1"" of type '" "Delay *""'"); 
-  }
-  arg1 = reinterpret_cast< Delay * >(argp1);
-  res2 = SWIG_ConvertPtr(obj1, &argp2,SWIGTYPE_p_double, 0 |  0 );
-  if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Delay_m_processArr_set" "', argument " "2"" of type '" "double [2]""'"); 
-  } 
-  arg2 = reinterpret_cast< double * >(argp2);
-  {
-    if (arg2) {
-      size_t ii = 0;
-      for (; ii < (size_t)2; ++ii) *(double *)&arg1->m_processArr[ii] = *((double *)arg2 + ii);
-    } else {
-      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in variable '""m_processArr""' of type '""double [2]""'");
-    }
-  }
-  resultobj = SWIG_Py_Void();
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap_Delay_m_processArr_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *resultobj = 0;
-  Delay *arg1 = (Delay *) 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  PyObject * obj0 = 0 ;
-  double *result = 0 ;
-  
-  if(!PyArg_UnpackTuple(args,(char *)"Delay_m_processArr_get",1,1,&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Delay, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Delay_m_processArr_get" "', argument " "1"" of type '" "Delay *""'"); 
-  }
-  arg1 = reinterpret_cast< Delay * >(argp1);
-  result = (double *)(double *) ((arg1)->m_processArr);
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_double, 0 |  0 );
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap_Delay_m_processVect_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *resultobj = 0;
-  Delay *arg1 = (Delay *) 0 ;
-  std::vector< double > arg2 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  void *argp2 ;
-  int res2 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
-  
-  if(!PyArg_UnpackTuple(args,(char *)"Delay_m_processVect_set",2,2,&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Delay, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Delay_m_processVect_set" "', argument " "1"" of type '" "Delay *""'"); 
-  }
-  arg1 = reinterpret_cast< Delay * >(argp1);
-  {
-    res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_std__vectorT_double_t,  0  | 0);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Delay_m_processVect_set" "', argument " "2"" of type '" "std::vector< double >""'"); 
-    }  
-    if (!argp2) {
-      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Delay_m_processVect_set" "', argument " "2"" of type '" "std::vector< double >""'");
-    } else {
-      std::vector< double > * temp = reinterpret_cast< std::vector< double > * >(argp2);
-      arg2 = *temp;
-      if (SWIG_IsNewObj(res2)) delete temp;
-    }
-  }
-  if (arg1) (arg1)->m_processVect = arg2;
-  resultobj = SWIG_Py_Void();
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap_Delay_m_processVect_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *resultobj = 0;
-  Delay *arg1 = (Delay *) 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  PyObject * obj0 = 0 ;
-  std::vector< double > result;
-  
-  if(!PyArg_UnpackTuple(args,(char *)"Delay_m_processVect_get",1,1,&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Delay, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Delay_m_processVect_get" "', argument " "1"" of type '" "Delay *""'"); 
-  }
-  arg1 = reinterpret_cast< Delay * >(argp1);
-  result =  ((arg1)->m_processVect);
-  resultobj = SWIG_NewPointerObj((new std::vector< double >(static_cast< const std::vector< double >& >(result))), SWIGTYPE_p_std__vectorT_double_t, SWIG_POINTER_OWN |  0 );
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap_new_Delay(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_new_Delay__SWIG_0(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   int arg1 ;
   int val1 ;
@@ -3914,6 +3736,92 @@ SWIGINTERN PyObject *_wrap_new_Delay(PyObject *SWIGUNUSEDPARM(self), PyObject *a
   arg1 = static_cast< int >(val1);
   result = (Delay *)new Delay(arg1);
   resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Delay, SWIG_POINTER_NEW |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_new_Delay__SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Delay *arg1 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  Delay *result = 0 ;
+  
+  if(!PyArg_UnpackTuple(args,(char *)"new_Delay",1,1,&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1, SWIGTYPE_p_Delay,  0  | 0);
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_Delay" "', argument " "1"" of type '" "Delay const &""'"); 
+  }
+  if (!argp1) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "new_Delay" "', argument " "1"" of type '" "Delay const &""'"); 
+  }
+  arg1 = reinterpret_cast< Delay * >(argp1);
+  result = (Delay *)new Delay((Delay const &)*arg1);
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Delay, SWIG_POINTER_NEW |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_new_Delay(PyObject *self, PyObject *args) {
+  int argc;
+  PyObject *argv[2] = {
+    0
+  };
+  int ii;
+  
+  if (!PyTuple_Check(args)) SWIG_fail;
+  argc = args ? (int)PyObject_Length(args) : 0;
+  for (ii = 0; (ii < 1) && (ii < argc); ii++) {
+    argv[ii] = PyTuple_GET_ITEM(args,ii);
+  }
+  if (argc == 1) {
+    int _v;
+    int res = SWIG_ConvertPtr(argv[0], 0, SWIGTYPE_p_Delay, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      return _wrap_new_Delay__SWIG_1(self, args);
+    }
+  }
+  if (argc == 1) {
+    int _v;
+    {
+      int res = SWIG_AsVal_int(argv[0], NULL);
+      _v = SWIG_CheckState(res);
+    }
+    if (_v) {
+      return _wrap_new_Delay__SWIG_0(self, args);
+    }
+  }
+  
+fail:
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'new_Delay'.\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    Delay::Delay(int)\n"
+    "    Delay::Delay(Delay const &)\n");
+  return 0;
+}
+
+
+SWIGINTERN PyObject *_wrap_delete_Delay(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Delay *arg1 = (Delay *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  
+  if(!PyArg_UnpackTuple(args,(char *)"delete_Delay",1,1,&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Delay, SWIG_POINTER_DISOWN |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_Delay" "', argument " "1"" of type '" "Delay *""'"); 
+  }
+  arg1 = reinterpret_cast< Delay * >(argp1);
+  delete arg1;
+  resultobj = SWIG_Py_Void();
   return resultobj;
 fail:
   return NULL;
@@ -3950,6 +3858,37 @@ fail:
 }
 
 
+SWIGINTERN PyObject *_wrap_Delay_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Delay *arg1 = (Delay *) 0 ;
+  int arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  int val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  double result;
+  
+  if(!PyArg_UnpackTuple(args,(char *)"Delay_get",2,2,&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Delay, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Delay_get" "', argument " "1"" of type '" "Delay *""'"); 
+  }
+  arg1 = reinterpret_cast< Delay * >(argp1);
+  ecode2 = SWIG_AsVal_int(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Delay_get" "', argument " "2"" of type '" "int""'");
+  } 
+  arg2 = static_cast< int >(val2);
+  result = (double)(arg1)->get(arg2);
+  resultobj = SWIG_From_double(static_cast< double >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
 SWIGINTERN PyObject *_wrap_Delay_printArray(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   Delay *arg1 = (Delay *) 0 ;
@@ -3971,20 +3910,36 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_delete_Delay(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *Delay_swigregister(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *obj;
+  if (!PyArg_UnpackTuple(args,(char*)"swigregister", 1, 1,&obj)) return NULL;
+  SWIG_TypeNewClientData(SWIGTYPE_p_Delay, SWIG_NewClientData(obj));
+  return SWIG_Py_Void();
+}
+
+SWIGINTERN PyObject *_wrap_Filter_d_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
-  Delay *arg1 = (Delay *) 0 ;
+  Filter *arg1 = (Filter *) 0 ;
+  Delay *arg2 = (Delay *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
   PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
   
-  if(!PyArg_UnpackTuple(args,(char *)"delete_Delay",1,1,&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Delay, SWIG_POINTER_DISOWN |  0 );
+  if(!PyArg_UnpackTuple(args,(char *)"Filter_d_set",2,2,&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Filter, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_Delay" "', argument " "1"" of type '" "Delay *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Filter_d_set" "', argument " "1"" of type '" "Filter *""'"); 
   }
-  arg1 = reinterpret_cast< Delay * >(argp1);
-  delete arg1;
+  arg1 = reinterpret_cast< Filter * >(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2,SWIGTYPE_p_Delay, 0 |  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Filter_d_set" "', argument " "2"" of type '" "Delay *""'"); 
+  }
+  arg2 = reinterpret_cast< Delay * >(argp2);
+  if (arg1) (arg1)->d = *arg2;
   resultobj = SWIG_Py_Void();
   return resultobj;
 fail:
@@ -3992,12 +3947,27 @@ fail:
 }
 
 
-SWIGINTERN PyObject *Delay_swigregister(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *obj;
-  if (!PyArg_UnpackTuple(args,(char*)"swigregister", 1, 1,&obj)) return NULL;
-  SWIG_TypeNewClientData(SWIGTYPE_p_Delay, SWIG_NewClientData(obj));
-  return SWIG_Py_Void();
+SWIGINTERN PyObject *_wrap_Filter_d_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Filter *arg1 = (Filter *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  Delay *result = 0 ;
+  
+  if(!PyArg_UnpackTuple(args,(char *)"Filter_d_get",1,1,&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Filter, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Filter_d_get" "', argument " "1"" of type '" "Filter *""'"); 
+  }
+  arg1 = reinterpret_cast< Filter * >(argp1);
+  result = (Delay *)& ((arg1)->d);
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Delay, 0 |  0 );
+  return resultobj;
+fail:
+  return NULL;
 }
+
 
 SWIGINTERN PyObject *_wrap_new_Filter(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
@@ -4182,97 +4152,21 @@ SWIGINTERN PyObject *Filter_swigregister(PyObject *SWIGUNUSEDPARM(self), PyObjec
   return SWIG_Py_Void();
 }
 
-SWIGINTERN PyObject *_wrap_new_Test(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *resultobj = 0;
-  double *arg1 = (double *) 0 ;
-  std::size_t arg2 ;
-  PyArrayObject *array1 = NULL ;
-  int is_new_object1 = 0 ;
-  PyObject * obj0 = 0 ;
-  Test *result = 0 ;
-  
-  if(!PyArg_UnpackTuple(args,(char *)"new_Test",1,1,&obj0)) SWIG_fail;
-  {
-    npy_intp size[1] = {
-      -1 
-    };
-    array1 = obj_to_array_contiguous_allow_conversion(obj0,
-      NPY_DOUBLE,
-      &is_new_object1);
-    if (!array1 || !require_dimensions(array1, 1) ||
-      !require_size(array1, size, 1)) SWIG_fail;
-    arg1 = (double*) array_data(array1);
-    arg2 = (int) array_size(array1,0);
-  }
-  result = (Test *)new Test((double const *)arg1,arg2);
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Test, SWIG_POINTER_NEW |  0 );
-  {
-    if (is_new_object1 && array1)
-    {
-      Py_DECREF(array1); 
-    }
-  }
-  return resultobj;
-fail:
-  {
-    if (is_new_object1 && array1)
-    {
-      Py_DECREF(array1); 
-    }
-  }
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap_delete_Test(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *resultobj = 0;
-  Test *arg1 = (Test *) 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  PyObject * obj0 = 0 ;
-  
-  if(!PyArg_UnpackTuple(args,(char *)"delete_Test",1,1,&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Test, SWIG_POINTER_DISOWN |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_Test" "', argument " "1"" of type '" "Test *""'"); 
-  }
-  arg1 = reinterpret_cast< Test * >(argp1);
-  delete arg1;
-  resultobj = SWIG_Py_Void();
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *Test_swigregister(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *obj;
-  if (!PyArg_UnpackTuple(args,(char*)"swigregister", 1, 1,&obj)) return NULL;
-  SWIG_TypeNewClientData(SWIGTYPE_p_Test, SWIG_NewClientData(obj));
-  return SWIG_Py_Void();
-}
-
 static PyMethodDef SwigMethods[] = {
 	 { (char *)"SWIG_PyInstanceMethod_New", (PyCFunction)SWIG_PyInstanceMethod_New, METH_O, NULL},
-	 { (char *)"Delay_size_test_set", _wrap_Delay_size_test_set, METH_VARARGS, NULL},
-	 { (char *)"Delay_size_test_get", _wrap_Delay_size_test_get, METH_VARARGS, NULL},
-	 { (char *)"Delay_m_processArr_set", _wrap_Delay_m_processArr_set, METH_VARARGS, NULL},
-	 { (char *)"Delay_m_processArr_get", _wrap_Delay_m_processArr_get, METH_VARARGS, NULL},
-	 { (char *)"Delay_m_processVect_set", _wrap_Delay_m_processVect_set, METH_VARARGS, NULL},
-	 { (char *)"Delay_m_processVect_get", _wrap_Delay_m_processVect_get, METH_VARARGS, NULL},
 	 { (char *)"new_Delay", _wrap_new_Delay, METH_VARARGS, NULL},
-	 { (char *)"Delay_process", _wrap_Delay_process, METH_VARARGS, NULL},
-	 { (char *)"Delay_printArray", _wrap_Delay_printArray, METH_VARARGS, NULL},
 	 { (char *)"delete_Delay", _wrap_delete_Delay, METH_VARARGS, NULL},
+	 { (char *)"Delay_process", _wrap_Delay_process, METH_VARARGS, NULL},
+	 { (char *)"Delay_get", _wrap_Delay_get, METH_VARARGS, NULL},
+	 { (char *)"Delay_printArray", _wrap_Delay_printArray, METH_VARARGS, NULL},
 	 { (char *)"Delay_swigregister", Delay_swigregister, METH_VARARGS, NULL},
+	 { (char *)"Filter_d_set", _wrap_Filter_d_set, METH_VARARGS, NULL},
+	 { (char *)"Filter_d_get", _wrap_Filter_d_get, METH_VARARGS, NULL},
 	 { (char *)"new_Filter", _wrap_new_Filter, METH_VARARGS, NULL},
 	 { (char *)"Filter_setCoef", _wrap_Filter_setCoef, METH_VARARGS, NULL},
 	 { (char *)"Filter_genBuffer", _wrap_Filter_genBuffer, METH_VARARGS, NULL},
 	 { (char *)"delete_Filter", _wrap_delete_Filter, METH_VARARGS, NULL},
 	 { (char *)"Filter_swigregister", Filter_swigregister, METH_VARARGS, NULL},
-	 { (char *)"new_Test", _wrap_new_Test, METH_VARARGS, NULL},
-	 { (char *)"delete_Test", _wrap_delete_Test, METH_VARARGS, NULL},
-	 { (char *)"Test_swigregister", Test_swigregister, METH_VARARGS, NULL},
 	 { NULL, NULL, 0, NULL }
 };
 
@@ -4281,34 +4175,22 @@ static PyMethodDef SwigMethods[] = {
 
 static swig_type_info _swigt__p_Delay = {"_p_Delay", "Delay *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_Filter = {"_p_Filter", "Filter *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_Test = {"_p_Test", "Test *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_char = {"_p_char", "char *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_double = {"_p_double", "double *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_std__vectorT_double_t = {"_p_std__vectorT_double_t", "std::vector< double > *", 0, 0, (void*)0, 0};
 
 static swig_type_info *swig_type_initial[] = {
   &_swigt__p_Delay,
   &_swigt__p_Filter,
-  &_swigt__p_Test,
   &_swigt__p_char,
-  &_swigt__p_double,
-  &_swigt__p_std__vectorT_double_t,
 };
 
 static swig_cast_info _swigc__p_Delay[] = {  {&_swigt__p_Delay, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Filter[] = {  {&_swigt__p_Filter, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_Test[] = {  {&_swigt__p_Test, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_char[] = {  {&_swigt__p_char, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_double[] = {  {&_swigt__p_double, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_std__vectorT_double_t[] = {  {&_swigt__p_std__vectorT_double_t, 0, 0, 0},{0, 0, 0, 0}};
 
 static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_Delay,
   _swigc__p_Filter,
-  _swigc__p_Test,
   _swigc__p_char,
-  _swigc__p_double,
-  _swigc__p_std__vectorT_double_t,
 };
 
 
