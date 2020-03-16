@@ -22,6 +22,7 @@ public:
         ~Delay();                       // destructor
 
         void process(double sample);
+        void reset();
         double get(int ind);
         void printArray();
 private:
@@ -30,8 +31,15 @@ private:
         std::vector<double> m_processVect;
 };
 
+class Generator{
+public:
+        float sampleRate;
+        virtual void genBuffer(double* out, std::size_t out_size,
+                          const double* in, std::size_t in_size) = 0;
 
-class Filter{
+};
+
+class Filter: public Generator{
 public:
         Delay d; //cant be private for some reason
                 
@@ -51,7 +59,7 @@ private:
         
 };
 
-class FilterChain{
+class FilterChain: public Generator{
 public:
         std::vector<Filter> filterBank;
 

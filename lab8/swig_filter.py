@@ -115,6 +115,9 @@ class Delay(object):
     def process(self, sample):
         return _swig_filter.Delay_process(self, sample)
 
+    def reset(self):
+        return _swig_filter.Delay_reset(self)
+
     def get(self, ind):
         return _swig_filter.Delay_get(self, ind)
 
@@ -123,7 +126,22 @@ class Delay(object):
 Delay_swigregister = _swig_filter.Delay_swigregister
 Delay_swigregister(Delay)
 
-class Filter(object):
+class Generator(object):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+
+    def __init__(self, *args, **kwargs):
+        raise AttributeError("No constructor defined - class is abstract")
+    __repr__ = _swig_repr
+    sampleRate = _swig_property(_swig_filter.Generator_sampleRate_get, _swig_filter.Generator_sampleRate_set)
+
+    def genBuffer(self, out, arg3):
+        return _swig_filter.Generator_genBuffer(self, out, arg3)
+    __swig_destroy__ = _swig_filter.delete_Generator
+    __del__ = lambda self: None
+Generator_swigregister = _swig_filter.Generator_swigregister
+Generator_swigregister(Generator)
+
+class Filter(Generator):
     thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
     __repr__ = _swig_repr
     d = _swig_property(_swig_filter.Filter_d_get, _swig_filter.Filter_d_set)
@@ -145,7 +163,7 @@ class Filter(object):
 Filter_swigregister = _swig_filter.Filter_swigregister
 Filter_swigregister(Filter)
 
-class FilterChain(object):
+class FilterChain(Generator):
     thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
     __repr__ = _swig_repr
     filterBank = _swig_property(_swig_filter.FilterChain_filterBank_get, _swig_filter.FilterChain_filterBank_set)

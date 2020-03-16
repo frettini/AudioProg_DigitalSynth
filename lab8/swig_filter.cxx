@@ -65,6 +65,12 @@ void Delay::process(double sample){
     // *m_processArr = sample;
 };
 
+void Delay::reset(){
+    for(int i = 0; i < size; i++){
+        m_processVect[i] = 0.0;
+    }
+}
+
 double Delay::get(int ind){
     // return *(m_processArr + ind);
     return m_processVect[ind];
@@ -103,10 +109,13 @@ void Filter::genBuffer(double* out, std::size_t out_size, const double* in, std:
     
     for(int i = 0; i<in_size; i++){
         middle = *(in+i) - m_b[1]* d.get(0) - m_b[2] * d.get(1);
-        *(out+i) = middle * m_a[0] + m_a[1]* d.get(0) + m_a[2]* d.get(1);
+        result = middle * m_a[0] + m_a[1]* d.get(0) + m_a[2]* d.get(1);
         // middle = *(in+i) - m_b[1]* *(d.m_processArr) - m_b[2] * *(d.m_processArr+1);
         // *(out+i) = middle * m_a[0] + m_a[1]* *(d.m_processArr) + m_a[2]* *(d.m_processArr+1);
+        
+        if(result > 1.5) d.reset();
         d.process(middle);
+        *(out+i) = result;
     }
 };
 
