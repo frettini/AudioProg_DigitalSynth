@@ -54,12 +54,12 @@ Delay::~Delay(){
 };
 
 
-void Delay::process(double audioSample){
+void Delay::process(double sample){
     // preferred way is to use vector with rotate, but the vector crashes the code
     for(int i = size-1; i > 0; --i){
         *(m_processArr+i) = *(m_processArr+i-1);
     }
-    *m_processArr = audioSample;
+    *m_processArr = sample;
 };
 
 double Delay::get(int ind){

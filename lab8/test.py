@@ -37,14 +37,15 @@ print(type(white_buffer))
 
 f.genBuffer(result, np.array(white_buffer)) # filter it 
 
+print(result[:20])
+print(result[-20:])
 norm_result = result/np.max(result) # normalize result (avoid blown filters)
 result_freq = scipy.fftpack.fft(norm_result) # get spectrum
-print(result)
 # Write noise to wav
 rw.write_wav(white_buffer, 44100, "white_noise")
 rw.write_wav(norm_result, 44100, "white_noise_filter")
 
-
+f = None
 plot.plot(np.real(result_freq))
 # plot.plot(norm_result)
 plot.show()

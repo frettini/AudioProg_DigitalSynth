@@ -21,7 +21,7 @@ public:
         Delay(const Delay &obj);        // copy constructor
         ~Delay();                       // destructor
 
-        void process(double audioSample);
+        void process(double sample);
         double get(int ind);
         void printArray();
 private:
