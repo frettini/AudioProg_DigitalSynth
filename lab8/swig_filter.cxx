@@ -29,7 +29,7 @@ PyInit_example(void)
 
 
 // Delay init ----------------------------------------------------
-Delay::Delay(int delaySize): size(delaySize)  {
+Delay::Delay(int delaySize): size(delaySize), m_processVect(size, 0.0)  {
     std::cout << "Delay: constructor start \n ";
     m_processArr = new double[size];
 
@@ -56,19 +56,26 @@ Delay::~Delay(){
 
 void Delay::process(double sample){
     // preferred way is to use vector with rotate, but the vector crashes the code
-    for(int i = size-1; i > 0; --i){
-        *(m_processArr+i) = *(m_processArr+i-1);
-    }
-    *m_processArr = sample;
+    std::rotate(m_processVect.begin(), m_processVect.end()-1, m_processVect.end());
+    m_processVect[0] = sample;
+    
+    // for(int i = size-1; i > 0; --i){
+    //     *(m_processArr+i) = *(m_processArr+i-1);
+    // }
+    // *m_processArr = sample;
 };
 
 double Delay::get(int ind){
-    return *(m_processArr + ind);
+    // return *(m_processArr + ind);
+    return m_processVect[ind];
 };
 
 void Delay::printArray(){
-    for (int i = 0; i<size; i++)
-        std::cout << *(m_processArr+i) << ' ';
+    // for (int i = 0; i<size; i++)
+    //     std::cout << *(m_processArr+i) << ' ';
+
+    for (auto i = m_processVect.begin(); i != m_processVect.end(); ++i)
+        std::cout << *i << ' ';
 };
 
 
@@ -104,4 +111,25 @@ void Filter::genBuffer(double* out, std::size_t out_size, const double* in, std:
 };
 
 
+
+// FilterChain ----------------------------------------------------
+FilterChain::FilterChain(const double* in, 
+                        std::size_t in_size1, 
+                        std::size_t in_size2): filterBank() {
+
+    std::cout << "number of filters : " << in_size1 << "\n";
+    
+    filterBank.reserve(in_size1);
+
+    for(int i = 0; i < in_size1; i++){
+        filterBank.push_back(Filter(in+i, in_size2));
+    }
+
+};
+
+void FilterChain::genBuffer(double* out, std::size_t out_size,
+                          const double* in, std::size_t in_size){
+
+
+};
 

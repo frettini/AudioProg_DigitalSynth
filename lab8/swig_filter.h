@@ -27,6 +27,7 @@ public:
 private:
         int size;
         double* m_processArr;
+        std::vector<double> m_processVect;
 };
 
 
@@ -50,7 +51,17 @@ private:
         
 };
 
+class FilterChain{
+public:
+        std::vector<Filter> filterBank;
 
+        FilterChain(const double* in, 
+                        std::size_t in_size1, 
+                        std::size_t in_size2);
+
+        void genBuffer(double* out, std::size_t out_size,
+                          const double* in, std::size_t in_size);
+};
 
 
 #endif

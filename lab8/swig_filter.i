@@ -26,5 +26,6 @@ import_array();
 // %apply double *OUTPUT { double* min, double* max, double* sum }; 
 %apply (double* INPLACE_ARRAY1, int DIM1) { (double* out, std::size_t out_size) };
 
+%apply (double* IN_ARRAY2, int DIM1, int DIM2) {(const double* in, std::size_t in_size1, std::size_t in_size2)}
 /* Parse the c++ header file and generate the output file */
 %include "swig_filter.h"

@@ -2969,9 +2969,11 @@ SWIG_Python_NonDynamicSetAttr(PyObject *obj, PyObject *name, PyObject *value) {
 
 #define SWIGTYPE_p_Delay swig_types[0]
 #define SWIGTYPE_p_Filter swig_types[1]
-#define SWIGTYPE_p_char swig_types[2]
-static swig_type_info *swig_types[4];
-static swig_module_info swig_module = {swig_types, 3, 0, 0, 0, 0};
+#define SWIGTYPE_p_FilterChain swig_types[2]
+#define SWIGTYPE_p_char swig_types[3]
+#define SWIGTYPE_p_std__vectorT_Filter_t swig_types[4]
+static swig_type_info *swig_types[6];
+static swig_module_info swig_module = {swig_types, 5, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -4152,6 +4154,192 @@ SWIGINTERN PyObject *Filter_swigregister(PyObject *SWIGUNUSEDPARM(self), PyObjec
   return SWIG_Py_Void();
 }
 
+SWIGINTERN PyObject *_wrap_FilterChain_filterBank_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  FilterChain *arg1 = (FilterChain *) 0 ;
+  std::vector< Filter > *arg2 = (std::vector< Filter > *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if(!PyArg_UnpackTuple(args,(char *)"FilterChain_filterBank_set",2,2,&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_FilterChain, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "FilterChain_filterBank_set" "', argument " "1"" of type '" "FilterChain *""'"); 
+  }
+  arg1 = reinterpret_cast< FilterChain * >(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2,SWIGTYPE_p_std__vectorT_Filter_t, 0 |  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "FilterChain_filterBank_set" "', argument " "2"" of type '" "std::vector< Filter > *""'"); 
+  }
+  arg2 = reinterpret_cast< std::vector< Filter > * >(argp2);
+  if (arg1) (arg1)->filterBank = *arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_FilterChain_filterBank_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  FilterChain *arg1 = (FilterChain *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  std::vector< Filter > *result = 0 ;
+  
+  if(!PyArg_UnpackTuple(args,(char *)"FilterChain_filterBank_get",1,1,&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_FilterChain, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "FilterChain_filterBank_get" "', argument " "1"" of type '" "FilterChain *""'"); 
+  }
+  arg1 = reinterpret_cast< FilterChain * >(argp1);
+  result = (std::vector< Filter > *)& ((arg1)->filterBank);
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_std__vectorT_Filter_t, 0 |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_new_FilterChain(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  double *arg1 = (double *) 0 ;
+  std::size_t arg2 ;
+  std::size_t arg3 ;
+  PyArrayObject *array1 = NULL ;
+  int is_new_object1 = 0 ;
+  PyObject * obj0 = 0 ;
+  FilterChain *result = 0 ;
+  
+  if(!PyArg_UnpackTuple(args,(char *)"new_FilterChain",1,1,&obj0)) SWIG_fail;
+  {
+    npy_intp size[2] = {
+      -1, -1 
+    };
+    array1 = obj_to_array_contiguous_allow_conversion(obj0, NPY_DOUBLE,
+      &is_new_object1);
+    if (!array1 || !require_dimensions(array1, 2) ||
+      !require_size(array1, size, 2)) SWIG_fail;
+    arg1 = (double*) array_data(array1);
+    arg2 = (int) array_size(array1,0);
+    arg3 = (int) array_size(array1,1);
+  }
+  result = (FilterChain *)new FilterChain((double const *)arg1,arg2,arg3);
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_FilterChain, SWIG_POINTER_NEW |  0 );
+  {
+    if (is_new_object1 && array1)
+    {
+      Py_DECREF(array1); 
+    }
+  }
+  return resultobj;
+fail:
+  {
+    if (is_new_object1 && array1)
+    {
+      Py_DECREF(array1); 
+    }
+  }
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_FilterChain_genBuffer(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  FilterChain *arg1 = (FilterChain *) 0 ;
+  double *arg2 = (double *) 0 ;
+  std::size_t arg3 ;
+  double *arg4 = (double *) 0 ;
+  std::size_t arg5 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyArrayObject *array2 = NULL ;
+  int i2 = 1 ;
+  PyArrayObject *array4 = NULL ;
+  int is_new_object4 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  
+  if(!PyArg_UnpackTuple(args,(char *)"FilterChain_genBuffer",3,3,&obj0,&obj1,&obj2)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_FilterChain, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "FilterChain_genBuffer" "', argument " "1"" of type '" "FilterChain *""'"); 
+  }
+  arg1 = reinterpret_cast< FilterChain * >(argp1);
+  {
+    array2 = obj_to_array_no_conversion(obj1, NPY_DOUBLE);
+    if (!array2 || !require_dimensions(array2,1) || !require_contiguous(array2)
+      || !require_native(array2)) SWIG_fail;
+    arg2 = (double*) array_data(array2);
+    arg3 = 1;
+    for (i2=0; i2 < array_numdims(array2); ++i2) arg3 *= array_size(array2,i2);
+  }
+  {
+    npy_intp size[1] = {
+      -1 
+    };
+    array4 = obj_to_array_contiguous_allow_conversion(obj2,
+      NPY_DOUBLE,
+      &is_new_object4);
+    if (!array4 || !require_dimensions(array4, 1) ||
+      !require_size(array4, size, 1)) SWIG_fail;
+    arg4 = (double*) array_data(array4);
+    arg5 = (int) array_size(array4,0);
+  }
+  (arg1)->genBuffer(arg2,arg3,(double const *)arg4,arg5);
+  resultobj = SWIG_Py_Void();
+  {
+    if (is_new_object4 && array4)
+    {
+      Py_DECREF(array4); 
+    }
+  }
+  return resultobj;
+fail:
+  {
+    if (is_new_object4 && array4)
+    {
+      Py_DECREF(array4); 
+    }
+  }
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_delete_FilterChain(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  FilterChain *arg1 = (FilterChain *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  
+  if(!PyArg_UnpackTuple(args,(char *)"delete_FilterChain",1,1,&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_FilterChain, SWIG_POINTER_DISOWN |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_FilterChain" "', argument " "1"" of type '" "FilterChain *""'"); 
+  }
+  arg1 = reinterpret_cast< FilterChain * >(argp1);
+  delete arg1;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *FilterChain_swigregister(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *obj;
+  if (!PyArg_UnpackTuple(args,(char*)"swigregister", 1, 1,&obj)) return NULL;
+  SWIG_TypeNewClientData(SWIGTYPE_p_FilterChain, SWIG_NewClientData(obj));
+  return SWIG_Py_Void();
+}
+
 static PyMethodDef SwigMethods[] = {
 	 { (char *)"SWIG_PyInstanceMethod_New", (PyCFunction)SWIG_PyInstanceMethod_New, METH_O, NULL},
 	 { (char *)"new_Delay", _wrap_new_Delay, METH_VARARGS, NULL},
@@ -4167,6 +4355,12 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"Filter_genBuffer", _wrap_Filter_genBuffer, METH_VARARGS, NULL},
 	 { (char *)"delete_Filter", _wrap_delete_Filter, METH_VARARGS, NULL},
 	 { (char *)"Filter_swigregister", Filter_swigregister, METH_VARARGS, NULL},
+	 { (char *)"FilterChain_filterBank_set", _wrap_FilterChain_filterBank_set, METH_VARARGS, NULL},
+	 { (char *)"FilterChain_filterBank_get", _wrap_FilterChain_filterBank_get, METH_VARARGS, NULL},
+	 { (char *)"new_FilterChain", _wrap_new_FilterChain, METH_VARARGS, NULL},
+	 { (char *)"FilterChain_genBuffer", _wrap_FilterChain_genBuffer, METH_VARARGS, NULL},
+	 { (char *)"delete_FilterChain", _wrap_delete_FilterChain, METH_VARARGS, NULL},
+	 { (char *)"FilterChain_swigregister", FilterChain_swigregister, METH_VARARGS, NULL},
 	 { NULL, NULL, 0, NULL }
 };
 
@@ -4175,22 +4369,30 @@ static PyMethodDef SwigMethods[] = {
 
 static swig_type_info _swigt__p_Delay = {"_p_Delay", "Delay *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_Filter = {"_p_Filter", "Filter *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_FilterChain = {"_p_FilterChain", "FilterChain *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_char = {"_p_char", "char *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_std__vectorT_Filter_t = {"_p_std__vectorT_Filter_t", "std::vector< Filter > *", 0, 0, (void*)0, 0};
 
 static swig_type_info *swig_type_initial[] = {
   &_swigt__p_Delay,
   &_swigt__p_Filter,
+  &_swigt__p_FilterChain,
   &_swigt__p_char,
+  &_swigt__p_std__vectorT_Filter_t,
 };
 
 static swig_cast_info _swigc__p_Delay[] = {  {&_swigt__p_Delay, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Filter[] = {  {&_swigt__p_Filter, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_FilterChain[] = {  {&_swigt__p_FilterChain, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_char[] = {  {&_swigt__p_char, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_std__vectorT_Filter_t[] = {  {&_swigt__p_std__vectorT_Filter_t, 0, 0, 0},{0, 0, 0, 0}};
 
 static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_Delay,
   _swigc__p_Filter,
+  _swigc__p_FilterChain,
   _swigc__p_char,
+  _swigc__p_std__vectorT_Filter_t,
 };
 
 

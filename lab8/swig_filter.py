@@ -112,8 +112,8 @@ class Delay(object):
     __swig_destroy__ = _swig_filter.delete_Delay
     __del__ = lambda self: None
 
-    def process(self, audioSample):
-        return _swig_filter.Delay_process(self, audioSample)
+    def process(self, sample):
+        return _swig_filter.Delay_process(self, sample)
 
     def get(self, ind):
         return _swig_filter.Delay_get(self, ind)
@@ -144,6 +144,25 @@ class Filter(object):
     __del__ = lambda self: None
 Filter_swigregister = _swig_filter.Filter_swigregister
 Filter_swigregister(Filter)
+
+class FilterChain(object):
+    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
+    __repr__ = _swig_repr
+    filterBank = _swig_property(_swig_filter.FilterChain_filterBank_get, _swig_filter.FilterChain_filterBank_set)
+
+    def __init__(self, arg2):
+        this = _swig_filter.new_FilterChain(arg2)
+        try:
+            self.this.append(this)
+        except:
+            self.this = this
+
+    def genBuffer(self, out, arg3):
+        return _swig_filter.FilterChain_genBuffer(self, out, arg3)
+    __swig_destroy__ = _swig_filter.delete_FilterChain
+    __del__ = lambda self: None
+FilterChain_swigregister = _swig_filter.FilterChain_swigregister
+FilterChain_swigregister(FilterChain)
 
 
 

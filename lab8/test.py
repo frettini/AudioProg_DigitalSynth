@@ -22,6 +22,7 @@ rw = soundrw.SoundRW()
 # osc = rec_osc.RecOsc(20, 0.5)
 white = white_noise.WhiteNoise()
 
+print(coefs[0])
 # inst a delay, gain and filter object
 # pole magnitude distance to 1 = Q 
 # difference between zero and poles = gain
