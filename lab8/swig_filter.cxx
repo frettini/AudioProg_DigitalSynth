@@ -31,26 +31,7 @@ PyInit_example(void)
 // Delay init ----------------------------------------------------
 Delay::Delay(int delaySize): size(delaySize), m_processVect(size, 0.0)  {
     std::cout << "Delay: constructor start \n ";
-    m_processArr = new double[size];
-
-    //initialize the array with 0!
-    for(int i = 0; i < size ; i++){
-        *(m_processArr+i) = 0.0;
-    }
-};
-
-Delay::Delay(const Delay &obj){
-    //copy constructor
-    std::cout << "Delay: copy constructor \n ";
-    m_processArr = new double[obj.size];
-    size = obj.size;
-    // copy n characeter from source (obj.m_processArr) to dest (m_processArr)
-    memcpy(m_processArr, obj.m_processArr, sizeof(double) * size); 
-};
-
-Delay::~Delay(){
-    std::cout << "Delay: destructor \n ";
-    delete [] m_processArr;
+    
 };
 
 
@@ -58,11 +39,6 @@ void Delay::process(double sample){
     // preferred way is to use vector with rotate, but the vector crashes the code
     std::rotate(m_processVect.begin(), m_processVect.end()-1, m_processVect.end());
     m_processVect[0] = sample;
-    
-    // for(int i = size-1; i > 0; --i){
-    //     *(m_processArr+i) = *(m_processArr+i-1);
-    // }
-    // *m_processArr = sample;
 };
 
 void Delay::reset(){
@@ -72,14 +48,10 @@ void Delay::reset(){
 }
 
 double Delay::get(int ind){
-    // return *(m_processArr + ind);
     return m_processVect[ind];
 };
 
 void Delay::printArray(){
-    // for (int i = 0; i<size; i++)
-    //     std::cout << *(m_processArr+i) << ' ';
-
     for (auto i = m_processVect.begin(); i != m_processVect.end(); ++i)
         std::cout << *i << ' ';
 };
@@ -110,8 +82,6 @@ void Filter::genBuffer(double* out, std::size_t out_size, const double* in, std:
     for(int i = 0; i<in_size; i++){
         middle = *(in+i) - m_b[1]* d.get(0) - m_b[2] * d.get(1);
         result = middle * m_a[0] + m_a[1]* d.get(0) + m_a[2]* d.get(1);
-        // middle = *(in+i) - m_b[1]* *(d.m_processArr) - m_b[2] * *(d.m_processArr+1);
-        // *(out+i) = middle * m_a[0] + m_a[1]* *(d.m_processArr) + m_a[2]* *(d.m_processArr+1);
         
         if(result > 1.5) d.reset();
         d.process(middle);
@@ -127,18 +97,22 @@ FilterChain::FilterChain(const double* in,
                         std::size_t in_size2): filterBank() {
 
     std::cout << "number of filters : " << in_size1 << "\n";
-    
+    size = in_size1;
     filterBank.reserve(in_size1);
 
     for(int i = 0; i < in_size1; i++){
-        filterBank.push_back(Filter(in+i, in_size2));
+        filterBank.push_back(Filter(in+i*in_size2, in_size2));
     }
 
 };
 
 void FilterChain::genBuffer(double* out, std::size_t out_size,
                           const double* in, std::size_t in_size){
-
+    for (size_t i = 0; i < size; i++)
+    {
+        std::cout << "FC: generate buff: " << i << "\n";
+        filterBank[i].genBuffer(out, out_size, in, in_size);
+    }
 
 };
 

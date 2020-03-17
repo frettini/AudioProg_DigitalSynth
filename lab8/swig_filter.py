@@ -103,14 +103,12 @@ class Delay(object):
     thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
     __repr__ = _swig_repr
 
-    def __init__(self, *args):
-        this = _swig_filter.new_Delay(*args)
+    def __init__(self, delaySize):
+        this = _swig_filter.new_Delay(delaySize)
         try:
             self.this.append(this)
         except:
             self.this = this
-    __swig_destroy__ = _swig_filter.delete_Delay
-    __del__ = lambda self: None
 
     def process(self, sample):
         return _swig_filter.Delay_process(self, sample)
@@ -123,6 +121,8 @@ class Delay(object):
 
     def printArray(self):
         return _swig_filter.Delay_printArray(self)
+    __swig_destroy__ = _swig_filter.delete_Delay
+    __del__ = lambda self: None
 Delay_swigregister = _swig_filter.Delay_swigregister
 Delay_swigregister(Delay)
 
@@ -166,6 +166,7 @@ Filter_swigregister(Filter)
 class FilterChain(Generator):
     thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
     __repr__ = _swig_repr
+    size = _swig_property(_swig_filter.FilterChain_size_get, _swig_filter.FilterChain_size_set)
     filterBank = _swig_property(_swig_filter.FilterChain_filterBank_get, _swig_filter.FilterChain_filterBank_set)
 
     def __init__(self, arg2):

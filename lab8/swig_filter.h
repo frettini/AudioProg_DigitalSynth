@@ -18,16 +18,13 @@ public:
         
 
         Delay(int delaySize);           // constructor
-        Delay(const Delay &obj);        // copy constructor
-        ~Delay();                       // destructor
-
+        
         void process(double sample);
         void reset();
         double get(int ind);
         void printArray();
-private:
+private :
         int size;
-        double* m_processArr;
         std::vector<double> m_processVect;
 };
 
@@ -61,6 +58,7 @@ private:
 
 class FilterChain: public Generator{
 public:
+        size_t size;
         std::vector<Filter> filterBank;
 
         FilterChain(const double* in, 
