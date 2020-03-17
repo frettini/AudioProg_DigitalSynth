@@ -31,7 +31,6 @@ PyInit_example(void)
 // Filter init----------------------------------------------------
 //pass the coefficient
 Filter::Filter(const double* in, std::size_t in_size){
-    std::cout << "Filter: constructor  \n";
     setCoef(in, in_size);
     m_delayArr[0] = 0.0;
     m_delayArr[1] = 0.0;
@@ -39,7 +38,6 @@ Filter::Filter(const double* in, std::size_t in_size){
 
 void Filter::setCoef(const double* in, std::size_t in_size){
     //implementation of the filter
-    std::cout << "set coefs: ";
 
     for(int i = 0; i<in_size; i++){
         if (i<3){
@@ -47,16 +45,12 @@ void Filter::setCoef(const double* in, std::size_t in_size){
         }else{
             m_b[i-3] = *(in+i);
         }
-        std::cout << *(in+i) << ",";
-
     }     
 
-    std::cout << "\n";
 
 };
 
 void Filter::genBuffer(double* out, std::size_t out_size, const double* in, std::size_t in_size){
-    std::cout << "Filter: start genbuffer  \n";
     double middle = 0;
     double result = 0;
     
@@ -83,7 +77,6 @@ FilterChain::FilterChain(const double* in,
                         std::size_t in_size1, 
                         std::size_t in_size2): filterBank() {
 
-    std::cout << "number of filters : " << in_size1 << "\n";
     size = in_size1;
     filterBank.reserve(in_size1);
 
@@ -98,7 +91,6 @@ void FilterChain::genBuffer(double* out, std::size_t out_size,
     
     for (size_t i = 0; i < size; i++)
     {
-        std::cout << "FC: generate buff: " << i << "\n";
         filterBank[i].genBuffer(out, out_size, in, in_size);
     }
 };

@@ -7,17 +7,11 @@ import scipy.signal
 import swig_filter as sf
 
 sample_rate = 44100
-wp = 400*2/sample_rate # multiply by two for nyquist frequency
-ws = 500*2/sample_rate
-gpass = 40
-gstop = 160
-coefs = scipy.signal.iirdesign(wp,ws,gpass,gstop,output='sos')
-
-# wp2 = 2000*2/sample_rate # multiply by two for nyquist frequency
-# ws2 = 200*2/sample_rate
-# gpass2 = 1
-# gstop2 = 40
-# coefs2 = scipy.signal.iirdesign(wp2,ws2,gpass2,gstop2,output='sos')
+wp = [400*2/sample_rate, 401*2/sample_rate ]    # multiply by two for nyquist frequency
+ws = [350*2/sample_rate, 450*2/sample_rate ]
+gpass = 10
+gstop = 120
+coefs = scipy.signal.iirdesign(wp,ws,gpass,gstop,output='sos', ftype='ellip')
 
 # coefs = np.concatenate((coefs,coefs2))
 print(coefs)
@@ -46,11 +40,10 @@ result = np.zeros(len(white_buffer))
 filt_bank.genBuffer(result, np.array(white_buffer)) # filter it 
 
 
-norm_result = result/np.max(result) # normalize result (avoid blown filters)
+norm_result = result/np.max(abs(result)) # normalize result (avoid blown filters)
 result_freq = scipy.fftpack.fft(norm_result) # get spectrum
 
 
-print(result[:30])
 
 # Write noise to wav
 rw.write_wav(white_buffer, 44100, "white_noise")
@@ -60,7 +53,7 @@ print("test4")
 
 
 #use scipy.signal.iirfilter to get coefficients "sos" mode
-plot.plot(result)
+# plot.plot(result)
 # plot.plot(white_buffer)
 plot.plot(np.real(result_freq))
 plot.show()
