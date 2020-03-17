@@ -99,33 +99,6 @@ def _swig_setattr_nondynamic_method(set):
     return set_attr
 
 
-class Delay(object):
-    thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
-    __repr__ = _swig_repr
-
-    def __init__(self, *args):
-        this = _swig_filter.new_Delay(*args)
-        try:
-            self.this.append(this)
-        except:
-            self.this = this
-    __swig_destroy__ = _swig_filter.delete_Delay
-    __del__ = lambda self: None
-
-    def process(self, sample):
-        return _swig_filter.Delay_process(self, sample)
-
-    def reset(self):
-        return _swig_filter.Delay_reset(self)
-
-    def get(self, ind):
-        return _swig_filter.Delay_get(self, ind)
-
-    def printArray(self):
-        return _swig_filter.Delay_printArray(self)
-Delay_swigregister = _swig_filter.Delay_swigregister
-Delay_swigregister(Delay)
-
 class Generator(object):
     thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
 
@@ -144,7 +117,6 @@ Generator_swigregister(Generator)
 class Filter(Generator):
     thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
     __repr__ = _swig_repr
-    d = _swig_property(_swig_filter.Filter_d_get, _swig_filter.Filter_d_set)
 
     def __init__(self, arg2):
         this = _swig_filter.new_Filter(arg2)
