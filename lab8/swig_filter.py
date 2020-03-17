@@ -138,6 +138,7 @@ Filter_swigregister(Filter)
 class FilterChain(Generator):
     thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
     __repr__ = _swig_repr
+    size = _swig_property(_swig_filter.FilterChain_size_get, _swig_filter.FilterChain_size_set)
     filterBank = _swig_property(_swig_filter.FilterChain_filterBank_get, _swig_filter.FilterChain_filterBank_set)
 
     def __init__(self, arg2):

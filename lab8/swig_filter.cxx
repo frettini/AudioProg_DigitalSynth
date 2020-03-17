@@ -39,20 +39,20 @@ Filter::Filter(const double* in, std::size_t in_size){
 
 void Filter::setCoef(const double* in, std::size_t in_size){
     //implementation of the filter
+    std::cout << "set coefs: ";
 
     for(int i = 0; i<in_size; i++){
         if (i<3){
             m_a[i] = *(in+i);
         }else{
             m_b[i-3] = *(in+i);
-            std::cout << "b " << *(in+i) << "\n";
         }
+        std::cout << *(in+i) << ",";
+
     }     
 
-    for(int i =0; i<3; i++){
-        std::cout << "a: " << m_a[i] << "\n";
-        std::cout << "b: " << m_b[i] << "\n";
-    }
+    std::cout << "\n";
+
 };
 
 void Filter::genBuffer(double* out, std::size_t out_size, const double* in, std::size_t in_size){
@@ -84,18 +84,22 @@ FilterChain::FilterChain(const double* in,
                         std::size_t in_size2): filterBank() {
 
     std::cout << "number of filters : " << in_size1 << "\n";
-    
+    size = in_size1;
     filterBank.reserve(in_size1);
 
     for(int i = 0; i < in_size1; i++){
-        filterBank.push_back(Filter(in+i, in_size2));
+        filterBank.push_back(Filter(in+i*in_size2, in_size2));
     }
 
 };
 
 void FilterChain::genBuffer(double* out, std::size_t out_size,
                           const double* in, std::size_t in_size){
-
-
+    
+    for (size_t i = 0; i < size; i++)
+    {
+        std::cout << "FC: generate buff: " << i << "\n";
+        filterBank[i].genBuffer(out, out_size, in, in_size);
+    }
 };
 

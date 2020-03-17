@@ -3668,6 +3668,123 @@ SWIG_From_float  (float value)
 
 
 
+
+SWIGINTERNINLINE int
+SWIG_CanCastAsInteger(double *d, double min, double max) {
+  double x = *d;
+  if ((min <= x && x <= max)) {
+   double fx = floor(x);
+   double cx = ceil(x);
+   double rd =  ((x - fx) < 0.5) ? fx : cx; /* simple rint */
+   if ((errno == EDOM) || (errno == ERANGE)) {
+     errno = 0;
+   } else {
+     double summ, reps, diff;
+     if (rd < x) {
+       diff = x - rd;
+     } else if (rd > x) {
+       diff = rd - x;
+     } else {
+       return 1;
+     }
+     summ = rd + x;
+     reps = diff/summ;
+     if (reps < 8*DBL_EPSILON) {
+       *d = rd;
+       return 1;
+     }
+   }
+  }
+  return 0;
+}
+
+
+SWIGINTERN int
+SWIG_AsVal_unsigned_SS_long (PyObject *obj, unsigned long *val) 
+{
+#if PY_VERSION_HEX < 0x03000000
+  if (PyInt_Check(obj)) {
+    long v = PyInt_AsLong(obj);
+    if (v >= 0) {
+      if (val) *val = v;
+      return SWIG_OK;
+    } else {
+      return SWIG_OverflowError;
+    }
+  } else
+#endif
+  if (PyLong_Check(obj)) {
+    unsigned long v = PyLong_AsUnsignedLong(obj);
+    if (!PyErr_Occurred()) {
+      if (val) *val = v;
+      return SWIG_OK;
+    } else {
+      PyErr_Clear();
+#if PY_VERSION_HEX >= 0x03000000
+      {
+        long v = PyLong_AsLong(obj);
+        if (!PyErr_Occurred()) {
+          if (v < 0) {
+            return SWIG_OverflowError;
+          }
+        } else {
+          PyErr_Clear();
+        }
+      }
+#endif
+    }
+  }
+#ifdef SWIG_PYTHON_CAST_MODE
+  {
+    int dispatch = 0;
+    unsigned long v = PyLong_AsUnsignedLong(obj);
+    if (!PyErr_Occurred()) {
+      if (val) *val = v;
+      return SWIG_AddCast(SWIG_OK);
+    } else {
+      PyErr_Clear();
+    }
+    if (!dispatch) {
+      double d;
+      int res = SWIG_AddCast(SWIG_AsVal_double (obj,&d));
+      if (SWIG_IsOK(res) && SWIG_CanCastAsInteger(&d, 0, ULONG_MAX)) {
+	if (val) *val = (unsigned long)(d);
+	return res;
+      }
+    }
+  }
+#endif
+  return SWIG_TypeError;
+}
+
+
+SWIGINTERNINLINE int
+SWIG_AsVal_size_t (PyObject * obj, size_t *val)
+{
+  unsigned long v;
+  int res = SWIG_AsVal_unsigned_SS_long (obj, val ? &v : 0);
+  if (SWIG_IsOK(res) && val) *val = static_cast< size_t >(v);
+  return res;
+}
+
+
+  #define SWIG_From_long   PyLong_FromLong 
+
+
+SWIGINTERNINLINE PyObject* 
+SWIG_From_unsigned_SS_long  (unsigned long value)
+{
+  return (value > LONG_MAX) ?
+    PyLong_FromUnsignedLong(value) : PyLong_FromLong(static_cast< long >(value)); 
+}
+
+
+SWIGINTERNINLINE PyObject *
+SWIG_From_size_t  (size_t value)
+{    
+  return SWIG_From_unsigned_SS_long  (static_cast< unsigned long >(value));
+}
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -3997,6 +4114,58 @@ SWIGINTERN PyObject *Filter_swigregister(PyObject *SWIGUNUSEDPARM(self), PyObjec
   return SWIG_Py_Void();
 }
 
+SWIGINTERN PyObject *_wrap_FilterChain_size_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  FilterChain *arg1 = (FilterChain *) 0 ;
+  size_t arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  size_t val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if(!PyArg_UnpackTuple(args,(char *)"FilterChain_size_set",2,2,&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_FilterChain, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "FilterChain_size_set" "', argument " "1"" of type '" "FilterChain *""'"); 
+  }
+  arg1 = reinterpret_cast< FilterChain * >(argp1);
+  ecode2 = SWIG_AsVal_size_t(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "FilterChain_size_set" "', argument " "2"" of type '" "size_t""'");
+  } 
+  arg2 = static_cast< size_t >(val2);
+  if (arg1) (arg1)->size = arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_FilterChain_size_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  FilterChain *arg1 = (FilterChain *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  size_t result;
+  
+  if(!PyArg_UnpackTuple(args,(char *)"FilterChain_size_get",1,1,&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_FilterChain, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "FilterChain_size_get" "', argument " "1"" of type '" "FilterChain *""'"); 
+  }
+  arg1 = reinterpret_cast< FilterChain * >(argp1);
+  result =  ((arg1)->size);
+  resultobj = SWIG_From_size_t(static_cast< size_t >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
 SWIGINTERN PyObject *_wrap_FilterChain_filterBank_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   FilterChain *arg1 = (FilterChain *) 0 ;
@@ -4195,6 +4364,8 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"Filter_genBuffer", _wrap_Filter_genBuffer, METH_VARARGS, NULL},
 	 { (char *)"delete_Filter", _wrap_delete_Filter, METH_VARARGS, NULL},
 	 { (char *)"Filter_swigregister", Filter_swigregister, METH_VARARGS, NULL},
+	 { (char *)"FilterChain_size_set", _wrap_FilterChain_size_set, METH_VARARGS, NULL},
+	 { (char *)"FilterChain_size_get", _wrap_FilterChain_size_get, METH_VARARGS, NULL},
 	 { (char *)"FilterChain_filterBank_set", _wrap_FilterChain_filterBank_set, METH_VARARGS, NULL},
 	 { (char *)"FilterChain_filterBank_get", _wrap_FilterChain_filterBank_get, METH_VARARGS, NULL},
 	 { (char *)"new_FilterChain", _wrap_new_FilterChain, METH_VARARGS, NULL},

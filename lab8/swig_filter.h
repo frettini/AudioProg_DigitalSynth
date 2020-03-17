@@ -44,6 +44,7 @@ private:
 
 class FilterChain: public Generator{
 public:
+        size_t size;
         std::vector<Filter> filterBank;
 
         FilterChain(const double* in, 
