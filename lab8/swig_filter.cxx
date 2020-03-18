@@ -69,8 +69,8 @@ Filter::Filter(const double* in, std::size_t in_size): d(2){
 void Filter::setCoef(const double* in, std::size_t in_size){
     //implementation of the filter
     for(int i = 0; i<in_size; i++){
-        if(i<3) this->m_a[i] = *(in+i);
-        else this->m_b[i] = *(in+i);
+        if(i<3) m_a[i] = *(in+i);
+        else m_b[i-3] = *(in+i);
     }     
 };
 
