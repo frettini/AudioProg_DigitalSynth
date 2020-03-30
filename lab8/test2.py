@@ -29,7 +29,7 @@ white = white_noise.WhiteNoise()
 # pole magnitude distance to 1 = Q 
 # difference between zero and poles = gain
 filt_bank = sf.FilterChain(coefs)
-
+filt_bank.setCoef(coefs)
 print("test2")
 # og1 = osc.gen_buffer(2048, end_freq = 15000)
 

@@ -13,6 +13,10 @@ import math
 import numpy as np
 import mido
 import rtmidi
+import scipy.signal
+
+from swig_module import swig_filter as sf
+from swig_module.modules import white_noise
 
 SAMPLE_RATE = 44100
 AUDIO_CHANS = 1
@@ -114,17 +118,35 @@ class MidiPortReader(QObject):
 
 class Meep(QIODevice):
     
-    SAMPLES_PER_READ = 1024
+    SAMPLES_PER_READ = 2048
     
     def __init__(self, format, parent = None):
 
         QIODevice.__init__(self, parent)
         self.data = QByteArray()
         
+        
+
         # Preserve phase across calls
         self.phase = 0
         self.freq = 440
         
+
+        self.convert_16_bit = float(2**15)
+
+        # wp = [self.freq*2/SAMPLE_RATE, (self.freq+50)*2/SAMPLE_RATE ]    # multiply by two for nyquist frequency
+        # ws = [(self.freq-50)*2/SAMPLE_RATE, (self.freq-50)*2/SAMPLE_RATE ]
+        # self.gpass = 1
+        # self.gstop = 40
+        # coefs = scipy.signal.iirdesign(wp,ws,self.gpass,self.gstop,output='sos', ftype='ellip')
+
+        coefs = self.getCoef()
+
+        self.white_osc = white_noise.WhiteNoise()
+        
+        self.white_buffer = self.white_osc.gen_buffer(Meep.SAMPLES_PER_READ) # gen white buffer
+        self.filter = sf.FilterChain(coefs)
+
         # Check we can deal with the supplied
         # sample format. We're supposed to be
         # able to deal with any requested
@@ -153,18 +175,24 @@ class Meep(QIODevice):
     def generateData(self, format, samples):
         
         #pps controls the frequency
-        pps = self.freq*2*np.pi/format.sampleRate()
-        finalphase = samples*pps + self.phase
-        tone = (
-          10000 * np.sin(
-            np.arange(self.phase,
-                      finalphase,
-                      pps)
-          )
-        ).astype(np.int16)
+        # pps = self.freq*2*np.pi/format.sampleRate()
+        # finalphase = samples*pps + self.phase
+        # tone = (
+        #   10000 * np.sin(
+        #     np.arange(self.phase,
+        #               finalphase,
+        #               pps)
+        #   )
+        # ).astype(np.int16)
         
-        self.phase = finalphase % (2*np.pi)
-        return tone.tostring()
+        # self.phase = finalphase % (2*np.pi)
+        # return tone.tostring()
+        result_buffer = np.zeros(samples)
+        self.filter.genBuffer(result_buffer, self.white_osc.gen_buffer(samples))
+
+        result_buffer = np.int16( result_buffer * (self.convert_16_bit-1) )
+        return result_buffer.tostring()
+
     
     
     def readData(self, bytes):
@@ -177,6 +205,21 @@ class Meep(QIODevice):
     @pyqtSlot(float)
     def changeFreq(self, midi):
         self.freq = math.pow(2,(midi-69)/12)*440
+        # wp = [self.freq*2/SAMPLE_RATE, (self.freq+50)*2/SAMPLE_RATE ]    # multiply by two for nyquist frequency
+        # ws = [(self.freq-50)*2/SAMPLE_RATE, (self.freq-50)*2/SAMPLE_RATE ]
+        # self.gpass = 1
+        # self.gstop = 40
+        # coefs = scipy.signal.iirdesign(wp,ws,self.gpass,self.gstop,output='sos', ftype='ellip')
+
+        self.filter.setCoef(self.getCoef())
+
+    def getCoef(self):
+        wp = [self.freq*2/SAMPLE_RATE, (self.freq+50)*2/SAMPLE_RATE ]    # multiply by two for nyquist frequency
+        ws = [(self.freq-10)*2/SAMPLE_RATE, (self.freq-10)*2/SAMPLE_RATE ]
+        self.gpass = 20
+        self.gstop = 130
+        coefs = scipy.signal.iirdesign(wp,ws,self.gpass,self.gstop,output='sos', ftype='ellip')
+        return coefs
 
 class ToneGenerator(QWidget):
     
