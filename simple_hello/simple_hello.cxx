@@ -1,6 +1,6 @@
 // File: simple_hello.cxx
 //
-// Implementation of the Hello function suite in C++
+Implementation of the Hello function suite in C++
 #define PY_SSIZE_T_CLEAN
 #include <Python.h>
 

@@ -13,11 +13,28 @@
 #include <iostream>
 
 
+class Delay{
+public:
+        
+
+        Delay(int delaySize);           // constructor
+        
+        void process(double sample);
+        void reset();
+        double get(int ind);
+        void printArray();
+private :
+        int size;
+        std::vector<double> m_processVect;
+};
+
 
 
 class Generator{
-public:
+private:
         float sampleRate;
+
+public:
         virtual void genBuffer(double* out, std::size_t out_size,
                           const double* in, std::size_t in_size) = 0;
 
@@ -39,14 +56,16 @@ public:
 private:
         double m_a[3];
         double m_b[3];
-        double m_delayArr[2];
+        // double m_delayArr[2];
+        Delay d;
 };
 
 class FilterChain: public Generator{
-public:
+private:
         size_t size;
         std::vector<Filter> filterBank;
 
+public:
         FilterChain(const double* in, 
                         std::size_t in_size1, 
                         std::size_t in_size2);
@@ -58,6 +77,8 @@ public:
                         std::size_t in_size1, 
                         std::size_t in_size2);
 };
+
+
 
 
 #endif
