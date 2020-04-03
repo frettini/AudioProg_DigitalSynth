@@ -8,26 +8,28 @@
 #ifndef swig_filter_H
 #define swig_filter_H
 
-#include <cstddef>
-#include <vector>
-#include <iostream>
+#include "delay.h"
+
+// #include <cstddef>
+// #include <vector>
+// #include <iostream>
 
 
-class Delay{
-public:
+
+// class Delay{
+// public:
         
 
-        Delay(int delaySize);           // constructor
+//         Delay(int delaySize);           // constructor
         
-        void process(double sample);
-        void reset();
-        double get(int ind);
-        void printArray();
-private :
-        int size;
-        std::vector<double> m_processVect;
-};
-
+//         void process(double sample);
+//         void reset();
+//         double get(int ind);
+//         void printArray();
+// private :
+//         int size;
+//         std::vector<double> m_processVect;
+// };
 
 
 class Generator{

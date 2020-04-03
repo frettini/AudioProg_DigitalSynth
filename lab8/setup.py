@@ -5,7 +5,8 @@ setup.py file for SWIG example
 """
 
 # system import
-from distutils.core import setup, Extension
+# from distutils.core import setup, Extension
+from setuptools import setup, Extension
 import os
 
 # 3rd party module
@@ -22,7 +23,7 @@ except AttributeError:
 #                            sources=['swig_filter_wrap.cxx', 'swig_filter.cxx'],
 #                            ) 
 
-srcFiles = ['swig_filter.i','swig_filter_wrap.cpp', 'swig_filter.cxx']
+srcFiles = ['swig_filter.i','swig_filter_wrap.cpp', 'swig_filter.cxx', 'delay.cxx']
 
 
 

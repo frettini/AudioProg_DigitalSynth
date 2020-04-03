@@ -61,29 +61,6 @@ class _SwigNonDynamicMeta(type):
     __setattr__ = _swig_setattr_nondynamic_class_variable(type.__setattr__)
 
 
-class Delay(object):
-    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
-    __repr__ = _swig_repr
-
-    def __init__(self, delaySize):
-        _swig_filter.Delay_swiginit(self, _swig_filter.new_Delay(delaySize))
-
-    def process(self, sample):
-        return _swig_filter.Delay_process(self, sample)
-
-    def reset(self):
-        return _swig_filter.Delay_reset(self)
-
-    def get(self, ind):
-        return _swig_filter.Delay_get(self, ind)
-
-    def printArray(self):
-        return _swig_filter.Delay_printArray(self)
-    __swig_destroy__ = _swig_filter.delete_Delay
-
-# Register Delay in _swig_filter:
-_swig_filter.Delay_swigregister(Delay)
-
 class Generator(object):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
 

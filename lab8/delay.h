@@ -1,5 +1,9 @@
-#ifndef swig_filter_H
-#define swig_filter_H
+#ifndef delay_H
+#define delay_H
+
+#include <iostream>
+#include <cstddef>
+#include <vector>
 
 class Delay{
 public:
