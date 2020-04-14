@@ -12,7 +12,7 @@ Contains basic Python and Audio Programming exercise and modules:
  * Recursive oscillator
  * 2nd order IIR filter and concatenated Filters
  
-**lab8** folder: 
+**swig_filter** folder: 
 
 Contains the SWIG extension. The filter code written in Python (in **labs/**) is rewritten in C++. SWIG is used to generate a wrapper and python module. This makes the C++ extension accessible from Python, and greatly optimizes the application.
 
