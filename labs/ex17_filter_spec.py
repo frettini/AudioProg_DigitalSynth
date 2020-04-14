@@ -13,12 +13,12 @@ rw = soundrw.SoundRW()
 white = white_noise.WhiteNoise()
 sample_rate = 44100
 
-# initialize frequency coeffs
-wp = 1600*2/sample_rate # multiply by two for nyquist frequency
-ws = 1400*2/sample_rate
-gpass = 1
-gstop = 40
-coefs = scipy.signal.iirdesign(wp,ws,gpass,gstop,output='sos')
+sample_rate = 44100
+wp = [400*2/sample_rate, 401*2/sample_rate ]    # multiply by two for nyquist frequency
+ws = [350*2/sample_rate, 450*2/sample_rate ]
+gpass = 10
+gstop = 120
+coefs = scipy.signal.iirdesign(wp,ws,gpass,gstop,output='sos', ftype='ellip')
 
 print(coefs)
 
@@ -38,21 +38,24 @@ g = delay.Gain(2)
 
 # Generate and filter the buffer
 cwd = os.getcwd()
-filename = os.path.join(cwd,"assets/voice1.wav")
-print(filename)
-white_buffer = rw.load_wav(filename) #white.gen_buffer(204800) # gen white buffer
+# filename = os.path.join(cwd,"assets", "voice1.wav")
+# print(filename)
+white_buffer =  white.gen_buffer(204800) # gen white buffer #rw.load_wav(filename)
 to_filter = white_buffer
 
+start = time.time()
 #loop through instantiated filters
 for fil in filters:
     to_filter = fil.gen_buffer(to_filter) 
+end = time.time()
+print("time elapsed: {}".format(end-start))
 
 norm_result = to_filter/np.max(to_filter) # normalize result
 result_freq = scipy.fftpack.fft(norm_result) # get spectrum
 
 # Write noise to wav
 # rw.write_wav(white_buffer, 44100, "white_noise")
-rw.write_wav(norm_result, 44100, "assets/voice1_filter")
+# rw.write_wav(norm_result, 44100, "assets/voice1_filter")
 
 
 plot.plot(np.real(result_freq))

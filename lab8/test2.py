@@ -3,6 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plot
 import scipy.fftpack
 import scipy.signal
+import time 
 
 import swig_filter as sf
 
@@ -37,8 +38,10 @@ print("test2")
 white_buffer = white.gen_buffer(204800) # gen white buffer
 result = np.zeros(len(white_buffer))
 
+start = time.time()
 filt_bank.genBuffer(result, np.array(white_buffer)) # filter it 
-
+end = time.time()
+print("time elapsed: {}".format(end-start))
 
 norm_result = result/np.max(abs(result)) # normalize result (avoid blown filters)
 result_freq = scipy.fftpack.fft(norm_result) # get spectrum
