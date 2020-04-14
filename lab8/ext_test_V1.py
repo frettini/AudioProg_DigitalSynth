@@ -1,4 +1,3 @@
-from modules import rec_osc, white_noise, soundrw
 import numpy as np
 
 import swig_filter as sf

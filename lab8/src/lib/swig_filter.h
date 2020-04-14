@@ -10,28 +10,8 @@
 
 #include "delay.h"
 
-// #include <cstddef>
-// #include <vector>
-// #include <iostream>
 
-
-
-// class Delay{
-// public:
-        
-
-//         Delay(int delaySize);           // constructor
-        
-//         void process(double sample);
-//         void reset();
-//         double get(int ind);
-//         void printArray();
-// private :
-//         int size;
-//         std::vector<double> m_processVect;
-// };
-
-
+// abstract base class
 class Generator{
 private:
         float sampleRate;
@@ -41,6 +21,7 @@ public:
                           const double* in, std::size_t in_size) = 0;
 
 };
+
 
 class Filter: public Generator{
 public:
@@ -58,9 +39,9 @@ public:
 private:
         double m_a[3];
         double m_b[3];
-        // double m_delayArr[2];
         Delay d;
 };
+
 
 class FilterChain: public Generator{
 private:

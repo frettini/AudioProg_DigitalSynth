@@ -7,8 +7,6 @@
 
 class Delay{
 public:
-        
-
         Delay(int delaySize);           // constructor
         
         void process(double sample);

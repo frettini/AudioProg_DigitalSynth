@@ -2,35 +2,6 @@
 #include "swig_filter.h"
 
 
-// // Delay init ----------------------------------------------------------------------------------------
-// Delay::Delay(int delaySize): size(delaySize), m_processVect(size, 0.0)  {
-//     std::cout << "Delay: constructor start \n ";
-    
-// };
-
-
-// void Delay::process(double sample){
-//     // preferred way is to use vector with rotate, but the vector crashes the code
-//     std::rotate(m_processVect.begin(), m_processVect.end()-1, m_processVect.end());
-//     m_processVect[0] = sample;
-// };
-
-// void Delay::reset(){
-//     for(int i = 0; i < size; i++){
-//         m_processVect[i] = 0.0;
-//     }
-// }
-
-// double Delay::get(int ind){
-//     return m_processVect[ind];
-// };
-
-// void Delay::printArray(){
-//     for (auto i = m_processVect.begin(); i != m_processVect.end(); ++i)
-//         std::cout << *i << ' ';
-// };
-
-
 
 // Filter init----------------------------------------------------------------------------
 //pass the coefficient
@@ -50,8 +21,6 @@ void Filter::setCoef(const double* in, std::size_t in_size){
             m_b[i-3] = *(in+i);
         }
     }     
-
-
 };
 
 void Filter::genBuffer(double* out, std::size_t out_size, const double* in, std::size_t in_size){
@@ -59,20 +28,7 @@ void Filter::genBuffer(double* out, std::size_t out_size, const double* in, std:
     double result = 0;
     
     for(int i = 0; i<in_size; i++){
-        // middle = *(in+i) - m_b[1]* m_delayArr[0] - m_b[2] * m_delayArr[1];
-        // result = middle * m_a[0] + m_a[1]* m_delayArr[0] + m_a[2]* m_delayArr[1];
         
-        // // if(result > 1.5){
-        // //     m_delayArr[1] = 0.0;
-        // //     m_delayArr[0] = 0.0;
-        // // }
-
-        // *(out+i) = result;
-
-        // m_delayArr[1] = m_delayArr[0];
-        // m_delayArr[0] = middle;
-
-
         middle = *(in+i) - m_b[1]* d.get(0) - m_b[2] * d.get(1);
         result = middle * m_a[0] + m_a[1]* d.get(0) + m_a[2]* d.get(1);
         
