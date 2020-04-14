@@ -1,4 +1,0 @@
-import simple_hello
-
-
-
