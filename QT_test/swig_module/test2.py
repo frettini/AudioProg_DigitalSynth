@@ -10,8 +10,8 @@ import swig_filter as sf
 sample_rate = 44100
 wp = [400*2/sample_rate, 401*2/sample_rate ]    # multiply by two for nyquist frequency
 ws = [350*2/sample_rate, 450*2/sample_rate ]
-gpass = 3
-gstop = 100
+gpass = 10
+gstop = 120
 coefs = scipy.signal.iirdesign(wp,ws,gpass,gstop,output='sos', ftype='ellip')
 
 # coefs = np.concatenate((coefs,coefs2))
@@ -57,8 +57,6 @@ print("test4")
 
 #use scipy.signal.iirfilter to get coefficients "sos" mode
 # plot.plot(result)
-# plot.plot(norm_result)
-
 # plot.plot(white_buffer)
 plot.plot(np.real(result_freq))
 plot.show()

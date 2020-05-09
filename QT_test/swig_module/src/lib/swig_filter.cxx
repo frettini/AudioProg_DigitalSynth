@@ -1,39 +1,14 @@
-#define PY_SSIZE_T_CLEAN
-#include <Python.h>
-
+#include <algorithm>
 #include "swig_filter.h"
 
 
-PyMethodDef swig_filter_Methods[]=
-{
-    {0,0,0,0}
-};
 
-
-static struct PyModuleDef swig_filter_module = {
-    PyModuleDef_HEAD_INIT,
-    "swig_filter",   /* name of module */
-    "swig_filter_doc", /* module documentation, may be NULL */
-    -1,       /* size of per-interpreter state of the module,
-                 or -1 if the module keeps state in global variables. */
-    swig_filter_Methods
-};
-
-
-PyMODINIT_FUNC 
-PyInit_example(void)
-{
-    return PyModule_Create(&swig_filter_module);
-};
-
-
-
-// Filter init----------------------------------------------------
+// Filter init----------------------------------------------------------------------------
 //pass the coefficient
-Filter::Filter(const double* in, std::size_t in_size){
+Filter::Filter(const double* in, std::size_t in_size): d(2){
     setCoef(in, in_size);
-    m_delayArr[0] = 0.0;
-    m_delayArr[1] = 0.0;
+    // m_delayArr[0] = 0.0;
+    // m_delayArr[1] = 0.0;
 };
 
 void Filter::setCoef(const double* in, std::size_t in_size){
@@ -46,8 +21,6 @@ void Filter::setCoef(const double* in, std::size_t in_size){
             m_b[i-3] = *(in+i);
         }
     }     
-
-
 };
 
 void Filter::genBuffer(double* out, std::size_t out_size, const double* in, std::size_t in_size){
@@ -55,18 +28,13 @@ void Filter::genBuffer(double* out, std::size_t out_size, const double* in, std:
     double result = 0;
     
     for(int i = 0; i<in_size; i++){
-        middle = *(in+i) - m_b[1]* m_delayArr[0] - m_b[2] * m_delayArr[1];
-        result = middle * m_a[0] + m_a[1]* m_delayArr[0] + m_a[2]* m_delayArr[1];
         
-        // if(result > 1.5){
-        //     m_delayArr[1] = 0.0;
-        //     m_delayArr[0] = 0.0;
-        // }
-
+        middle = *(in+i) - m_b[1]* d.get(0) - m_b[2] * d.get(1);
+        result = middle * m_a[0] + m_a[1]* d.get(0) + m_a[2]* d.get(1);
+        
+        // if(result > 1.5) d.reset();
+        d.process(middle);
         *(out+i) = result;
-
-        m_delayArr[1] = m_delayArr[0];
-        m_delayArr[0] = middle;
     }
 };
 

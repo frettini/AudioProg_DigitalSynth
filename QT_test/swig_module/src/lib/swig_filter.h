@@ -8,20 +8,20 @@
 #ifndef swig_filter_H
 #define swig_filter_H
 
-#include <cstddef>
-#include <vector>
-#include <iostream>
+#include "delay.h"
 
 
-
-
+// abstract base class
 class Generator{
-public:
+private:
         float sampleRate;
+
+public:
         virtual void genBuffer(double* out, std::size_t out_size,
                           const double* in, std::size_t in_size) = 0;
 
 };
+
 
 class Filter: public Generator{
 public:
@@ -39,14 +39,16 @@ public:
 private:
         double m_a[3];
         double m_b[3];
-        double m_delayArr[2];
+        Delay d;
 };
 
+
 class FilterChain: public Generator{
-public:
+private:
         size_t size;
         std::vector<Filter> filterBank;
 
+public:
         FilterChain(const double* in, 
                         std::size_t in_size1, 
                         std::size_t in_size2);
@@ -58,6 +60,8 @@ public:
                         std::size_t in_size1, 
                         std::size_t in_size2);
 };
+
+
 
 
 #endif

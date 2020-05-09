@@ -52,6 +52,7 @@ class ExecutiveToy(QWidget):
         # "top level" layout
         vLayout = QVBoxLayout(self)
         vLayout.addWidget(self.mySlider)
+        vLayout.addWidget(ToneGenerator())
         vLayout.addLayout(hLayout)  
 
         self.quitButton.clicked.connect(
@@ -214,10 +215,10 @@ class Meep(QIODevice):
         self.filter.setCoef(self.getCoef())
 
     def getCoef(self):
-        wp = [self.freq*2/SAMPLE_RATE, (self.freq+50)*2/SAMPLE_RATE ]    # multiply by two for nyquist frequency
-        ws = [(self.freq-10)*2/SAMPLE_RATE, (self.freq-10)*2/SAMPLE_RATE ]
-        self.gpass = 20
-        self.gstop = 130
+        wp = [self.freq*2/SAMPLE_RATE, (self.freq+1)*2/SAMPLE_RATE ]    # multiply by two for nyquist frequency
+        ws = [(self.freq-50)*2/SAMPLE_RATE, (self.freq-50)*2/SAMPLE_RATE ]
+        self.gpass = 3
+        self.gstop = 100
         coefs = scipy.signal.iirdesign(wp,ws,self.gpass,self.gstop,output='sos', ftype='ellip')
         return coefs
 
@@ -282,6 +283,6 @@ class ToneGenerator(QWidget):
 if __name__ == "__main__":
 
     app = QApplication(sys.argv)
-    window = ToneGenerator()
+    window = ExecutiveToy() #ToneGenerator()
     window.show()
     sys.exit(app.exec_())

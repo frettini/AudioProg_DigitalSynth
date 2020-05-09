@@ -3,7 +3,7 @@
 
 // Delay init ----------------------------------------------------------------------------------------
 Delay::Delay(int delaySize): size(delaySize), m_processVect(size, 0.0)  {
-    std::cout << "Delay: constructor start! \n ";
+    std::cout << "Delay: constructor start \n ";
     
 };
 
