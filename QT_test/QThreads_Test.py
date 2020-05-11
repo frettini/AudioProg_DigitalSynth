@@ -135,12 +135,6 @@ class Meep(QIODevice):
 
         self.convert_16_bit = float(2**15)
 
-        # wp = [self.freq*2/SAMPLE_RATE, (self.freq+50)*2/SAMPLE_RATE ]    # multiply by two for nyquist frequency
-        # ws = [(self.freq-50)*2/SAMPLE_RATE, (self.freq-50)*2/SAMPLE_RATE ]
-        # self.gpass = 1
-        # self.gstop = 40
-        # coefs = scipy.signal.iirdesign(wp,ws,self.gpass,self.gstop,output='sos', ftype='ellip')
-
         coefs = self.getCoef()
 
         self.white_osc = white_noise.WhiteNoise()
@@ -190,7 +184,7 @@ class Meep(QIODevice):
         # return tone.tostring()
         result_buffer = np.zeros(samples)
         self.filter.genBuffer(result_buffer, self.white_osc.gen_buffer(samples))
-
+        result_buffer = result_buffer/np.max(abs(result_buffer))
         result_buffer = np.int16( result_buffer * (self.convert_16_bit-1) )
         return result_buffer.tostring()
 
@@ -206,18 +200,12 @@ class Meep(QIODevice):
     @pyqtSlot(float)
     def changeFreq(self, midi):
         self.freq = math.pow(2,(midi-69)/12)*440
-        # wp = [self.freq*2/SAMPLE_RATE, (self.freq+50)*2/SAMPLE_RATE ]    # multiply by two for nyquist frequency
-        # ws = [(self.freq-50)*2/SAMPLE_RATE, (self.freq-50)*2/SAMPLE_RATE ]
-        # self.gpass = 1
-        # self.gstop = 40
-        # coefs = scipy.signal.iirdesign(wp,ws,self.gpass,self.gstop,output='sos', ftype='ellip')
-
         self.filter.setCoef(self.getCoef())
 
     def getCoef(self):
         wp = [self.freq*2/SAMPLE_RATE, (self.freq+1)*2/SAMPLE_RATE ]    # multiply by two for nyquist frequency
         ws = [(self.freq-50)*2/SAMPLE_RATE, (self.freq-50)*2/SAMPLE_RATE ]
-        self.gpass = 3
+        self.gpass = 10
         self.gstop = 100
         coefs = scipy.signal.iirdesign(wp,ws,self.gpass,self.gstop,output='sos', ftype='ellip')
         return coefs

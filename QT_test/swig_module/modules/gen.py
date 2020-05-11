@@ -4,7 +4,7 @@ import abc
 from abc import ABC, abstractmethod
 from scipy import signal
 
-class Gen(ABC):
+class Generator(ABC):
     
     def __init__(self, sample_rate = 44100):
         #default sample sate is 44100
@@ -12,11 +12,15 @@ class Gen(ABC):
         self._frequency = 0
         self._amplitude = 0
         self._phase = 0
-        self._sample_rate = sample_rate
+        self._sampleRate = sample_rate
         
 
     @abc.abstractmethod
-    def gen_buffer(self):
+    def genBuffer(self, bufferSize):
+        pass
+    
+    @abc.abstractmethod
+    def setFreq(self, freq):
         pass
 
 

@@ -29,7 +29,7 @@ void Filter::genBuffer(double* out, std::size_t out_size, const double* in, std:
     
     for(int i = 0; i<in_size; i++){
         
-        middle = *(in+i) - m_b[1]* d.get(0) - m_b[2] * d.get(1);
+        middle = *(in+i)* m_b[0] - m_b[1]* d.get(0) - m_b[2] * d.get(1);
         result = middle * m_a[0] + m_a[1]* d.get(0) + m_a[2]* d.get(1);
         
         // if(result > 1.5) d.reset();
