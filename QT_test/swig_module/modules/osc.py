@@ -1,11 +1,13 @@
-from .gen import Gen
+from gen import Generator
 import numpy as np
 import math
+from PyQt5.QtCore import pyqtSlot
 
-class RecOsc(Gen):
+# recursive oscillator done using the power of physics
+class RecOsc(Generator):
 
 
-    def __init__(self,  freq, amp, sample_rate = 44100):
+    def __init__(self,  freq = 440, amp = 1, sample_rate = 44100):
         
         self.states = np.zeros(2)
         super().__init__(sample_rate)
@@ -26,13 +28,11 @@ class RecOsc(Gen):
 
     @frequency.setter
     def frequency(self, value):
-        if value >= 0 or value <= self._sample_rate/2:
-            self._frequency = value
-            self.change_freq()
+        if value >= 0 or value <= self._sampleRate/2:
+            self.setFreq(value)
             
-        elif value > self._sample_rate/2:
-            self._frequency = self._sample_rate/2
-            self.change_freq()
+        elif value > self._sampleRate/2:
+            self.setFreq(self._sampleRate/2)
         else:
             self._frequency = 0
 
@@ -73,13 +73,15 @@ class RecOsc(Gen):
             #going down
             self._phase = np.pi - phase
 
-    def change_freq(self):
+    @pyqtSlot()
+    def setFreq(self, freq):
+        self._frequency = freq
         #need to recalculate the two previous samples with the new freq and phase
-        self.states[0] = math.sin(-1*2*math.pi*self._frequency/self._sample_rate + self._phase)
-        self.cos_omega_t = 2*math.cos(2*math.pi * self._frequency /self._sample_rate)
+        self.states[0] = math.sin(-1*2*math.pi*self._frequency/self._sampleRate + self._phase)
+        self.cos_omega_t = 2*math.cos(2*math.pi * self._frequency /self._sampleRate)
 
 
-    def gen_buffer(self, buffer_size, end_freq = 0):
+    def genBuffer(self, buffer_size, end_freq = 0):
         #takes in a buffer of any size in the form of nparray
         if end_freq == 0:
             end_freq = self._frequency
@@ -105,8 +107,7 @@ class RecOsc(Gen):
             if chirp == True and i > 2:
                 
                 self.cal_phase()
-                self._frequency += step
-                self.change_freq()
+                self.setFreq(self._frequency + step)
                 
     
         
@@ -116,4 +117,26 @@ class RecOsc(Gen):
 
         return result
 
+
+if __name__ == "__main__":
+
+    import matplotlib.pyplot as plot
+    import time
+
+    ro = RecOsc()
+
+    result = np.zeros(4096)
+    
+    #takes about 3 ms to generate a buffer which should be manageable
+    #if not, it will have to be implemented in c++ 
+    start = time.time()
+    result[:2048] = ro.genBuffer(2048)
+    end = time.time()
+    print("time taken: {}".format(end - start))
+    
+    ro.setFreq(220)
+    result[2048:] = ro.genBuffer(2048)
+
+    plot.plot(result)
+    plot.show()
 

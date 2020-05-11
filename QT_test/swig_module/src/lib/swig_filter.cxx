@@ -23,7 +23,7 @@ void Filter::setCoef(const double* in, std::size_t in_size){
     }     
 };
 
-void Filter::genBuffer(double* out, std::size_t out_size, const double* in, std::size_t in_size){
+void Filter::modBuffer(double* out, std::size_t out_size, const double* in, std::size_t in_size){
     double middle = 0;
     double result = 0;
     
@@ -54,12 +54,12 @@ FilterChain::FilterChain(const double* in,
 
 };
 
-void FilterChain::genBuffer(double* out, std::size_t out_size,
+void FilterChain::modBuffer(double* out, std::size_t out_size,
                           const double* in, std::size_t in_size){
     
     for (size_t i = 0; i < size; i++)
     {
-        filterBank[i].genBuffer(out, out_size, in, in_size);
+        filterBank[i].modBuffer(out, out_size, in, in_size);
     }
 };
 

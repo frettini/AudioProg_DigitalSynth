@@ -35,9 +35,9 @@ class WhiteNoise(Generator):
 # Flute like generator, combines the White Noise and Filter Classes
 class FilteredNoise(Generator):
 
-    def __init__(self, sample_rate = 44100):
+    def __init__(self, freq = 440, sample_rate = 44100):
         self._sampleRate = sample_rate
-        self._frequency = 440 
+        self._frequency = freq
 
         self.gpass = 10
         self.gstop = 100
@@ -52,7 +52,7 @@ class FilteredNoise(Generator):
         # shows the biggest flaw of this design! 
         # the white noise and filter chain have different arguments for the function
         resultBuf = np.zeros(bufferSize)
-        self.fc.genBuffer(resultBuf, self.wn.genBuffer(bufferSize))
+        self.fc.modBuffer(resultBuf, self.wn.genBuffer(bufferSize))
         return resultBuf
 
     

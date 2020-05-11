@@ -61,21 +61,21 @@ class _SwigNonDynamicMeta(type):
     __setattr__ = _swig_setattr_nondynamic_class_variable(type.__setattr__)
 
 
-class Generator(object):
+class Modifier(object):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
 
     def __init__(self, *args, **kwargs):
         raise AttributeError("No constructor defined - class is abstract")
     __repr__ = _swig_repr
 
-    def genBuffer(self, out, _in):
-        return _swig_filter.Generator_genBuffer(self, out, _in)
-    __swig_destroy__ = _swig_filter.delete_Generator
+    def modBuffer(self, out, _in):
+        return _swig_filter.Modifier_modBuffer(self, out, _in)
+    __swig_destroy__ = _swig_filter.delete_Modifier
 
-# Register Generator in _swig_filter:
-_swig_filter.Generator_swigregister(Generator)
+# Register Modifier in _swig_filter:
+_swig_filter.Modifier_swigregister(Modifier)
 
-class Filter(Generator):
+class Filter(Modifier):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
 
@@ -85,22 +85,22 @@ class Filter(Generator):
     def setCoef(self, _in):
         return _swig_filter.Filter_setCoef(self, _in)
 
-    def genBuffer(self, out, _in):
-        return _swig_filter.Filter_genBuffer(self, out, _in)
+    def modBuffer(self, out, _in):
+        return _swig_filter.Filter_modBuffer(self, out, _in)
     __swig_destroy__ = _swig_filter.delete_Filter
 
 # Register Filter in _swig_filter:
 _swig_filter.Filter_swigregister(Filter)
 
-class FilterChain(Generator):
+class FilterChain(Modifier):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
 
     def __init__(self, _in):
         _swig_filter.FilterChain_swiginit(self, _swig_filter.new_FilterChain(_in))
 
-    def genBuffer(self, out, _in):
-        return _swig_filter.FilterChain_genBuffer(self, out, _in)
+    def modBuffer(self, out, _in):
+        return _swig_filter.FilterChain_modBuffer(self, out, _in)
 
     def setCoef(self, _in):
         return _swig_filter.FilterChain_setCoef(self, _in)

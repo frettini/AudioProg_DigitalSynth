@@ -2659,7 +2659,7 @@ SWIGINTERN PyObject *SWIG_PyStaticMethod_New(PyObject *SWIGUNUSEDPARM(self), PyO
 
 #define SWIGTYPE_p_Filter swig_types[0]
 #define SWIGTYPE_p_FilterChain swig_types[1]
-#define SWIGTYPE_p_Generator swig_types[2]
+#define SWIGTYPE_p_Modifier swig_types[2]
 #define SWIGTYPE_p_char swig_types[3]
 static swig_type_info *swig_types[5];
 static swig_module_info swig_module = {swig_types, 4, 0, 0, 0, 0};
@@ -3256,9 +3256,9 @@ namespace swig {
 #ifdef __cplusplus
 extern "C" {
 #endif
-SWIGINTERN PyObject *_wrap_Generator_genBuffer(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_Modifier_modBuffer(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
-  Generator *arg1 = (Generator *) 0 ;
+  Modifier *arg1 = (Modifier *) 0 ;
   double *arg2 = (double *) 0 ;
   std::size_t arg3 ;
   double *arg4 = (double *) 0 ;
@@ -3271,12 +3271,12 @@ SWIGINTERN PyObject *_wrap_Generator_genBuffer(PyObject *SWIGUNUSEDPARM(self), P
   int is_new_object4 = 0 ;
   PyObject *swig_obj[3] ;
   
-  if (!SWIG_Python_UnpackTuple(args, "Generator_genBuffer", 3, 3, swig_obj)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_Generator, 0 |  0 );
+  if (!SWIG_Python_UnpackTuple(args, "Modifier_modBuffer", 3, 3, swig_obj)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_Modifier, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Generator_genBuffer" "', argument " "1"" of type '" "Generator *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Modifier_modBuffer" "', argument " "1"" of type '" "Modifier *""'"); 
   }
-  arg1 = reinterpret_cast< Generator * >(argp1);
+  arg1 = reinterpret_cast< Modifier * >(argp1);
   {
     array2 = obj_to_array_no_conversion(swig_obj[1], NPY_DOUBLE);
     if (!array2 || !require_dimensions(array2,1) || !require_contiguous(array2)
@@ -3297,7 +3297,7 @@ SWIGINTERN PyObject *_wrap_Generator_genBuffer(PyObject *SWIGUNUSEDPARM(self), P
     arg4 = (double*) array_data(array4);
     arg5 = (int) array_size(array4,0);
   }
-  (arg1)->genBuffer(arg2,arg3,(double const *)arg4,arg5);
+  (arg1)->modBuffer(arg2,arg3,(double const *)arg4,arg5);
   resultobj = SWIG_Py_Void();
   {
     if (is_new_object4 && array4)
@@ -3317,20 +3317,20 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_delete_Generator(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_delete_Modifier(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
-  Generator *arg1 = (Generator *) 0 ;
+  Modifier *arg1 = (Modifier *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
   PyObject *swig_obj[1] ;
   
   if (!args) SWIG_fail;
   swig_obj[0] = args;
-  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_Generator, SWIG_POINTER_DISOWN |  0 );
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_Modifier, SWIG_POINTER_DISOWN |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_Generator" "', argument " "1"" of type '" "Generator *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_Modifier" "', argument " "1"" of type '" "Modifier *""'"); 
   }
-  arg1 = reinterpret_cast< Generator * >(argp1);
+  arg1 = reinterpret_cast< Modifier * >(argp1);
   delete arg1;
   resultobj = SWIG_Py_Void();
   return resultobj;
@@ -3339,10 +3339,10 @@ fail:
 }
 
 
-SWIGINTERN PyObject *Generator_swigregister(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *Modifier_swigregister(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *obj;
   if (!SWIG_Python_UnpackTuple(args, "swigregister", 1, 1, &obj)) return NULL;
-  SWIG_TypeNewClientData(SWIGTYPE_p_Generator, SWIG_NewClientData(obj));
+  SWIG_TypeNewClientData(SWIGTYPE_p_Modifier, SWIG_NewClientData(obj));
   return SWIG_Py_Void();
 }
 
@@ -3438,7 +3438,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_Filter_genBuffer(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_Filter_modBuffer(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   Filter *arg1 = (Filter *) 0 ;
   double *arg2 = (double *) 0 ;
@@ -3453,10 +3453,10 @@ SWIGINTERN PyObject *_wrap_Filter_genBuffer(PyObject *SWIGUNUSEDPARM(self), PyOb
   int is_new_object4 = 0 ;
   PyObject *swig_obj[3] ;
   
-  if (!SWIG_Python_UnpackTuple(args, "Filter_genBuffer", 3, 3, swig_obj)) SWIG_fail;
+  if (!SWIG_Python_UnpackTuple(args, "Filter_modBuffer", 3, 3, swig_obj)) SWIG_fail;
   res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_Filter, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Filter_genBuffer" "', argument " "1"" of type '" "Filter *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Filter_modBuffer" "', argument " "1"" of type '" "Filter *""'"); 
   }
   arg1 = reinterpret_cast< Filter * >(argp1);
   {
@@ -3479,7 +3479,7 @@ SWIGINTERN PyObject *_wrap_Filter_genBuffer(PyObject *SWIGUNUSEDPARM(self), PyOb
     arg4 = (double*) array_data(array4);
     arg5 = (int) array_size(array4,0);
   }
-  (arg1)->genBuffer(arg2,arg3,(double const *)arg4,arg5);
+  (arg1)->modBuffer(arg2,arg3,(double const *)arg4,arg5);
   resultobj = SWIG_Py_Void();
   {
     if (is_new_object4 && array4)
@@ -3576,7 +3576,7 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_FilterChain_genBuffer(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_FilterChain_modBuffer(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   FilterChain *arg1 = (FilterChain *) 0 ;
   double *arg2 = (double *) 0 ;
@@ -3591,10 +3591,10 @@ SWIGINTERN PyObject *_wrap_FilterChain_genBuffer(PyObject *SWIGUNUSEDPARM(self),
   int is_new_object4 = 0 ;
   PyObject *swig_obj[3] ;
   
-  if (!SWIG_Python_UnpackTuple(args, "FilterChain_genBuffer", 3, 3, swig_obj)) SWIG_fail;
+  if (!SWIG_Python_UnpackTuple(args, "FilterChain_modBuffer", 3, 3, swig_obj)) SWIG_fail;
   res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_FilterChain, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "FilterChain_genBuffer" "', argument " "1"" of type '" "FilterChain *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "FilterChain_modBuffer" "', argument " "1"" of type '" "FilterChain *""'"); 
   }
   arg1 = reinterpret_cast< FilterChain * >(argp1);
   {
@@ -3617,7 +3617,7 @@ SWIGINTERN PyObject *_wrap_FilterChain_genBuffer(PyObject *SWIGUNUSEDPARM(self),
     arg4 = (double*) array_data(array4);
     arg5 = (int) array_size(array4,0);
   }
-  (arg1)->genBuffer(arg2,arg3,(double const *)arg4,arg5);
+  (arg1)->modBuffer(arg2,arg3,(double const *)arg4,arg5);
   resultobj = SWIG_Py_Void();
   {
     if (is_new_object4 && array4)
@@ -3722,17 +3722,17 @@ SWIGINTERN PyObject *FilterChain_swiginit(PyObject *SWIGUNUSEDPARM(self), PyObje
 
 static PyMethodDef SwigMethods[] = {
 	 { "SWIG_PyInstanceMethod_New", SWIG_PyInstanceMethod_New, METH_O, NULL},
-	 { "Generator_genBuffer", _wrap_Generator_genBuffer, METH_VARARGS, NULL},
-	 { "delete_Generator", _wrap_delete_Generator, METH_O, NULL},
-	 { "Generator_swigregister", Generator_swigregister, METH_O, NULL},
+	 { "Modifier_modBuffer", _wrap_Modifier_modBuffer, METH_VARARGS, NULL},
+	 { "delete_Modifier", _wrap_delete_Modifier, METH_O, NULL},
+	 { "Modifier_swigregister", Modifier_swigregister, METH_O, NULL},
 	 { "new_Filter", _wrap_new_Filter, METH_O, NULL},
 	 { "Filter_setCoef", _wrap_Filter_setCoef, METH_VARARGS, NULL},
-	 { "Filter_genBuffer", _wrap_Filter_genBuffer, METH_VARARGS, NULL},
+	 { "Filter_modBuffer", _wrap_Filter_modBuffer, METH_VARARGS, NULL},
 	 { "delete_Filter", _wrap_delete_Filter, METH_O, NULL},
 	 { "Filter_swigregister", Filter_swigregister, METH_O, NULL},
 	 { "Filter_swiginit", Filter_swiginit, METH_VARARGS, NULL},
 	 { "new_FilterChain", _wrap_new_FilterChain, METH_O, NULL},
-	 { "FilterChain_genBuffer", _wrap_FilterChain_genBuffer, METH_VARARGS, NULL},
+	 { "FilterChain_modBuffer", _wrap_FilterChain_modBuffer, METH_VARARGS, NULL},
 	 { "FilterChain_setCoef", _wrap_FilterChain_setCoef, METH_VARARGS, NULL},
 	 { "delete_FilterChain", _wrap_delete_FilterChain, METH_O, NULL},
 	 { "FilterChain_swigregister", FilterChain_swigregister, METH_O, NULL},
@@ -3747,33 +3747,33 @@ static PyMethodDef SwigMethods_proxydocs[] = {
 
 /* -------- TYPE CONVERSION AND EQUIVALENCE RULES (BEGIN) -------- */
 
-static void *_p_FilterTo_p_Generator(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((Generator *)  ((Filter *) x));
+static void *_p_FilterTo_p_Modifier(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((Modifier *)  ((Filter *) x));
 }
-static void *_p_FilterChainTo_p_Generator(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((Generator *)  ((FilterChain *) x));
+static void *_p_FilterChainTo_p_Modifier(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((Modifier *)  ((FilterChain *) x));
 }
 static swig_type_info _swigt__p_Filter = {"_p_Filter", "Filter *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_FilterChain = {"_p_FilterChain", "FilterChain *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_Generator = {"_p_Generator", "Generator *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_Modifier = {"_p_Modifier", "Modifier *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_char = {"_p_char", "char *", 0, 0, (void*)0, 0};
 
 static swig_type_info *swig_type_initial[] = {
   &_swigt__p_Filter,
   &_swigt__p_FilterChain,
-  &_swigt__p_Generator,
+  &_swigt__p_Modifier,
   &_swigt__p_char,
 };
 
 static swig_cast_info _swigc__p_Filter[] = {  {&_swigt__p_Filter, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_FilterChain[] = {  {&_swigt__p_FilterChain, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_Generator[] = {  {&_swigt__p_Generator, 0, 0, 0},  {&_swigt__p_Filter, _p_FilterTo_p_Generator, 0, 0},  {&_swigt__p_FilterChain, _p_FilterChainTo_p_Generator, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_Modifier[] = {  {&_swigt__p_Filter, _p_FilterTo_p_Modifier, 0, 0},  {&_swigt__p_Modifier, 0, 0, 0},  {&_swigt__p_FilterChain, _p_FilterChainTo_p_Modifier, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_char[] = {  {&_swigt__p_char, 0, 0, 0},{0, 0, 0, 0}};
 
 static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_Filter,
   _swigc__p_FilterChain,
-  _swigc__p_Generator,
+  _swigc__p_Modifier,
   _swigc__p_char,
 };
 

@@ -12,18 +12,18 @@
 
 
 // abstract base class
-class Generator{
+class Modifier{
 private:
         float sampleRate;
 
 public:
-        virtual void genBuffer(double* out, std::size_t out_size,
+        virtual void modBuffer(double* out, std::size_t out_size,
                           const double* in, std::size_t in_size) = 0;
 
 };
 
 
-class Filter: public Generator{
+class Filter: public Modifier{
 public:
                 
         // define constructor
@@ -33,7 +33,7 @@ public:
         void setCoef(const double* in, std::size_t in_size);
         
         // generate the buffer (should derive from gen)
-        void genBuffer(double* out, std::size_t out_size,
+        void modBuffer(double* out, std::size_t out_size,
                           const double* in, std::size_t in_size);
 
 private:
@@ -43,7 +43,7 @@ private:
 };
 
 
-class FilterChain: public Generator{
+class FilterChain: public Modifier{
 private:
         size_t size;
         std::vector<Filter> filterBank;
@@ -53,7 +53,7 @@ public:
                         std::size_t in_size1, 
                         std::size_t in_size2);
 
-        void genBuffer(double* out, std::size_t out_size,
+        void modBuffer(double* out, std::size_t out_size,
                           const double* in, std::size_t in_size);
 
         void setCoef(const double* in, 
