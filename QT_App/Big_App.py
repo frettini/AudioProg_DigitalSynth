@@ -8,6 +8,7 @@ from PyQt5.QtWidgets import \
     QVBoxLayout, QHBoxLayout, QGroupBox
 from PyQt5.QtMultimedia import QAudioFormat, QAudioOutput
 
+from src.view import sliders
 # import math
 # import numpy as np
 # import mido
@@ -240,11 +241,11 @@ class ToneWidget(QWidget):
         
         # add the two sliders and ADSR layout in a horizontal layout
         slidLayout.addStretch(1)
-        slidLayout.addWidget(FiltSlider(activeGen, self).createUI(parent))
+        slidLayout.addWidget(sliders.FiltSlider(activeGen, self).createUI(parent))
         slidLayout.addStretch(1)
-        slidLayout.addWidget(ADSRSlider(activeGen, self).createUI(parent))    
+        slidLayout.addWidget(sliders.ADSRSlider(activeGen, self).createUI(parent))    
         slidLayout.addStretch(1)    
-        slidLayout.addWidget(MasterSlider(activeGen, self).createUI(parent))
+        slidLayout.addWidget(sliders.MasterSlider(activeGen, self).createUI(parent))
         slidLayout.addStretch(1)    
 
 
@@ -253,7 +254,7 @@ class ToneWidget(QWidget):
 
         vLayout.addWidget(self.title)
         vLayout.addLayout(slidLayout)
-        vLayout.addLayout(GenSlider(activeGen, self).createUI(parent))
+        vLayout.addLayout(sliders.GenSlider(activeGen, self).createUI(parent))
 
         
 

@@ -21,10 +21,10 @@ author = "Nicolae Marton"
 version = "0.1"
 description = """Modules that implements audio filters in C"""
 # output directory for the extension
-target_Dir = "pkg" 
+target_Dir = os.path.join("src", "filter_ext")
 # include and lib directory
 # srcDir = os.path.abspath('./src')
-srcDir = "./src"
+srcDir = os.path.join("src", "filter_ext")
 #-----------------------------------------------------------------------------------
 
 
@@ -37,18 +37,16 @@ except AttributeError:
 # create the module, interface and wrapper names
 mod_name = "_" + name
 interface = name + ".i"
-wrapper = name + "_wrap.cpp"
 
 # add package target directory
 mod_name = target_Dir + "." + mod_name
 interface = os.path.join(target_Dir,interface)
-wrapper = os.path.join(target_Dir,wrapper)
 
 
 # initialize source which contains all the files to compile
 # initialize swig options which will contain includes
 # initialize include directories which will contain the external and local includes
-srcFiles = [interface, wrapper] 
+srcFiles = [interface] 
 swig_opts = ['-c++', '-modern'] 
 include_dirs = [numpy_include]
 

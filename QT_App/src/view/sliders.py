@@ -1,26 +1,9 @@
-import sys
 from PyQt5.QtCore import \
-    Qt, pyqtSlot, pyqtSignal, QObject, QThread, QByteArray, QIODevice
+    Qt, pyqtSlot, pyqtSignal, QObject
 from PyQt5.QtWidgets import \
-    QApplication, QWidget, \
+    QWidget, \
     QSlider, QPushButton, QLabel, \
-    QMessageBox, \
     QVBoxLayout, QHBoxLayout, QGroupBox
-from PyQt5.QtMultimedia import QAudioFormat, QAudioOutput
-
-# import math
-# import numpy as np
-# import mido
-# import rtmidi
-# import scipy.signal
-
-# from swig_module import swig_filter as sf
-# from swig_module.modules import noise
-
-SAMPLE_RATE = 44100
-AUDIO_CHANS = 1
-SAMPLE_SIZE = 16
-CTRL_INTERVAL = 100 # milliseconds of audio
 
 class UIHelper:
 
@@ -218,49 +201,3 @@ class GenSlider(QWidget):
     def genReleased(self):
         print("Gen value changed to {}".format(self.genSlid.value()))
         
-
-class ToneWidget(QWidget):
-
-    def __init__(self, parent=None):
-        print("Tone Widget inst")
-        QWidget.__init__(self, parent)
-        self.createUI(parent)
-
-    def createUI(self, parent):
-        print("Create UI")
-        slidLayout = QHBoxLayout()
-        vLayout = QVBoxLayout(self)
-
-        #create dummy active gen for now
-        activeGen = None
-
-        #create the two other sliders
-        self.MasterSlid = QSlider(Qt.Vertical)
-        self.QSlid = QSlider(Qt.Vertical)
-        
-        # add the two sliders and ADSR layout in a horizontal layout
-        slidLayout.addStretch(1)
-        slidLayout.addWidget(FiltSlider(activeGen, self).createUI(parent))
-        slidLayout.addStretch(1)
-        slidLayout.addWidget(ADSRSlider(activeGen, self).createUI(parent))    
-        slidLayout.addStretch(1)    
-        slidLayout.addWidget(MasterSlider(activeGen, self).createUI(parent))
-        slidLayout.addStretch(1)    
-
-
-        self.title = QLabel(self)
-        self.title.setText("Big App")
-
-        vLayout.addWidget(self.title)
-        vLayout.addLayout(slidLayout)
-        vLayout.addLayout(GenSlider(activeGen, self).createUI(parent))
-
-        
-
-
-if __name__ == "__main__":
-
-    app = QApplication(sys.argv)
-    window = ToneWidget()
-    window.show()
-    sys.exit(app.exec_())

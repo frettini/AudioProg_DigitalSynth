@@ -5,7 +5,7 @@ import scipy.fftpack
 import scipy.signal
 import time 
 
-import swig_filter as sf
+from pkg import swig_filter as sf
 
 sample_rate = 44100
 wp = [400*2/sample_rate, 401*2/sample_rate ]    # multiply by two for nyquist frequency
