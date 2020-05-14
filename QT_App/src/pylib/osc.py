@@ -1,6 +1,7 @@
-from gen import Generator
 import numpy as np
 import math
+
+from .gen import Generator
 
 # recursive oscillator done using the power of physics
 class RecOsc(Generator):

@@ -107,7 +107,10 @@ class MidiPortReader(QObject):
             for mmsg in mip:
                 print(mmsg.type)
                 print(mmsg.bytes())
-        
+                
+                # convert midi to frequency
+                # math.pow(2,(midi-69)/12)*440
+
                 # Only communicate via the Qt signal
                 # Qt will stop us hurting ourselves
                 

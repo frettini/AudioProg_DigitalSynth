@@ -29,7 +29,7 @@ class ADSRSlider(QWidget):
         # self.createUI(parent)
 
     def createUI(self, parent):
-        groupBox = QGroupBox() 
+        groupBox = QGroupBox("Envelope") 
 
         ADSRLayout = QVBoxLayout()
         
@@ -47,10 +47,6 @@ class ADSRSlider(QWidget):
         self.SSlid = QSlider(Qt.Vertical)
         self.RSlid = QSlider(Qt.Vertical)
 
-        # add a section title
-        self.envelope = QLabel(self)
-        self.envelope.setText("Envelope")
-
         # slider titles
         self.ALabel = QLabel(self)
         self.DLabel = QLabel(self)
@@ -63,7 +59,7 @@ class ADSRSlider(QWidget):
         subLayout.addLayout(UIHelper.labSlidLayout(self.SSlid, self.SLabel, "Sustain"))
         subLayout.addLayout(UIHelper.labSlidLayout(self.RSlid, self.RLabel, "Release"))
 
-        ADSRLayout.addWidget(self.envelope)
+        # ADSRLayout.addWidget(self.envelope)
         ADSRLayout.addLayout(subLayout)
         
 
@@ -83,9 +79,6 @@ class ADSRSlider(QWidget):
         groupBox.setLayout(ADSRLayout)
 
         return groupBox
-
-
-
 
     @pyqtSlot()
     def AReleased(self):
@@ -136,6 +129,7 @@ class MasterSlider(QWidget):
 
     def __init__(self, activeGen, parent=None):
         QWidget.__init__(self,parent) 
+        self.activeGen = activeGen
     
     def createUI(self, parent):
         filterBox = QGroupBox("Master")
@@ -152,7 +146,8 @@ class MasterSlider(QWidget):
 
     @pyqtSlot()
     def masterReleased(self):
-        print("Master value changed to {}".format(self.masterSlid.value()))
+        print("Master value changed to {}".format(self.masterSlid.value()/100))
+        self.activeGen.master.setGain(self.masterSlid.value()/100)
 
 
 # Active generator slider class
@@ -160,6 +155,7 @@ class GenSlider(QWidget):
 
     def __init__(self, activeGen, parent=None):
         QWidget.__init__(self,parent) 
+        self.activeGen = activeGen
 
     def createUI(self, parent):
 
@@ -200,4 +196,5 @@ class GenSlider(QWidget):
     @pyqtSlot()
     def genReleased(self):
         print("Gen value changed to {}".format(self.genSlid.value()))
+        self.activeGen.setActive(self.genSlid.value())
         

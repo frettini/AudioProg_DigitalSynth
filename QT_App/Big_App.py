@@ -8,9 +8,11 @@ from PyQt5.QtWidgets import \
     QVBoxLayout, QHBoxLayout, QGroupBox
 from PyQt5.QtMultimedia import QAudioFormat, QAudioOutput
 
+import numpy as np
+
 from src.view import sliders
+from src.pylib.active_gen import ActiveGen
 # import math
-# import numpy as np
 # import mido
 # import rtmidi
 # import scipy.signal
@@ -23,209 +25,134 @@ AUDIO_CHANS = 1
 SAMPLE_SIZE = 16
 CTRL_INTERVAL = 100 # milliseconds of audio
 
-class UIHelper:
 
-    # test static methods
-    # this could have also been done extending the QSlider widget
-    @staticmethod
-    def labSlidLayout(slider, label, labelName):
-        layout = QVBoxLayout()
-        label.setText(labelName)
-        
-        # label.setAlignment(Qt.AlignCenter)
+class MidiPortReader(QObject):
 
-        layout.addWidget(label)
-        layout.addWidget(slider)
-
-        return layout
-
-
-class ADSRSlider(QWidget):
-
-    def __init__(self, activeGen, parent=None):
-        QWidget.__init__(self,parent)        
-        # self.createUI(parent)
-
-    def createUI(self, parent):
-        groupBox = QGroupBox() 
-
-        ADSRLayout = QVBoxLayout()
-        
-        subLayout = QHBoxLayout()
-        
-        ALayout = QVBoxLayout()
-        DLayout = QVBoxLayout()
-        SLayout = QVBoxLayout()
-        RLayout = QVBoxLayout()
-        
-
-        # create the middle sliders for ADSR
-        self.ASlid = QSlider(Qt.Vertical)
-        self.DSlid = QSlider(Qt.Vertical)
-        self.SSlid = QSlider(Qt.Vertical)
-        self.RSlid = QSlider(Qt.Vertical)
-
-        # add a section title
-        self.envelope = QLabel(self)
-        self.envelope.setText("Envelope")
-
-        # slider titles
-        self.ALabel = QLabel(self)
-        self.DLabel = QLabel(self)
-        self.SLabel = QLabel(self)
-        self.RLabel = QLabel(self)
-
-        # add them to a sublayout (to add the section title)
-        subLayout.addLayout(UIHelper.labSlidLayout(self.ASlid, self.ALabel, "Attack"))
-        subLayout.addLayout(UIHelper.labSlidLayout(self.DSlid, self.DLabel, "Decay"))
-        subLayout.addLayout(UIHelper.labSlidLayout(self.SSlid, self.SLabel, "Sustain"))
-        subLayout.addLayout(UIHelper.labSlidLayout(self.RSlid, self.RLabel, "Release"))
-
-        ADSRLayout.addWidget(self.envelope)
-        ADSRLayout.addLayout(subLayout)
-        
-
-        self.ASlid.sliderReleased.connect(
-            self.AReleased
-        )
-        self.DSlid.sliderReleased.connect(
-            self.DReleased
-        )
-        self.SSlid.sliderReleased.connect(
-            self.SReleased
-        )
-        self.RSlid.sliderReleased.connect(
-            self.RReleased
-        )
-
-        groupBox.setLayout(ADSRLayout)
-
-        return groupBox
-
-
-
-
-    @pyqtSlot()
-    def AReleased(self):
-        print("A value changed to {}".format(self.ASlid.value()))
-        
-    @pyqtSlot()
-    def DReleased(self):
-        print("D value changed to {}".format(self.DSlid.value()))
-
-    @pyqtSlot()
-    def SReleased(self):
-        print("S value changed to {}".format(self.SSlid.value()))
-
-    @pyqtSlot()
-    def RReleased(self):
-        print("R value changed to {}".format(self.RSlid.value()))
-
-
-
-class FiltSlider(QWidget):
-
-    def __init__(self, activeGen, parent=None,):
-        QWidget.__init__(self,parent) 
+    # Create a signal for when a
+    # MIDI note_on happens
+    newNoteFrequency = pyqtSignal(float)
     
-    def createUI(self, parent):
-        #Box Layout which groups sliders with a title and borders
-        filterBox = QGroupBox("Filtered Noise")
-
-        #create sub widget
-        self.filterLabel = QLabel(self)
-        self.filterSlid = QSlider(Qt.Vertical)
-
-        self.filterSlid.sliderReleased.connect(
-            self.filterReleased
-        )
-
-        #create lyaout with label on top of slider
-        filterBox.setLayout(UIHelper.labSlidLayout(self.filterSlid, self.filterLabel, "Q"))
-        return filterBox
-
-    @pyqtSlot()
-    def filterReleased(self):
-        print("Filter value changed to {}".format(self.filterSlid.value()))
-
-
-# Deals with Master slider view and sliders signals
-class MasterSlider(QWidget):
-
-    def __init__(self, activeGen, parent=None):
-        QWidget.__init__(self,parent) 
+    # Object initialisation:
+    def __init__(self):
+        QObject.__init__(self)
+        mido.set_backend('mido.backends.rtmidi')
+        print("Using MIDI APIs: {}".format(mido.backend.module.get_api_names()))
+        
     
-    def createUI(self, parent):
-        filterBox = QGroupBox("Master")
+    # Define a function which is to
+    # run in its own thread
+    def listener(self):
+        with mido.open_input(virtual=False) as mip:
+            for mmsg in mip:
+                print(mmsg.type)
+                print(mmsg.bytes())
+                
+                # convert midi to frequency
+                # math.pow(2,(midi-69)/12)*440
 
-        self.masterLabel = QLabel(self)
-        self.masterSlid = QSlider(Qt.Vertical)
-
-        self.masterSlid.sliderReleased.connect(
-            self.masterReleased
-        )
-
-        filterBox.setLayout(UIHelper.labSlidLayout(self.masterSlid, self.masterLabel, "Gain") )
-        return filterBox
-
-    @pyqtSlot()
-    def masterReleased(self):
-        print("Master value changed to {}".format(self.masterSlid.value()))
+                # Only communicate via the Qt signal
+                # Qt will stop us hurting ourselves
+                
+                self.newNoteFrequency.emit(float(mmsg.bytes()[1]))
 
 
-# Active generator slider class
-class GenSlider(QWidget):
+class Meep(QIODevice):
+    
+    SAMPLES_PER_READ = 2048
+    
+    def __init__(self, format, activeGen, parent = None):
 
-    def __init__(self, activeGen, parent=None):
-        QWidget.__init__(self,parent) 
-
-    def createUI(self, parent):
-
-        genLayout = QVBoxLayout()
-        self.genLabel = QLabel(self)
-
-        max = 2
-        # create active generator slider
-        # change range from 0 to 2 and add ticks
-        self.genSlid = QSlider(Qt.Horizontal)
-        self.genSlid.setRange(0,max)
-        self.genSlid.setTickPosition(QSlider.TicksBelow)
+        QIODevice.__init__(self, parent)
+        self.data = QByteArray()
         
-        labels = ["Flute", "Sine", "Noise"]
+        # Preserve phase across calls
+        self.phase = 0
+        self.freq = 440
+
+        self.generator = activeGen
+
+        self.convert_16_bit = float(2**15)
+
+        # Check we can deal with the supplied
+        # sample format. We're supposed to be
+        # able to deal with any requested
+        # sample format. But this is a
+        # _minimal_ example, right?
+        if format.isValid() and \
+           format.sampleSize() == 16 and \
+           format.byteOrder() == \
+                QAudioFormat.LittleEndian and \
+           format.sampleType() == \
+                QAudioFormat.SignedInt and \
+           format.channelCount() == 1 :
+               print(
+                 "Meep: Format compatible. Good."
+               )
+               self.format = format
+    
+    
+    def start(self):
         
-        labelLayout = QHBoxLayout()
+        # Call QIODevices open
+        # making this object readable
+        self.open(QIODevice.ReadOnly)
+    
 
-        ind = 0
-        for lab in labels:
-            label = QLabel(lab)
-            labelLayout.addWidget(label)
-            if ind < max:
-                labelLayout.addStretch()
-                ind += 1
-
-        labelLayout.setAlignment(Qt.AlignJustify)
-
-        genLayout.addLayout(UIHelper.labSlidLayout(self.genSlid, self.genLabel, "Active Generator"))
-        genLayout.addLayout(labelLayout)
-
-        self.genSlid.sliderReleased.connect(
-            self.genReleased
-        )
-
-        return genLayout
-
-
-    @pyqtSlot()
-    def genReleased(self):
-        print("Gen value changed to {}".format(self.genSlid.value()))
+    def generateData(self, format, samples):
         
+        result_buffer = self.generator.genBuffer(samples)
+        result_buffer = np.int16( result_buffer * (self.convert_16_bit-1) )
+        return result_buffer.tostring()
 
-class ToneWidget(QWidget):
+    
+    def readData(self, bytes):
+
+        if bytes > 2 * Meep.SAMPLES_PER_READ:
+            bytes = 2 * Meep.SAMPLES_PER_READ
+        return self.generateData(self.format,
+                                 bytes//2)
+
+
+
+
+class ToneWindow(QWidget):
 
     def __init__(self, parent=None):
         print("Tone Widget inst")
         QWidget.__init__(self, parent)
+
+
+        self.activeGen = ActiveGen()
         self.createUI(parent)
+
+        # Meep playback format initialization
+        format = QAudioFormat()
+        format.setChannelCount(AUDIO_CHANS)
+        format.setSampleRate(SAMPLE_RATE)
+        format.setSampleSize(SAMPLE_SIZE)
+        format.setCodec("audio/pcm")
+        format.setByteOrder(
+            QAudioFormat.LittleEndian
+        )
+        format.setSampleType(
+            QAudioFormat.SignedInt
+        )
+
+        # Audio Output init
+        self.output = QAudioOutput(format, self)
+        output_buffer_size = \
+            int(2*SAMPLE_RATE \
+                 *CTRL_INTERVAL/1000)
+        self.output.setBufferSize(
+            output_buffer_size
+        )
+        
+        self.generator = Meep(format, self.activeGen, self )        
+        self.generator.start()
+        self.output.start(self.generator)
+
+
+
 
     def createUI(self, parent):
         print("Create UI")
@@ -233,7 +160,6 @@ class ToneWidget(QWidget):
         vLayout = QVBoxLayout(self)
 
         #create dummy active gen for now
-        activeGen = None
 
         #create the two other sliders
         self.MasterSlid = QSlider(Qt.Vertical)
@@ -241,11 +167,11 @@ class ToneWidget(QWidget):
         
         # add the two sliders and ADSR layout in a horizontal layout
         slidLayout.addStretch(1)
-        slidLayout.addWidget(sliders.FiltSlider(activeGen, self).createUI(parent))
+        slidLayout.addWidget(sliders.FiltSlider(self.activeGen, self).createUI(parent))
         slidLayout.addStretch(1)
-        slidLayout.addWidget(sliders.ADSRSlider(activeGen, self).createUI(parent))    
+        slidLayout.addWidget(sliders.ADSRSlider(self.activeGen, self).createUI(parent))    
         slidLayout.addStretch(1)    
-        slidLayout.addWidget(sliders.MasterSlider(activeGen, self).createUI(parent))
+        slidLayout.addWidget(sliders.MasterSlider(self.activeGen, self).createUI(parent))
         slidLayout.addStretch(1)    
 
 
@@ -254,7 +180,7 @@ class ToneWidget(QWidget):
 
         vLayout.addWidget(self.title)
         vLayout.addLayout(slidLayout)
-        vLayout.addLayout(sliders.GenSlider(activeGen, self).createUI(parent))
+        vLayout.addLayout(sliders.GenSlider(self.activeGen, self).createUI(parent))
 
         
 
@@ -262,6 +188,7 @@ class ToneWidget(QWidget):
 if __name__ == "__main__":
 
     app = QApplication(sys.argv)
-    window = ToneWidget()
+    app.setStyle("Fusion")
+    window = ToneWindow()
     window.show()
     sys.exit(app.exec_())
