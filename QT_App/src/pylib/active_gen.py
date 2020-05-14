@@ -35,8 +35,7 @@ class ActiveGen(Generator):
         return self.master.modBuffer(inBuffer)
 
     # set Frequency of the generator currently in use
-    @pyqtSlot(float)
-    def setFreq(self, freq = 440):
+    def setFreq(self, freq):
         self._frequency= freq
         self.activeGen.setFreq(self._frequency)
         

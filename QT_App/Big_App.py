@@ -9,12 +9,12 @@ from PyQt5.QtWidgets import \
 from PyQt5.QtMultimedia import QAudioFormat, QAudioOutput
 
 import numpy as np
+import math
+import mido
+import rtmidi
 
 from src.view import sliders
 from src.pylib.active_gen import ActiveGen
-# import math
-# import mido
-# import rtmidi
 # import scipy.signal
 
 # from swig_module import swig_filter as sf
@@ -48,12 +48,12 @@ class MidiPortReader(QObject):
                 print(mmsg.bytes())
                 
                 # convert midi to frequency
-                # math.pow(2,(midi-69)/12)*440
+                freq = math.pow(2,(float(mmsg.bytes()[1])-69)/12)*440
 
                 # Only communicate via the Qt signal
                 # Qt will stop us hurting ourselves
                 
-                self.newNoteFrequency.emit(float(mmsg.bytes()[1]))
+                self.newNoteFrequency.emit(float(freq))
 
 
 class Meep(QIODevice):
@@ -150,6 +150,31 @@ class ToneWindow(QWidget):
         self.generator = Meep(format, self.activeGen, self )        
         self.generator.start()
         self.output.start(self.generator)
+
+        # Create the port reader object
+        self.midiListener = MidiPortReader()
+
+        # Create a thread which will read it
+        self.listenerThread = QThread()
+
+        # Take the object and move it
+        # to the new thread (it isn't running yet)
+        self.midiListener.moveToThread(
+            self.listenerThread
+        )
+
+        self.midiListener.newNoteFrequency.connect(
+            self.activeGen.setFreq
+        )
+
+        # Tell Qt the function to call
+        # when it starts the thread 
+        self.listenerThread.started.connect(
+            self.midiListener.listener
+        )
+
+        # Fingers in ears, eyes tight shut...
+        self.listenerThread.start()
 
 
 

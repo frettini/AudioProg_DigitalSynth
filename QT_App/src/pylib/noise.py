@@ -53,7 +53,7 @@ class FilteredNoise(Generator):
         # init filterchain and white noise gen
         # give init coefficients
         self.wn = WhiteNoise()
-        self.fc = sf.FilterChain(self.setFreq(440))
+        self.fc = sf.FilterChain(self.getCoef())
         
     def genBuffer(self, bufferSize):
 
@@ -65,10 +65,14 @@ class FilteredNoise(Generator):
 
     
     def setFreq(self, freq):
+        self._frequency = freq
+        self.fc.setCoef(self.getCoef())
+
+    # calculate IIR coefficients
+    def getCoef(self):
         wp = [self._frequency*2/self._sampleRate, (self._frequency+1)*2/self._sampleRate ]    # multiply by two for nyquist frequency
         ws = [(self._frequency-50)*2/self._sampleRate, (self._frequency-50)*2/self._sampleRate ]
         coefs = scipy.signal.iirdesign(wp,ws,self.gpass,self.gstop,output='sos', ftype='ellip')
-        print(coefs)
         return coefs
 
 

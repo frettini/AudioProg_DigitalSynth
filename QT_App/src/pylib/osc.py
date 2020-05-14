@@ -109,12 +109,15 @@ class RecOsc(Generator):
                 self.setFreq(self._frequency + step)
                 
     
-        
-        result = result/np.max(result)
+        try:
+            norm_result = result/np.max(result)
+        except ValueError:
+            norm_result = result
+        return norm_result 
         
         self.cal_phase()
 
-        return result
+        return norm_result
 
 
 if __name__ == "__main__":
