@@ -16,7 +16,7 @@ import rtmidi
 import scipy.signal
 
 from swig_module import swig_filter as sf
-from swig_module.modules import white_noise
+from swig_module.modules import noise
 
 SAMPLE_RATE = 44100
 AUDIO_CHANS = 1
@@ -137,9 +137,9 @@ class Meep(QIODevice):
 
         coefs = self.getCoef()
 
-        self.white_osc = white_noise.WhiteNoise()
+        self.white_osc = noise.WhiteNoise()
         
-        self.white_buffer = self.white_osc.gen_buffer(Meep.SAMPLES_PER_READ) # gen white buffer
+        self.white_buffer = self.white_osc.genBuffer(Meep.SAMPLES_PER_READ) # gen white buffer
         self.filter = sf.FilterChain(coefs)
 
         # Check we can deal with the supplied
@@ -183,7 +183,7 @@ class Meep(QIODevice):
         # self.phase = finalphase % (2*np.pi)
         # return tone.tostring()
         result_buffer = np.zeros(samples)
-        self.filter.genBuffer(result_buffer, self.white_osc.gen_buffer(samples))
+        self.filter.modBuffer(result_buffer, self.white_osc.genBuffer(samples))
         result_buffer = result_buffer/np.max(abs(result_buffer))
         result_buffer = np.int16( result_buffer * (self.convert_16_bit-1) )
         return result_buffer.tostring()
@@ -241,7 +241,7 @@ class ToneGenerator(QWidget):
         self.output.start(self.generator)
 
         
-                # Create the port reader object
+        # Create the port reader object
         self.midiListener = MidiPortReader()
 
         # Create a thread which will read it

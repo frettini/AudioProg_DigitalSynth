@@ -22,13 +22,15 @@ class ActiveGen(Generator):
         
         self.activeGen = self.recOsc
 
-
+    # generate buffer using the active generator
     def genBuffer(self, bufferSize):
         return self.modBuffer(self.activeGen.genBuffer(bufferSize))
 
+    # apply modifiers contained in the class
     def modBuffer(self, inBuffer):
         return self.master.modBuffer(inBuffer)
 
+    # set Frequency of the generator currently in use
     def setFreq(self, freq = 440):
         self._frequency= freq
         self.activeGen.setFreq(self._frequency)

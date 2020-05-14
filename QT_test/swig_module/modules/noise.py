@@ -2,7 +2,7 @@
 # used now as the swig filter is maintained at a top level
 # might be better to wrap the application in a pacakge or move swig_fitler with the modules
 
-from gen import Generator
+from .gen import Generator
 import scipy.signal
 import numpy as np
 import math
@@ -39,7 +39,7 @@ class FilteredNoise(Generator):
         self._sampleRate = sample_rate
         self._frequency = freq
 
-        self.gpass = 10
+        self.gpass = 9
         self.gstop = 100
 
         # init filterchain and white noise gen
@@ -78,6 +78,7 @@ if __name__ == "__main__":
     result_freq = scipy.fftpack.fft(norm_result) # get spectrum
     
     plot.plot(np.real(result_freq))
+    plot.plot(np.imag(result_freq))
     plot.show()
 
 
