@@ -108,6 +108,7 @@ class FiltSlider(QWidget):
 
     def __init__(self, activeGen, parent=None,):
         QWidget.__init__(self,parent) 
+        self.activeGen = activeGen
     
     def createUI(self, parent):
         #Box Layout which groups sliders with a title and borders
@@ -128,6 +129,7 @@ class FiltSlider(QWidget):
     @pyqtSlot()
     def filterReleased(self):
         print("Filter value changed to {}".format(self.filterSlid.value()))
+        self.activeGen.fNoise.setBW(self.filterSlid.value())
 
 
 # Deals with Master slider view and sliders signals

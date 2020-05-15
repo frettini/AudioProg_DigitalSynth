@@ -3687,6 +3687,77 @@ fail:
 }
 
 
+SWIGINTERN PyObject *_wrap_FilterChain_addFilter(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  FilterChain *arg1 = (FilterChain *) 0 ;
+  double *arg2 = (double *) 0 ;
+  std::size_t arg3 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyArrayObject *array2 = NULL ;
+  int is_new_object2 = 0 ;
+  PyObject *swig_obj[2] ;
+  
+  if (!SWIG_Python_UnpackTuple(args, "FilterChain_addFilter", 2, 2, swig_obj)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_FilterChain, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "FilterChain_addFilter" "', argument " "1"" of type '" "FilterChain *""'"); 
+  }
+  arg1 = reinterpret_cast< FilterChain * >(argp1);
+  {
+    npy_intp size[1] = {
+      -1 
+    };
+    array2 = obj_to_array_contiguous_allow_conversion(swig_obj[1],
+      NPY_DOUBLE,
+      &is_new_object2);
+    if (!array2 || !require_dimensions(array2, 1) ||
+      !require_size(array2, size, 1)) SWIG_fail;
+    arg2 = (double*) array_data(array2);
+    arg3 = (int) array_size(array2,0);
+  }
+  (arg1)->addFilter((double const *)arg2,arg3);
+  resultobj = SWIG_Py_Void();
+  {
+    if (is_new_object2 && array2)
+    {
+      Py_DECREF(array2); 
+    }
+  }
+  return resultobj;
+fail:
+  {
+    if (is_new_object2 && array2)
+    {
+      Py_DECREF(array2); 
+    }
+  }
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_FilterChain_removeFilter(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  FilterChain *arg1 = (FilterChain *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject *swig_obj[1] ;
+  
+  if (!args) SWIG_fail;
+  swig_obj[0] = args;
+  res1 = SWIG_ConvertPtr(swig_obj[0], &argp1,SWIGTYPE_p_FilterChain, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "FilterChain_removeFilter" "', argument " "1"" of type '" "FilterChain *""'"); 
+  }
+  arg1 = reinterpret_cast< FilterChain * >(argp1);
+  (arg1)->removeFilter();
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
 SWIGINTERN PyObject *_wrap_delete_FilterChain(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   FilterChain *arg1 = (FilterChain *) 0 ;
@@ -3734,6 +3805,8 @@ static PyMethodDef SwigMethods[] = {
 	 { "new_FilterChain", _wrap_new_FilterChain, METH_O, NULL},
 	 { "FilterChain_modBuffer", _wrap_FilterChain_modBuffer, METH_VARARGS, NULL},
 	 { "FilterChain_setCoef", _wrap_FilterChain_setCoef, METH_VARARGS, NULL},
+	 { "FilterChain_addFilter", _wrap_FilterChain_addFilter, METH_VARARGS, NULL},
+	 { "FilterChain_removeFilter", _wrap_FilterChain_removeFilter, METH_O, NULL},
 	 { "delete_FilterChain", _wrap_delete_FilterChain, METH_O, NULL},
 	 { "FilterChain_swigregister", FilterChain_swigregister, METH_O, NULL},
 	 { "FilterChain_swiginit", FilterChain_swiginit, METH_VARARGS, NULL},

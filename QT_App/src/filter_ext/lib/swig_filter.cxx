@@ -7,14 +7,12 @@
 //pass the coefficient
 Filter::Filter(const double* in, std::size_t in_size): d(2){
     setCoef(in, in_size);
-    // m_delayArr[0] = 0.0;
-    // m_delayArr[1] = 0.0;
 };
 
 void Filter::setCoef(const double* in, std::size_t in_size){
     //implementation of the filter
 
-    for(int i = 0; i<in_size; i++){
+    for(size_t i = 0; i<in_size; i++){
         if (i<3){
             m_a[i] = *(in+i);
         }else{
@@ -27,7 +25,7 @@ void Filter::modBuffer(double* out, std::size_t out_size, const double* in, std:
     double middle = 0;
     double result = 0;
     
-    for(int i = 0; i<in_size; i++){
+    for(size_t i = 0; i<in_size; i++){
         
         middle = *(in+i) - m_b[1]* d.get(0) - m_b[2] * d.get(1);
         result = middle * m_a[0] + m_a[1]* d.get(0) + m_a[2]* d.get(1);
@@ -66,9 +64,39 @@ void FilterChain::modBuffer(double* out, std::size_t out_size,
 void FilterChain::setCoef(const double* in, 
                             std::size_t in_size1, 
                             std::size_t in_size2){
-    for (int i = 0; i < size; i++)
+    if(size > in_size1){
+        for(size_t i = 0; i < (size - in_size1); i++){
+            removeFilter();
+        }
+        size = in_size1;
+    }
+
+    for (size_t i = 0; i < in_size1; i++)
     {
+        // add filter here (coefficient needs to be known)
+        if(i >= size){
+
+            addFilter(in+i*in_size2, in_size2);
+            size = i;
+            continue;
+        }
+
         filterBank[i].setCoef(in+i*in_size2, in_size2);
     }
     
-}
+};
+
+
+void FilterChain::addFilter(const double* in, std::size_t in_size){
+    std::cout << "Add Filter \n ";
+    filterBank.push_back(Filter(in, in_size));
+    std::cout << "vector size: " << filterBank.size() << "\n ";
+
+};
+
+void FilterChain::removeFilter(){
+    std::cout << "Remove Filter \n ";
+    filterBank.pop_back();
+    std::cout << "vector size: " << filterBank.size() << "\n ";
+
+};

@@ -104,6 +104,12 @@ class FilterChain(Modifier):
 
     def setCoef(self, _in):
         return _swig_filter.FilterChain_setCoef(self, _in)
+
+    def addFilter(self, _in):
+        return _swig_filter.FilterChain_addFilter(self, _in)
+
+    def removeFilter(self):
+        return _swig_filter.FilterChain_removeFilter(self)
     __swig_destroy__ = _swig_filter.delete_FilterChain
 
 # Register FilterChain in _swig_filter:

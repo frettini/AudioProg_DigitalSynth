@@ -48,6 +48,7 @@ class FilteredNoise(Generator):
 
         self.gpass = 9
         self.gstop = 100
+        self.bw = 50
 
         # init filterchain and white noise gen
         # give init coefficients
@@ -56,6 +57,8 @@ class FilteredNoise(Generator):
         
     def genBuffer(self, bufferSize):
 
+        if bufferSize == 0:
+            bufferSize = 2048
         # shows the biggest flaw of this design! 
         # the white noise and filter chain have different arguments for the function
         resultBuf = np.zeros(bufferSize)
@@ -76,10 +79,19 @@ class FilteredNoise(Generator):
     # calculate IIR coefficients
     def getCoef(self):
         wp = [self._frequency*2/self._sampleRate, (self._frequency+1)*2/self._sampleRate ]    # multiply by two for nyquist frequency
-        ws = [(self._frequency-50)*2/self._sampleRate, (self._frequency-50)*2/self._sampleRate ]
+        ws = [(self._frequency-self.bw)*2/self._sampleRate, (self._frequency-self.bw)*2/self._sampleRate ]
         coefs = scipy.signal.iirdesign(wp,ws,self.gpass,self.gstop,output='sos', ftype='ellip')
         return coefs
 
+    def setBW(self, bw):
+        if bw > 100:
+            self.bw = 100
+        elif bw < 10:
+            self.bw = 10
+        else:
+            self.bw = bw
+
+        self.setFreq(self._frequency)
 
 if __name__ == "__main__":
 
@@ -94,8 +106,44 @@ if __name__ == "__main__":
     norm_result = result/np.max(abs(result)) # normalize result (avoid blown filters)
     result_freq = scipy.fftpack.fft(norm_result) # get spectrum
     
-    plot.plot(np.real(result_freq))
-    plot.plot(np.imag(result_freq))
-    plot.show()
+    _frequency = 400
+    _sampleRate= 44100
+    gpass = 9
+    gstop= 100
+
+    # starts with 3 filters
+
+    wp = [_frequency*2/_sampleRate, (_frequency+1)*2/_sampleRate ]    # multiply by two for nyquist frequency
+    ws = [(_frequency-25)*2/_sampleRate, (_frequency-25)*2/_sampleRate ]
+    coefs = scipy.signal.iirdesign(wp,ws,gpass,gstop,output='sos', ftype='ellip')
+    print(coefs)
+
+    fc = sf.FilterChain(coefs)
+
+    #removes one filter
+
+    wp = [_frequency*2/_sampleRate, (_frequency+1)*2/_sampleRate ]    # multiply by two for nyquist frequency
+    ws = [(_frequency-50)*2/_sampleRate, (_frequency-50)*2/_sampleRate ]
+    coefs = scipy.signal.iirdesign(wp,ws,gpass,gstop,output='sos', ftype='ellip')
+    print(coefs)
+
+    fc.setCoef(coefs)
+
+    # adds one filter
+
+    wp = [_frequency*2/_sampleRate, (_frequency+1)*2/_sampleRate ]    # multiply by two for nyquist frequency
+    ws = [(_frequency-25)*2/_sampleRate, (_frequency-25)*2/_sampleRate ]
+    coefs = scipy.signal.iirdesign(wp,ws,gpass,gstop,output='sos', ftype='ellip')
+    print(coefs)
+    
+    fc.setCoef(coefs)
+
+
+    print("Alles ist gut")
+
+
+    # plot.plot(np.real(result_freq))
+    # plot.plot(np.imag(result_freq))
+    # plot.show()
 
 

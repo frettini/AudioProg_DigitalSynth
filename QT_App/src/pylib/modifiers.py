@@ -101,7 +101,7 @@ class ADSR(sf.Modifier):
             # if the note is maintained further than the release
             # multiply the input value with 0
             if self.index >= len(self.Rbuffer):
-                return input_arr*0.01
+                return input_arr*0
 
             result_buffer = input_arr * self.Rbuffer[self.index:(self.index+self.samplePerRead)]
             self.index += self.index+self.samplePerRead
@@ -134,8 +134,8 @@ class ADSR(sf.Modifier):
         else:
             self.R = self.maxR
 
-        self.Rbuffer[0:self.R] = np.linspace(self.S,0.01,self.R)
-        self.Rbuffer[self.R:] = 0.01
+        self.Rbuffer[0:self.R] = np.linspace(self.S,0,self.R)
+        self.Rbuffer[self.R:] = 0
 
     def setS(self, S):
         if S <= 1:

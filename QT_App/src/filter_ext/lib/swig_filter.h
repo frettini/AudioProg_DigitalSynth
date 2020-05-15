@@ -32,7 +32,7 @@ public:
         // set coefficient at any time
         void setCoef(const double* in, std::size_t in_size);
         
-        // generate the buffer (should derive from gen)
+        // modify the buffer, derived from modifier
         void modBuffer(double* out, std::size_t out_size,
                           const double* in, std::size_t in_size);
 
@@ -59,6 +59,10 @@ public:
         void setCoef(const double* in, 
                         std::size_t in_size1, 
                         std::size_t in_size2);
+
+        void addFilter(const double* in , std::size_t in_size);
+        void removeFilter();
+
 };
 
 
