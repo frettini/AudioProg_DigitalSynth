@@ -3,7 +3,7 @@ import numpy as np
 
 from .gen import Generator
 from .osc import RecOsc
-from .modifiers import Gain
+from .modifiers import Gain, ADSR
 from .noise import WhiteNoise, FilteredNoise
 
 
@@ -22,6 +22,7 @@ class ActiveGen(Generator):
         self.genLst = [self.fNoise, self.recOsc, self.wNoise]
 
         self.master = Gain(1)
+        self.adsr = ADSR(2048)
         
         
         self.activeGen = self.genLst[0]
@@ -32,13 +33,17 @@ class ActiveGen(Generator):
 
     # apply modifiers contained in the class
     def modBuffer(self, inBuffer):
-        return self.master.modBuffer(inBuffer)
+        outBuffer = self.adsr.modBuffer(inBuffer)
+        return self.master.modBuffer(outBuffer)
 
     # set Frequency of the generator currently in use
     def setFreq(self, freq):
-        self._frequency= freq
-        self.activeGen.setFreq(self._frequency)
-        
+        # change frequency only if necessary
+        if freq != self._frequency:
+            self._frequency= freq
+            self.activeGen.setFreq(self._frequency)
+
+            
     # set active generator, make sure the index matches the sliders
     # to ensure knowledge of view is not required,a dictionary is best
     def setActive(self, index):

@@ -81,6 +81,9 @@ class RecOsc(Generator):
 
 
     def genBuffer(self, buffer_size, end_freq = 0):
+        if buffer_size == 0:
+            buffer_size = 2048
+
         #takes in a buffer of any size in the form of nparray
         if end_freq == 0:
             end_freq = self._frequency
@@ -109,10 +112,8 @@ class RecOsc(Generator):
                 self.setFreq(self._frequency + step)
                 
     
-        try:
-            norm_result = result/np.max(result)
-        except ValueError:
-            norm_result = result
+        norm_result = result/np.max(result)
+        
         return norm_result 
         
         self.cal_phase()

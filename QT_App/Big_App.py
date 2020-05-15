@@ -31,6 +31,7 @@ class MidiPortReader(QObject):
     # Create a signal for when a
     # MIDI note_on happens
     newNoteFrequency = pyqtSignal(float)
+    newNotePress = pyqtSignal()
     
     # Object initialisation:
     def __init__(self):
@@ -54,6 +55,7 @@ class MidiPortReader(QObject):
                 # Qt will stop us hurting ourselves
                 
                 self.newNoteFrequency.emit(float(freq))
+                self.newNotePress.emit()
 
 
 class Meep(QIODevice):
@@ -167,6 +169,8 @@ class ToneWindow(QWidget):
             self.activeGen.setFreq
         )
 
+        self.midiListener.newNotePress.connect(self.activeGen.adsr.setNote)
+
         # Tell Qt the function to call
         # when it starts the thread 
         self.listenerThread.started.connect(
@@ -211,7 +215,7 @@ class ToneWindow(QWidget):
 
 
 if __name__ == "__main__":
-
+    
     app = QApplication(sys.argv)
     app.setStyle("Fusion")
     window = ToneWindow()

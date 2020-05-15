@@ -25,7 +25,8 @@ class UIHelper:
 class ADSRSlider(QWidget):
 
     def __init__(self, activeGen, parent=None):
-        QWidget.__init__(self,parent)        
+        QWidget.__init__(self,parent)   
+        self.activeGen = activeGen     
         # self.createUI(parent)
 
     def createUI(self, parent):
@@ -83,18 +84,23 @@ class ADSRSlider(QWidget):
     @pyqtSlot()
     def AReleased(self):
         print("A value changed to {}".format(self.ASlid.value()))
+        self.activeGen.adsr.setAD(self.ASlid.value()/100, self.DSlid.value()/100)
         
     @pyqtSlot()
     def DReleased(self):
         print("D value changed to {}".format(self.DSlid.value()))
+        self.activeGen.adsr.setAD(self.ASlid.value()/100, self.DSlid.value()/100)
 
     @pyqtSlot()
     def SReleased(self):
         print("S value changed to {}".format(self.SSlid.value()))
+        self.activeGen.adsr.setS(self.SSlid.value()/100)
 
     @pyqtSlot()
     def RReleased(self):
         print("R value changed to {}".format(self.RSlid.value()))
+        self.activeGen.adsr.setR(self.RSlid.value()/50)
+
 
 
 

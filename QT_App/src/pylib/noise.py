@@ -26,14 +26,13 @@ class WhiteNoise(Generator):
 
     def genBuffer(self, bufferSize):
         result =  np.random.standard_normal(size=bufferSize)
-        norm_result = result
-        
+
         # the function will sometime skip a buffer
         # use a try catch to avoid fatal errors
         try:
             norm_result = result/np.max(result)
         except ValueError:
-            norm_result = result
+            norm_result = np.zeros(bufferSize)
         return norm_result 
 
     def setFreq(self, freq):
@@ -61,7 +60,13 @@ class FilteredNoise(Generator):
         # the white noise and filter chain have different arguments for the function
         resultBuf = np.zeros(bufferSize)
         self.fc.modBuffer(resultBuf, self.wn.genBuffer(bufferSize))
-        return resultBuf
+
+        try:
+            norm_result = resultBuf/np.max(resultBuf)
+        except ValueError:
+            norm_result = resultBuf
+        return norm_result 
+
 
     
     def setFreq(self, freq):
