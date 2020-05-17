@@ -12,12 +12,19 @@ class UIHelper:
     @staticmethod
     def labSlidLayout(slider, label, labelName):
         layout = QVBoxLayout()
+
         label.setText(labelName)
+        label.setMaximumHeight(50)
+        label.setAlignment(Qt.AlignCenter)
+        label.setStyleSheet("QLabel { background-color : red; color : blue; }")
+        label.setMargin(5)
+        # slider.setMaximumWidth()
         
-        # label.setAlignment(Qt.AlignCenter)
+        slider.setMinimumHeight(100)
 
         layout.addWidget(label)
         layout.addWidget(slider)
+        layout.setAlignment(slider, Qt.AlignCenter)
 
         return layout
 
@@ -32,8 +39,6 @@ class ADSRSlider(QWidget):
     def createUI(self, parent):
         groupBox = QGroupBox("Envelope") 
 
-        ADSRLayout = QVBoxLayout()
-        
         subLayout = QHBoxLayout()
         
         ALayout = QVBoxLayout()
@@ -66,8 +71,8 @@ class ADSRSlider(QWidget):
         subLayout.addLayout(UIHelper.labSlidLayout(self.SSlid, self.SLabel, "Sustain"))
         subLayout.addLayout(UIHelper.labSlidLayout(self.RSlid, self.RLabel, "Release"))
 
-        # ADSRLayout.addWidget(self.envelope)
-        ADSRLayout.addLayout(subLayout)
+        subLayout.setContentsMargins(20,20,20,20)
+        subLayout.setAlignment(Qt.AlignJustify)
         
 
         self.ASlid.sliderReleased.connect(
@@ -83,7 +88,7 @@ class ADSRSlider(QWidget):
             self.RReleased
         )
 
-        groupBox.setLayout(ADSRLayout)
+        groupBox.setLayout(subLayout)
 
         return groupBox
 
@@ -128,9 +133,11 @@ class FiltSlider(QWidget):
         QWidget.__init__(self,parent) 
         self.activeGen = activeGen
     
+
     def createUI(self, parent):
         #Box Layout which groups sliders with a title and borders
         filterBox = QGroupBox("Filtered Noise")
+        filterBox.setMinimumWidth(75)
 
         #create sub widget
         self.filterLabel = QLabel(self)
@@ -140,8 +147,12 @@ class FiltSlider(QWidget):
             self.filterReleased
         )
 
-        #create lyaout with label on top of slider
-        filterBox.setLayout(UIHelper.labSlidLayout(self.filterSlid, self.filterLabel, "Q"))
+        subLayout = UIHelper.labSlidLayout(self.filterSlid, self.filterLabel, "Q")
+        subLayout.setContentsMargins(20,20,20,20)
+
+        #create layout with label on top of slider
+        filterBox.setLayout(subLayout)
+        
         return filterBox
 
     @pyqtSlot()
@@ -158,7 +169,8 @@ class MasterSlider(QWidget):
         self.activeGen = activeGen
     
     def createUI(self, parent):
-        filterBox = QGroupBox("Master")
+        masterBox = QGroupBox("Master")
+        masterBox.setMinimumWidth(75)
 
         self.masterLabel = QLabel(self)
         self.masterSlid = QSlider(Qt.Vertical)
@@ -167,8 +179,12 @@ class MasterSlider(QWidget):
             self.masterReleased
         )
 
-        filterBox.setLayout(UIHelper.labSlidLayout(self.masterSlid, self.masterLabel, "Gain") )
-        return filterBox
+        masterLayout = UIHelper.labSlidLayout(self.masterSlid, self.masterLabel, "Gain")
+        masterLayout.setContentsMargins(20,20,20,20)
+
+        masterBox.setLayout(masterLayout)
+
+        return masterBox
 
     @pyqtSlot()
     def masterReleased(self):
@@ -186,17 +202,25 @@ class GenSlider(QWidget):
     def createUI(self, parent):
 
         genLayout = QVBoxLayout()
-        self.genLabel = QLabel(self)
 
-        max = 2
+        # Section title setup
+        self.genLabel = QLabel(self)
+        self.genLabel.setText("Active Generator")
+        self.genLabel.setMaximumHeight(100)
+        self.genLabel.setAlignment(Qt.AlignCenter)
+
         # create active generator slider
         # change range from 0 to 2 and add ticks
+        max = 2
         self.genSlid = QSlider(Qt.Horizontal)
         self.genSlid.setRange(0,max)
         self.genSlid.setTickPosition(QSlider.TicksBelow)
+        self.genSlid.setMinimumWidth(400)
+        self.genSlid.setMaximumWidth(400)
         
+
+        # create labels and add them to a sub layout
         labels = ["Flute", "Sine", "Noise"]
-        
         labelLayout = QHBoxLayout()
 
         ind = 0
@@ -207,17 +231,25 @@ class GenSlider(QWidget):
                 labelLayout.addStretch()
                 ind += 1
 
+        #align to the ticks
         labelLayout.setAlignment(Qt.AlignJustify)
+        labelLayout.setAlignment(Qt.AlignTop)
 
-        genLayout.addLayout(UIHelper.labSlidLayout(self.genSlid, self.genLabel, "Active Generator"))
-        genLayout.addLayout(labelLayout)
+        subLayout = QVBoxLayout()
+
+        subLayout.addWidget(self.genLabel)
+        subLayout.addWidget(self.genSlid)
+        subLayout.addLayout(labelLayout)
+        subLayout.setAlignment(self.genSlid, Qt.AlignHCenter)
+
+        # genLayout.addLayout(subLayout)
+        # genLayout.addLayout(labelLayout)
 
         self.genSlid.sliderReleased.connect(
             self.genReleased
         )
 
-        return genLayout
-
+        return subLayout
 
     @pyqtSlot()
     def genReleased(self):

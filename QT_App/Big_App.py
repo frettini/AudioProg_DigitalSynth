@@ -201,18 +201,31 @@ class ToneWindow(QWidget):
         self.QSlid = QSlider(Qt.Vertical)
         
         # add the two sliders and ADSR layout in a horizontal layout
-        slidLayout.addStretch(1)
         slidLayout.addWidget(sliders.FiltSlider(self.activeGen, self).createUI(parent))
-        slidLayout.addStretch(1)
-        slidLayout.addWidget(sliders.ADSRSlider(self.activeGen, self).createUI(parent))    
-        slidLayout.addStretch(1)    
+        slidLayout.addStretch(0.9)
+        slidLayout.addWidget(sliders.ADSRSlider(self.activeGen, self).createUI(parent), Qt.AlignHCenter)    
+        slidLayout.addStretch(0.9)    
         slidLayout.addWidget(sliders.MasterSlider(self.activeGen, self).createUI(parent))
-        slidLayout.addStretch(1)    
 
 
         self.title = QLabel(self)
-        self.title.setText("Big App")
+        self.title.setText("The Dome Generator")
+        self.title.setMargin(10)
+        self.title.setStyleSheet("""
+            QLabel {
+                font-size: 20px;
+                border: 2px solid green;
+                border-radius: 4px;
+                padding: 2px;
+                background-color : yellow ;
+            }  
+        """)
+        
+        self.title.setMaximumHeight(50)
+        self.title.setMaximumHeight(50)
+        self.title.setAlignment(Qt.AlignCenter)
 
+    
         vLayout.addWidget(self.title)
         vLayout.addLayout(slidLayout)
         vLayout.addLayout(sliders.GenSlider(self.activeGen, self).createUI(parent))
@@ -225,5 +238,6 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     app.setStyle("Fusion")
     window = ToneWindow()
+    window.setWindowTitle("Tone Generator")
     window.show()
     sys.exit(app.exec_())

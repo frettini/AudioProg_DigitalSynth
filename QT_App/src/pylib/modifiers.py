@@ -287,7 +287,6 @@ class ADSR_V2(sf.Modifier):
     def modBuffer(self, input_arr):
         
         self.amplitude, nextState, modifier = self.currentState.process(self.amplitude)
-        print("next state: {} , amplitude: {}".format(nextState, self.amplitude))
         
         if self.currentState != self.states[nextState]:
             self.currentState = self.states[nextState]
