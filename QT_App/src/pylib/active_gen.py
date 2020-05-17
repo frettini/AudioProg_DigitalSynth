@@ -3,7 +3,7 @@ import numpy as np
 
 from .gen import Generator
 from .osc import RecOsc
-from .modifiers import Gain, ADSR
+from .modifiers import Gain, ADSR_V2
 from .noise import WhiteNoise, FilteredNoise
 
 
@@ -22,7 +22,7 @@ class ActiveGen(Generator):
         self.genLst = [self.fNoise, self.recOsc, self.wNoise]
 
         self.master = Gain(1)
-        self.adsr = ADSR(2048)
+        self.adsr = ADSR_V2(2048)
         
         
         self.activeGen = self.genLst[0]

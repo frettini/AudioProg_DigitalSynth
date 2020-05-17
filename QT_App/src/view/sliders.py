@@ -48,6 +48,12 @@ class ADSRSlider(QWidget):
         self.SSlid = QSlider(Qt.Vertical)
         self.RSlid = QSlider(Qt.Vertical)
 
+        # make sure range slider cannot be equal to 0
+        self.ASlid.setRange(1,100)
+        self.DSlid.setRange(1,100)
+        self.SSlid.setRange(1,100)
+        self.RSlid.setRange(1,100)
+
         # slider titles
         self.ALabel = QLabel(self)
         self.DLabel = QLabel(self)
@@ -83,24 +89,36 @@ class ADSRSlider(QWidget):
 
     @pyqtSlot()
     def AReleased(self):
+        # range from 0 to 2
         print("A value changed to {}".format(self.ASlid.value()))
-        self.activeGen.adsr.setAD(self.ASlid.value()/100, self.DSlid.value()/100)
+        self.sendADSR
         
     @pyqtSlot()
     def DReleased(self):
+        # range from 0 to 2
         print("D value changed to {}".format(self.DSlid.value()))
-        self.activeGen.adsr.setAD(self.ASlid.value()/100, self.DSlid.value()/100)
+        self.sendADSR
 
     @pyqtSlot()
     def SReleased(self):
+        # range from 0 to 1
         print("S value changed to {}".format(self.SSlid.value()))
-        self.activeGen.adsr.setS(self.SSlid.value()/100)
+        self.sendADSR
+
 
     @pyqtSlot()
     def RReleased(self):
+        # range from 0 ro 5 s
         print("R value changed to {}".format(self.RSlid.value()))
-        self.activeGen.adsr.setR(self.RSlid.value()/50)
+        self.sendADSR
 
+    def sendADSR(self):
+        self.activeGen.adsr.setADSR(
+            A = self.ASlid.value()/50,
+            D = self.DSlid.value()/50,
+            S = self.SSlid.value()/100,
+            R = self.RSlid.value()/20
+        )
 
 
 

@@ -14,6 +14,8 @@ gpass = 10
 gstop = 100
 coefs = scipy.signal.iirdesign(wp,ws,gpass,gstop,output='sos', ftype='ellip')
 
+print(type(scipy.signal.iirpeak(400*2/sample_rate, 5))) 
+
 # coefs = np.concatenate((coefs,coefs2))
 print(coefs)
 

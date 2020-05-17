@@ -31,7 +31,7 @@ class MidiPortReader(QObject):
     # Create a signal for when a
     # MIDI note_on happens
     newNoteFrequency = pyqtSignal(float)
-    newNotePress = pyqtSignal()
+    newNotePress = pyqtSignal(bool)
     
     # Object initialisation:
     def __init__(self):
@@ -55,7 +55,13 @@ class MidiPortReader(QObject):
                 # Qt will stop us hurting ourselves
                 
                 self.newNoteFrequency.emit(float(freq))
-                self.newNotePress.emit()
+                
+                if mmsg.type == "note_on":
+                    status = True
+                if mmsg.type == "note_off":
+                    status = False
+                    
+                self.newNotePress.emit(status)
 
 
 class Meep(QIODevice):

@@ -1,5 +1,6 @@
 import os,sys,inspect
 import numpy as np
+from abc import ABC, abstractmethod
 
 current_dir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 parent_dir = os.path.dirname(current_dir)
@@ -60,7 +61,7 @@ class ADSR(sf.Modifier):
 
         self.maxA = int(1 * self.sampleRate)
         self.maxD = int(1 * self.sampleRate)
-        self.maxR = int(2 * self.sampleRate)
+        self.maxR = int(4 * self.sampleRate)
         self.setS(S)
 
         # calculate the maximum size of the Attack and Delay Buffer
@@ -147,6 +148,173 @@ class ADSR(sf.Modifier):
         self.noteOn = not self.noteOn
         self.index = 0
 
+#-------------------------------------------------------------------
+# Second implementation of ADSR using a State Machine
+#-------------------------------------------------------------------
+class ADSRState(ABC):
+    def __init__(self, sampleRate, samplePerRead):
+        self.sampleRate = sampleRate
+        self.samplePerRead = samplePerRead
+
+    # generate the buffer of values
+    @abstractmethod
+    def process(self, amplitude):
+        pass
+
+    # time: time in seconds for each steps
+    # internally steps the amplitude step for the state
+    @abstractmethod
+    def setTime(self, time):
+        pass
+
+class AState(ADSRState):
+    
+    def __init__(self, sampleRate, samplePerRead, time=1):
+        super().__init__(sampleRate, samplePerRead)
+        self.setTime(time)
+
+    def process(self, amp):
+        # calculate the amplitude we want to get to
+        newAmp = amp + self.step
+        # if it is higher thank 1, clamp and set the next state to decay        
+        if newAmp >= 1:
+            newAmp = 1
+            nextState = "decay"
+        else:
+            nextState = "attack"
+        
+        # generate the buffer
+        result = np.linspace(amp, newAmp, self.samplePerRead)
+
+        return newAmp, nextState, result
+
+    def setTime(self, time):
+        self.step = self.samplePerRead / (self.sampleRate*time) 
+
+
+class DState(ADSRState):
+    
+    def __init__(self, sampleRate, samplePerRead, time=1, sustain=0.7):
+        super().__init__(sampleRate, samplePerRead) 
+        self.sustain = sustain
+        self.setTime(time, self.sustain)
+
+    def process(self, amp):
+        newAmp = amp + self.step
+
+        if newAmp < self.sustain:
+            newAmp = self.sustain
+            nextState = "sustain"
+        else:
+            nextState = "decay"
+
+        result = np.linspace(amp, newAmp, self.samplePerRead)
+
+        return newAmp, nextState, result
+
+    def setTime(self, time, sustain):
+        self.step = self.samplePerRead * (self.sustain - 1)/(self.sampleRate * time)
+
+
+class SState(ADSRState):
+    
+    def __init__(self, sampleRate, samplePerRead, sustain=0.7):
+        super().__init__(sampleRate, samplePerRead)
+        self.setSustain(sustain)
+
+    def process(self, amplitude):
+        newAmp = self.sustain
+        nextState = "sustain"
+        result = np.full(self.samplePerRead, self.sustain)
+        return newAmp, nextState, result
+
+    # needs a reference to the sustain value of the DState
+    # or it is taken care of in the ADSR class
+    def setSustain(self, sustain):
+        if sustain > 1:
+            self.sustain = 1
+        elif sustain < 0:
+            self.sustain = 0
+        else:
+            self.sustain = sustain
+
+    def setTime(self, time):
+        return 0
+
+
+class RState(ADSRState):
+    
+    def __init__(self, sampleRate, samplePerRead, time=2, sustain=0.7):
+        super().__init__(sampleRate, samplePerRead)
+        self.setTime(time, sustain)
+
+    def process(self, amp):
+        newAmp = amp + self.step
+
+        if newAmp < 0 :
+            newAmp = 0
+
+        nextState = "release"
+        result = np.linspace(amp, newAmp, self.samplePerRead)
+        return newAmp, nextState, result
+
+    def setTime(self, time, sustain=0.7):
+        self.sustain = sustain
+        self.step = self.samplePerRead * (-self.sustain)/(self.sampleRate * time)
+
+# ADSR modifier and state manager
+class ADSR_V2(sf.Modifier):
+    
+    def __init__(self, samplePerRead = 2048, sampleRate = 44100, A=1,D=1,S=0.7,R=2):
+        self.samplePerRead = samplePerRead
+        self.sampleRate = sampleRate
+        self.noteOn = False
+        self.amplitude = 0.0
+        self.R = R
+        
+        aState = AState(self.sampleRate, self.samplePerRead, A)
+        dState = DState(self.sampleRate, self.samplePerRead, D, S)
+        sState = SState(self.sampleRate, self.samplePerRead, S)
+        rState = RState(self.sampleRate, self.samplePerRead, R, S)
+
+        self.states = {"attack"  : aState, 
+                  "decay"   : dState, 
+                  "sustain" : sState,
+                  "release" : rState }
+        
+        self.currentState = self.states["release"]
+
+    def modBuffer(self, input_arr):
+        
+        self.amplitude, nextState, modifier = self.currentState.process(self.amplitude)
+        print("next state: {} , amplitude: {}".format(nextState, self.amplitude))
+        
+        if self.currentState != self.states[nextState]:
+            self.currentState = self.states[nextState]
+
+        return modifier * input_arr
+
+    def setADSR(self, A = 1, D = 1, S = 0.7, R = 2):
+        self.R = R
+
+        self.states["attack"].setTime(A)
+        self.states["decay"].setTime(D, S)
+        self.states["sustain"].setSustain(S)
+        self.states["release"].setTime(R)
+
+
+    def setNote(self, status):
+        
+        self.noteOn = status
+        if self.noteOn is True:
+            self.currentState = self.states["attack"]
+
+        if self.noteOn is False:
+            self.currentState = self.states["release"]
+            #ensure equal release time from any amplitude
+            self.currentState.setTime(self.R , self.amplitude)
+
+
 
 if __name__ == "__main__":
 
@@ -161,9 +329,25 @@ if __name__ == "__main__":
     print("Gain modifier")
     print(g.modBuffer(d.process_arr))
 
-    adsrmod = ADSR(20, 60)
+    adsrmod = ADSR_V2(20, 60, S=0.2)
+    random =  np.random.standard_normal(360)
+    result = np.zeros(360)
+    
+    adsrmod.setNote(True)
+    for i in range(0,100,20):
+        result[i:i+20] = adsrmod.modBuffer(random[i:i+20])
+    adsrmod.setNote(False)
+    for i in range(100,140,20):
+        result[i:i+20] = adsrmod.modBuffer(random[i:i+20])
+    adsrmod.setNote(True)
+    for i in range(140,200,20):
+        result[i:i+20] = adsrmod.modBuffer(random[i:i+20])
+    adsrmod.setNote(False)
+    for i in range(200,360,20):
+        result[i:i+20] = adsrmod.modBuffer(random[i:i+20])
+    
 
-    plot.plot(np.concatenate((adsrmod.ADbuffer,adsrmod.Rbuffer)))
+    plot.plot(result)
     plot.show()
 
 
