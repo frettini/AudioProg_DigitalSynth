@@ -81,6 +81,8 @@ class RecOsc(Generator):
 
 
     def genBuffer(self, buffer_size, end_freq = 0):
+        
+        #if given buffer size is 0 default to 2048
         if buffer_size == 0:
             buffer_size = 2048
 
@@ -113,8 +115,6 @@ class RecOsc(Generator):
                 
     
         norm_result = result/np.max(result)
-        
-        return norm_result 
         
         self.cal_phase()
 

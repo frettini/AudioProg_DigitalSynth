@@ -61,6 +61,12 @@ class ADSRSlider(QWidget):
         self.SSlid.setRange(1,100)
         self.RSlid.setRange(1,100)
 
+        # set ticker to an initial value
+        self.ASlid.setValue(50)
+        self.DSlid.setValue(50)
+        self.SSlid.setValue(70)
+        self.RSlid.setValue(40)
+
         # slider titles
         self.ALabel = QLabel(self)
         self.DLabel = QLabel(self)
@@ -125,6 +131,7 @@ class ADSRSlider(QWidget):
         print("R value changed to {}".format(self.RSlid.value()))
         self.sendADSR()
 
+    # update all the adsr values
     def sendADSR(self):
         self.activeGen.adsr.setADSR(
             A = self.ASlid.value()/50,
@@ -149,7 +156,12 @@ class FiltSlider(QWidget):
 
         #create sub widget
         self.filterLabel = QLabel(self)
+
+        # initialize the slider, its range and value
         self.filterSlid = QSlider(Qt.Vertical)
+        self.filterSlid.setRange(1,100)
+        self.filterSlid.setValue(1)
+
 
         self.filterSlid.sliderReleased.connect(
             self.filterReleased
@@ -181,7 +193,11 @@ class MasterSlider(QWidget):
         masterBox.setMinimumWidth(75)
 
         self.masterLabel = QLabel(self)
+        
+        # initialize the slider, its range and value
         self.masterSlid = QSlider(Qt.Vertical)
+        self.masterSlid.setRange(0,100)
+        self.masterSlid.setValue(70)
 
         self.masterSlid.sliderReleased.connect(
             self.masterReleased
@@ -209,15 +225,6 @@ class GenSlider(QWidget):
 
     def createUI(self, parent):
 
-
-        # Section title setup
-        self.genLabel = QLabel(self)
-        self.genLabel.setText("Active Generator")
-        self.genLabel.setMaximumHeight(100)
-        self.genLabel.setAlignment(Qt.AlignBottom)
-        self.genLabel.setAlignment(Qt.AlignCenter)
-
-
         # create active generator slider
         # change range from 0 to 2 and add ticks
         max = 2
@@ -225,7 +232,7 @@ class GenSlider(QWidget):
         self.genSlid.setRange(0,max)
         self.genSlid.setTickPosition(QSlider.TicksBelow)
         self.genSlid.setMinimumWidth(400)
-        self.genSlid.setMaximumWidth(400)
+        self.genSlid.setMaximumWidth(800)
         
 
         # create labels and add them to a sub layout
@@ -244,13 +251,14 @@ class GenSlider(QWidget):
         labelLayout.setAlignment(Qt.AlignJustify)
         labelLayout.setAlignment(Qt.AlignTop)
 
-        genWidget = QWidget()
-        subLayout = QVBoxLayout(genWidget)
+        # genWidget = QWidget()
+        subLayout = QVBoxLayout()
 
-        subLayout.addWidget(self.genLabel)
+        # subLayout.addWidget(self.genLabel)
         subLayout.addWidget(self.genSlid)
         subLayout.addLayout(labelLayout)
-        subLayout.setAlignment(self.genSlid, Qt.AlignHCenter)
+        subLayout.setAlignment(self.genSlid, Qt.AlignCenter)
+        subLayout.setAlignment(self.genSlid, Qt.AlignJustify)
 
         # genLayout.addLayout(subLayout)
         # genLayout.addLayout(labelLayout)
@@ -259,10 +267,14 @@ class GenSlider(QWidget):
             self.genReleased
         )
 
-        genWidget.setFixedWidth(450)
-        genWidget.setMaximumHeight(200)
+        genGroup = QGroupBox("Active Generator")
+        genGroup.setAlignment(Qt.AlignCenter)
+
+        genGroup.setMaximumHeight(200)
+        genGroup.setLayout(subLayout)
         
-        return genWidget
+        return genGroup
+
 
     @pyqtSlot()
     def genReleased(self):

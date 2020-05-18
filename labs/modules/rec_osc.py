@@ -1,4 +1,4 @@
-from .gen import Gen
+from gen import Gen
 import numpy as np
 import math
 
@@ -116,4 +116,25 @@ class RecOsc(Gen):
 
         return result
 
+
+if __name__ == "__main__":
+
+    import matplotlib.pyplot as plot
+    import time
+
+    ro = RecOsc(440,1)
+
+    result = np.zeros(4096)
+    
+    #takes about 3 ms to generate a buffer which should be manageable
+    #if not, it will have to be implemented in c++ 
+    start = time.time()
+    result[:2048] = ro.gen_buffer(2048)
+    end = time.time()
+    print("time taken: {}".format(end - start))
+    ro.frequency = 220
+    result[2048:] = ro.gen_buffer(2048)
+
+    plot.plot(result)
+    plot.show()
 

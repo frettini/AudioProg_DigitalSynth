@@ -54,10 +54,11 @@ class MidiPortReader(QObject):
                 # Only communicate via the Qt signal
                 # Qt will stop us hurting ourselves
                 
-                self.newNoteFrequency.emit(float(freq))
                 
                 if mmsg.type == "note_on":
                     status = True
+                    # change frequency only on onsets
+                    self.newNoteFrequency.emit(float(freq))
                 if mmsg.type == "note_off":
                     status = False
                     
@@ -217,8 +218,9 @@ class ToneWindow(QWidget):
                 font-size: 20px;
                 border: 2px solid green;
                 border-radius: 4px;
+                border-color: black;
                 padding: 2px;
-                background-color : yellow ;
+                background-color : grey ;
             }  
         """)
         
