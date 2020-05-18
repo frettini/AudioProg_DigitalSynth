@@ -197,40 +197,47 @@ class ToneWindow(QWidget):
         vLayout.setSpacing(10)
 
         #create the two other sliders
-        self.MasterSlid = QSlider(Qt.Vertical)
-        self.QSlid = QSlider(Qt.Vertical)
-        
+        filtSlider = sliders.FiltSlider(self.activeGen, self).createUI(parent)
+        adsrSlider = sliders.ADSRSlider(self.activeGen, self).createUI(parent)
+        masterSlider = sliders.MasterSlider(self.activeGen, self).createUI(parent)
+
         # add the two sliders and ADSR layout in a horizontal layout
         slidLayout.addStretch(1)
-        slidLayout.addWidget(sliders.FiltSlider(self.activeGen, self).createUI(parent))
+        slidLayout.addWidget(filtSlider)
         slidLayout.addStretch(1)
-        slidLayout.addWidget(sliders.ADSRSlider(self.activeGen, self).createUI(parent), Qt.AlignHCenter)    
+        slidLayout.addWidget(adsrSlider, Qt.AlignHCenter)    
         slidLayout.addStretch(1)    
-        slidLayout.addWidget(sliders.MasterSlider(self.activeGen, self).createUI(parent))
+        slidLayout.addWidget(masterSlider)
         slidLayout.addStretch(1)
 
 
         self.title = QLabel(self)
-        self.title.setText("The Tone Generator")
+        self.title.setText("Tone Generator")
         self.title.setMargin(10)
         self.title.setStyleSheet("""
             QLabel {
+                font-family : "Lucida Console";
                 font-size: 20px;
+                color : #F2F2F2;
                 border: 2px solid green;
                 border-radius: 4px;
-                border-color: black;
+                border-color: #082126;
                 padding: 2px;
-                background-color : grey ;
+                background-color : #0E3740 ;
             }  
         """)
+        self.setStyleSheet(
+            " background-color : #082126 ; "
+        )
         
+
+
         self.title.setFixedHeight(50)
         self.title.setFixedWidth(400)
         self.title.setAlignment(Qt.AlignCenter)
 
     
         genSlider = sliders.GenSlider(self.activeGen, self).createUI(parent)
-        
         vLayout.addWidget(self.title)
         vLayout.setAlignment(self.title,Qt.AlignCenter)
         vLayout.addSpacing(20)
@@ -240,14 +247,23 @@ class ToneWindow(QWidget):
         vLayout.addWidget(genSlider)
         vLayout.setAlignment(genSlider,Qt.AlignCenter)
 
-        
 
 
 if __name__ == "__main__":
     
     app = QApplication(sys.argv)
     app.setStyle("Fusion")
+
     window = ToneWindow()
     window.setWindowTitle("Tone Generator")
+    
+    # window.setStyleSheet("background-color: black;")
+    # window.setStyleSheet("""
+    #     QGroupBox, QLabel {
+    #         background-color :  #0E3740;
+    #         border-color : #082126;
+    #         color : #F2F2F2;
+    #     }
+    #     """ )
     window.show()
     sys.exit(app.exec_())

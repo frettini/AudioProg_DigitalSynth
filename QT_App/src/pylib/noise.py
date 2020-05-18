@@ -45,7 +45,7 @@ class FilteredNoise(Generator):
         self._frequency = freq
 
         self.gpass = 9
-        self.gstop = 100
+        self.gstop = 10
         self.bw = 50
 
         # init filterchain and white noise gen
@@ -81,13 +81,13 @@ class FilteredNoise(Generator):
         coefs = scipy.signal.iirdesign(wp,ws,self.gpass,self.gstop,output='sos', ftype='ellip')
         return coefs
 
-    def setBW(self, bw):
-        if bw > 100:
-            self.bw = 100
-        elif bw < 10:
-            self.bw = 10
+    def setQ(self, gstop):
+        if gstop > 100:
+            self.gstop = 100
+        elif gstop < 10:
+            self.gstop = 10
         else:
-            self.bw = bw
+            self.gstop = gstop
 
         self.setFreq(self._frequency)
 

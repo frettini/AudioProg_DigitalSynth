@@ -16,7 +16,7 @@ class UIHelper:
         label.setText(labelName)
         label.setMaximumHeight(50)
         label.setAlignment(Qt.AlignCenter)
-        label.setStyleSheet("QLabel { background-color : red; color : blue; }")
+        # label.setStyleSheet("QLabel { background-color : red; color : blue; }")
         label.setMargin(5)
         # slider.setMaximumWidth()
         
@@ -103,6 +103,68 @@ class ADSRSlider(QWidget):
         )
 
         groupBox.setLayout(subLayout)
+        groupBox.setStyleSheet(
+            """
+           QGroupBox, QLabel {
+               font-family : "Lucida Console";
+               background-color :  #0E3740;
+               border : #082126;
+               color : #F2F2F2;
+           }
+
+           QGroupBox {
+               font-weight: bold;
+               font-size: 13px;
+               padding: 10px;
+           }
+
+           QSlider{
+               background-color : #0E3740; 
+           }
+
+           QSlider::groove:vertical {
+                background: #082126;
+                border: 1px solid;
+                margin: 0px;
+            }
+
+            QSlider::handle:vertical {
+                background-color: #077373;
+                border: 1px solid;
+                height: 10px;
+                margin: 0 -4px;
+            }
+
+            QSlider::add-page:vertical{
+                background: #04BFBF;
+            }
+
+            QSlider::sub-page:vertical{
+                background: #082126;
+            }
+
+            QSlider::groove:horizontal {
+                background: #082126;
+                border: 1px solid;
+                margin: 0px;
+            }
+
+            QSlider::handle:horizontal {
+                background-color: #077373;
+                border: 1px solid;
+                height: 10px;
+                margin: 0 -4px;
+            }
+
+            QSlider::add-page:horizontal{
+                background: #04BFBF;
+            }
+
+            QSlider::sub-page:horizontal{
+                background: #082126;
+            }
+           """
+        )
 
         return groupBox
 
@@ -144,15 +206,15 @@ class ADSRSlider(QWidget):
 
 class FiltSlider(QWidget):
 
-    def __init__(self, activeGen, parent=None,):
+    def __init__(self, activeGen, parent=None, styleSheet = None):
         QWidget.__init__(self,parent) 
         self.activeGen = activeGen
     
 
     def createUI(self, parent):
         #Box Layout which groups sliders with a title and borders
-        filterBox = QGroupBox("Filtered Noise")
-        filterBox.setFixedWidth(75)
+        filterBox = QGroupBox("Filter Q")
+        filterBox.setFixedWidth(85)
 
         #create sub widget
         self.filterLabel = QLabel(self)
@@ -160,7 +222,7 @@ class FiltSlider(QWidget):
         # initialize the slider, its range and value
         self.filterSlid = QSlider(Qt.Vertical)
         self.filterSlid.setRange(1,100)
-        self.filterSlid.setValue(1)
+        self.filterSlid.setValue(100)
 
 
         self.filterSlid.sliderReleased.connect(
@@ -172,13 +234,77 @@ class FiltSlider(QWidget):
 
         #create layout with label on top of slider
         filterBox.setLayout(subLayout)
+
+        filterBox.setStyleSheet(
+            """
+           QGroupBox, QLabel {
+               font-family : "Lucida Console";
+               background-color :  #0E3740;
+               border : #082126;
+               color : #F2F2F2;
+           }
+
+           QGroupBox {
+               font-weight: bold;
+               font-size: 13px;
+               padding: 10px;
+           }
+
+           QSlider{
+               background-color : #0E3740; 
+           }
+
+           QSlider::groove:vertical {
+                background: #082126;
+                border: 1px solid;
+                margin: 0px;
+            }
+
+            QSlider::handle:vertical {
+                background-color: #077373;
+                border: 1px solid;
+                height: 10px;
+                margin: 0 -4px;
+            }
+
+            QSlider::add-page:vertical{
+                background: #04BFBF;
+            }
+
+            QSlider::sub-page:vertical{
+                background: #082126;
+            }
+
+            QSlider::groove:horizontal {
+                background: #082126;
+                border: 1px solid;
+                margin: 0px;
+            }
+
+            QSlider::handle:horizontal {
+                background-color: #077373;
+                border: 1px solid;
+                height: 10px;
+                margin: 0 -4px;
+            }
+
+            QSlider::add-page:horizontal{
+                background: #04BFBF;
+            }
+
+            QSlider::sub-page:horizontal{
+                background: #082126;
+            }
+           """
+           
+        )
         
         return filterBox
 
     @pyqtSlot()
     def filterReleased(self):
         print("Filter value changed to {}".format(self.filterSlid.value()))
-        self.activeGen.fNoise.setBW(self.filterSlid.value())
+        self.activeGen.fNoise.setQ(self.filterSlid.value()*-1 + 100)
 
 
 # Deals with Master slider view and sliders signals
@@ -190,7 +316,7 @@ class MasterSlider(QWidget):
     
     def createUI(self, parent):
         masterBox = QGroupBox("Master")
-        masterBox.setMinimumWidth(75)
+        masterBox.setMinimumWidth(85)
 
         self.masterLabel = QLabel(self)
         
@@ -207,6 +333,69 @@ class MasterSlider(QWidget):
         masterLayout.setContentsMargins(20,20,20,20)
 
         masterBox.setLayout(masterLayout)
+
+        masterBox.setStyleSheet(
+            """
+           QGroupBox, QLabel {
+               font-family : "Lucida Console";
+               background-color :  #0E3740;
+               border : #082126;
+               color : #F2F2F2;
+           }
+
+           QGroupBox {
+               font-weight: bold;
+               font-size: 13px;
+               padding: 10px;
+           }
+
+           QSlider{
+               background-color : #0E3740; 
+           }
+
+           QSlider::groove:vertical {
+                background: #082126;
+                border: 1px solid;
+                margin: 0px;
+            }
+
+            QSlider::handle:vertical {
+                background-color: #077373;
+                border: 1px solid;
+                height: 10px;
+                margin: 0 -4px;
+            }
+
+            QSlider::add-page:vertical{
+                background: #04BFBF;
+            }
+
+            QSlider::sub-page:vertical{
+                background: #082126;
+            }
+
+            QSlider::groove:horizontal {
+                background: #082126;
+                border: 1px solid;
+                margin: 0px;
+            }
+
+            QSlider::handle:horizontal {
+                background-color: #077373;
+                border: 1px solid;
+                height: 10px;
+                margin: 0 -4px;
+            }
+
+            QSlider::add-page:horizontal{
+                background: #04BFBF;
+            }
+
+            QSlider::sub-page:horizontal{
+                background: #082126;
+            }
+           """
+        )
 
         return masterBox
 
@@ -236,7 +425,7 @@ class GenSlider(QWidget):
         
 
         # create labels and add them to a sub layout
-        labels = ["Flute", "Sine", "Noise"]
+        labels = ["Filter", "Sine", "Noise"]
         labelLayout = QHBoxLayout()
 
         ind = 0
@@ -272,6 +461,49 @@ class GenSlider(QWidget):
 
         genGroup.setMaximumHeight(200)
         genGroup.setLayout(subLayout)
+        genGroup.setStyleSheet(
+            """
+           QGroupBox, QLabel {
+               font-family : "Lucida Console";
+               background-color :  #0E3740;
+               border : #082126;
+               color : #F2F2F2;
+           }
+
+           QGroupBox {
+               font-weight: bold;
+               font-size: 13px;
+               padding: 10px;
+           }
+
+           QSlider{
+               background-color : #0E3740; 
+           }
+
+
+            QSlider::groove:horizontal {
+                background: #082126;
+                height: 8px;
+                border: 1px solid;
+                margin: 0px;
+            }
+
+            QSlider::handle:horizontal {
+                background-color: #077373;
+                border: 1px solid;
+                width: 10px;
+                margin: -4px 0;
+            }
+
+            QSlider::add-page:horizontal{
+                background: #082126;
+            }
+
+            QSlider::sub-page:horizontal{
+                background: #082126 ;
+            }
+           """
+        )
         
         return genGroup
 
