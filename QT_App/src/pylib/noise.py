@@ -25,15 +25,13 @@ class WhiteNoise(Generator):
         self.std = 0
 
     def genBuffer(self, bufferSize):
+
+        if bufferSize == 0:
+            bufferSize = 2048
+
         result =  np.random.standard_normal(size=bufferSize)
 
-        # the function will sometime skip a buffer
-        # use a try catch to avoid fatal errors
-        try:
-            norm_result = result/np.max(result)
-        except ValueError:
-            norm_result = np.zeros(bufferSize)
-        return norm_result 
+        return result 
 
     def setFreq(self, freq):
         return 0

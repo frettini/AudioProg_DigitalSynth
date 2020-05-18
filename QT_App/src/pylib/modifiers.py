@@ -190,6 +190,8 @@ class AState(ADSRState):
 
     def setTime(self, time):
         self.step = self.samplePerRead / (self.sampleRate*time) 
+        print("A: " + str(self.step))
+
 
 
 class DState(ADSRState):
@@ -214,6 +216,8 @@ class DState(ADSRState):
 
     def setTime(self, time, sustain):
         self.step = self.samplePerRead * (self.sustain - 1)/(self.sampleRate * time)
+        print("D: " + str(self.step))
+
 
 
 class SState(ADSRState):
@@ -261,6 +265,7 @@ class RState(ADSRState):
     def setTime(self, time, sustain=0.7):
         self.sustain = sustain
         self.step = self.samplePerRead * (-self.sustain)/(self.sampleRate * time)
+        print("R: " + str(self.step))
 
 # ADSR modifier and state manager
 class ADSR_V2(sf.Modifier):
@@ -277,10 +282,12 @@ class ADSR_V2(sf.Modifier):
         sState = SState(self.sampleRate, self.samplePerRead, S)
         rState = RState(self.sampleRate, self.samplePerRead, R, S)
 
-        self.states = {"attack"  : aState, 
-                  "decay"   : dState, 
-                  "sustain" : sState,
-                  "release" : rState }
+        self.states = {
+            "attack"  : aState, 
+            "decay"   : dState, 
+            "sustain" : sState,
+            "release" : rState 
+                       }
         
         self.currentState = self.states["release"]
 
@@ -293,7 +300,7 @@ class ADSR_V2(sf.Modifier):
 
         return modifier * input_arr
 
-    def setADSR(self, A = 1, D = 1, S = 0.7, R = 2):
+    def setADSR(self, A, D, S, R):
         self.R = R
 
         self.states["attack"].setTime(A)

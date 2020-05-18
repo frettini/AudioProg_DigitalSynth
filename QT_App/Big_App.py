@@ -45,8 +45,8 @@ class MidiPortReader(QObject):
     def listener(self):
         with mido.open_input(virtual=False) as mip:
             for mmsg in mip:
-                print(mmsg.type)
-                print(mmsg.bytes())
+                # print(mmsg.type)
+                # print(mmsg.bytes())
                 
                 # convert midi to frequency
                 freq = math.pow(2,(float(mmsg.bytes()[1])-69)/12)*440
@@ -193,23 +193,24 @@ class ToneWindow(QWidget):
         print("Create UI")
         slidLayout = QHBoxLayout()
         vLayout = QVBoxLayout(self)
-
-        #create dummy active gen for now
+        vLayout.setSpacing(10)
 
         #create the two other sliders
         self.MasterSlid = QSlider(Qt.Vertical)
         self.QSlid = QSlider(Qt.Vertical)
         
         # add the two sliders and ADSR layout in a horizontal layout
+        slidLayout.addStretch(1)
         slidLayout.addWidget(sliders.FiltSlider(self.activeGen, self).createUI(parent))
-        slidLayout.addStretch(0.9)
+        slidLayout.addStretch(1)
         slidLayout.addWidget(sliders.ADSRSlider(self.activeGen, self).createUI(parent), Qt.AlignHCenter)    
-        slidLayout.addStretch(0.9)    
+        slidLayout.addStretch(1)    
         slidLayout.addWidget(sliders.MasterSlider(self.activeGen, self).createUI(parent))
+        slidLayout.addStretch(1)
 
 
         self.title = QLabel(self)
-        self.title.setText("The Dome Generator")
+        self.title.setText("The Tone Generator")
         self.title.setMargin(10)
         self.title.setStyleSheet("""
             QLabel {
@@ -221,14 +222,21 @@ class ToneWindow(QWidget):
             }  
         """)
         
-        self.title.setMaximumHeight(50)
-        self.title.setMaximumHeight(50)
+        self.title.setFixedHeight(50)
+        self.title.setFixedWidth(400)
         self.title.setAlignment(Qt.AlignCenter)
 
     
+        genSlider = sliders.GenSlider(self.activeGen, self).createUI(parent)
+        
         vLayout.addWidget(self.title)
+        vLayout.setAlignment(self.title,Qt.AlignCenter)
+        vLayout.addSpacing(20)
         vLayout.addLayout(slidLayout)
-        vLayout.addLayout(sliders.GenSlider(self.activeGen, self).createUI(parent))
+        vLayout.addSpacing(20)
+
+        vLayout.addWidget(genSlider)
+        vLayout.setAlignment(genSlider,Qt.AlignCenter)
 
         
 

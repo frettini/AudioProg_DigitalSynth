@@ -24,7 +24,9 @@ class UIHelper:
 
         layout.addWidget(label)
         layout.addWidget(slider)
-        layout.setAlignment(slider, Qt.AlignCenter)
+        # layout.setAlignment(slider, Qt.AlignCenter)
+        layout.setAlignment(slider, Qt.AlignJustify)
+
 
         return layout
 
@@ -66,10 +68,16 @@ class ADSRSlider(QWidget):
         self.RLabel = QLabel(self)
 
         # add them to a sublayout (to add the section title)
+        subLayout.addStretch(1)
         subLayout.addLayout(UIHelper.labSlidLayout(self.ASlid, self.ALabel, "Attack"))
+        subLayout.addStretch(1)
         subLayout.addLayout(UIHelper.labSlidLayout(self.DSlid, self.DLabel, "Decay"))
+        subLayout.addStretch(1)
         subLayout.addLayout(UIHelper.labSlidLayout(self.SSlid, self.SLabel, "Sustain"))
+        subLayout.addStretch(1)
         subLayout.addLayout(UIHelper.labSlidLayout(self.RSlid, self.RLabel, "Release"))
+        subLayout.addStretch(1)
+
 
         subLayout.setContentsMargins(20,20,20,20)
         subLayout.setAlignment(Qt.AlignJustify)
@@ -96,26 +104,26 @@ class ADSRSlider(QWidget):
     def AReleased(self):
         # range from 0 to 2
         print("A value changed to {}".format(self.ASlid.value()))
-        self.sendADSR
+        self.sendADSR()
         
     @pyqtSlot()
     def DReleased(self):
         # range from 0 to 2
         print("D value changed to {}".format(self.DSlid.value()))
-        self.sendADSR
+        self.sendADSR()
 
     @pyqtSlot()
     def SReleased(self):
         # range from 0 to 1
         print("S value changed to {}".format(self.SSlid.value()))
-        self.sendADSR
+        self.sendADSR()
 
 
     @pyqtSlot()
     def RReleased(self):
         # range from 0 ro 5 s
         print("R value changed to {}".format(self.RSlid.value()))
-        self.sendADSR
+        self.sendADSR()
 
     def sendADSR(self):
         self.activeGen.adsr.setADSR(
@@ -137,7 +145,7 @@ class FiltSlider(QWidget):
     def createUI(self, parent):
         #Box Layout which groups sliders with a title and borders
         filterBox = QGroupBox("Filtered Noise")
-        filterBox.setMinimumWidth(75)
+        filterBox.setFixedWidth(75)
 
         #create sub widget
         self.filterLabel = QLabel(self)
@@ -201,13 +209,14 @@ class GenSlider(QWidget):
 
     def createUI(self, parent):
 
-        genLayout = QVBoxLayout()
 
         # Section title setup
         self.genLabel = QLabel(self)
         self.genLabel.setText("Active Generator")
         self.genLabel.setMaximumHeight(100)
+        self.genLabel.setAlignment(Qt.AlignBottom)
         self.genLabel.setAlignment(Qt.AlignCenter)
+
 
         # create active generator slider
         # change range from 0 to 2 and add ticks
@@ -235,7 +244,8 @@ class GenSlider(QWidget):
         labelLayout.setAlignment(Qt.AlignJustify)
         labelLayout.setAlignment(Qt.AlignTop)
 
-        subLayout = QVBoxLayout()
+        genWidget = QWidget()
+        subLayout = QVBoxLayout(genWidget)
 
         subLayout.addWidget(self.genLabel)
         subLayout.addWidget(self.genSlid)
@@ -249,7 +259,10 @@ class GenSlider(QWidget):
             self.genReleased
         )
 
-        return subLayout
+        genWidget.setFixedWidth(450)
+        genWidget.setMaximumHeight(200)
+        
+        return genWidget
 
     @pyqtSlot()
     def genReleased(self):
