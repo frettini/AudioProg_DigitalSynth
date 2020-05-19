@@ -1,0 +1,1411 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.8.1" />
+<title>src.pylib.modifiers API documentation</title>
+<meta name="description" content="" />
+<link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
+<link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
+<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>src.pylib.modifiers</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">from abc import ABC, abstractmethod
+import numpy as np
+
+# import os,sys,inspect
+# current_dir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+# parent_dir = os.path.dirname(current_dir)
+# sys.path.insert(0, parent_dir) 
+# import filter_ext.swig_filter as sf
+
+from ..filter_ext import swig_filter as sf
+
+
+# Delay Class implemented using Python 
+# another Delay class is implemented in c++ and is more efficient
+class PyDelay:
+
+    def __init__(self, nsamp_delay, process_delay):
+        self.n = nsamp_delay
+        self.delay_store = np.zeros(nsamp_delay)
+        self.delay_inter = np.zeros(nsamp_delay)
+        self.process_arr = np.zeros(process_delay)
+
+    def delay(self, input_arr):
+
+        try:
+            
+            self.delay_inter = input_arr[-self.n:]
+            input_arr = np.concatenate((self.delay_store, input_arr[:-self.n]))
+           
+            self.delay_store = self.delay_inter
+
+            return input_arr
+
+        except IndexError:
+            print(&#34;IndexError : input array smaller than delay, return Input Array&#34;)
+            return input_arr
+
+    def process(self, audio_sample):
+        self.process_arr = np.concatenate(([audio_sample], self.process_arr[:(len(self.process_arr)-1)]))
+        return self.process_arr
+
+
+# Simple Gain Class that multiplies buffer with a set value
+class Gain(sf.Modifier):
+
+    def __init__(self, gain):
+        self.setGain(gain)
+        
+    def setGain(self, gain):
+        self.gain = gain
+
+    def modBuffer(self, input_arr):
+        return  input_arr * self.gain
+
+
+# ADSR envelope Mod
+class ADSR(sf.Modifier):
+
+    def __init__(self, samplePerRead, sampleRate = 44100, A=0.1, D=0.1, S=0.7, R=1.0):
+        self.noteOn = False
+        self.index = 0
+        self.sampleRate = sampleRate
+        self.samplePerRead = samplePerRead
+
+        self.maxA = int(1 * self.sampleRate)
+        self.maxD = int(1 * self.sampleRate)
+        self.maxR = int(4 * self.sampleRate)
+        self.setS(S)
+
+        # calculate the maximum size of the Attack and Delay Buffer
+        # Make sure it is a multiple of the sample per read rate
+        ADmaxsize = self.maxA + self.maxD 
+        ADmaxsize += (self.samplePerRead - ADmaxsize % self.samplePerRead)
+        self.ADbuffer = np.full(ADmaxsize,self.S)
+        print(ADmaxsize)
+
+        # same but for the release buffer
+        Rmaxsize = self.maxR
+        Rmaxsize += (self.samplePerRead - Rmaxsize % self.samplePerRead)
+        self.Rbuffer = np.full(Rmaxsize,self.S)
+        print(Rmaxsize)
+
+        # set the buffer values and sustain
+        self.setAD(A, D)
+        self.setR(R)
+
+
+    def modBuffer(self, input_arr):
+        
+        # this could be done by allocating the buffers to an active buffer
+        # however this require more memory allocation
+        # could also implement the active buffer in the setNote method
+        if self.noteOn is True:
+            
+            # if the note is maintained further than the attack and delay
+            # multiply the input value with the sustain value
+            if self.index &gt;= len(self.ADbuffer):
+                return input_arr*self.S
+
+            result_buffer = input_arr * self.ADbuffer[self.index:(self.index+self.samplePerRead)]
+            self.index += self.index+self.samplePerRead
+            return result_buffer
+
+        else:
+            # if the note is maintained further than the release
+            # multiply the input value with 0
+            if self.index &gt;= len(self.Rbuffer):
+                return input_arr*0
+
+            result_buffer = input_arr * self.Rbuffer[self.index:(self.index+self.samplePerRead)]
+            self.index += self.index+self.samplePerRead
+            return result_buffer
+            
+        return input_arr
+
+    #generate the buffer for the attack and decay
+    def setAD(self, A, D):
+        if A &lt;= self.maxA:
+            self.A = int(A * self.sampleRate)
+        else:
+            self.A = self.maxA
+
+        if D &lt;= self.maxD:
+            self.D = int(D * self.sampleRate)
+        else:
+            self.D = self.maxD
+
+        # set frames for A, D, and extra sustain 
+        self.ADbuffer[0:self.A] = np.linspace(0,1,self.A)
+        self.ADbuffer[self.A:self.A + self.D ] = np.linspace(1, self.S, self.D)
+        self.ADbuffer[self.A + self.D:] = self.S
+
+
+    #generate the buffer for the release
+    def setR(self, R):
+        if R &lt;= self.maxR:
+            self.R = int(R * self.sampleRate)
+        else:
+            self.R = self.maxR
+
+        self.Rbuffer[0:self.R] = np.linspace(self.S,0,self.R)
+        self.Rbuffer[self.R:] = 0
+
+    def setS(self, S):
+        if S &lt;= 1:
+            self.S = S
+        else:
+            self.S = 1
+
+    def setNote(self):
+        self.noteOn = not self.noteOn
+        self.index = 0
+
+#-------------------------------------------------------------------
+# Second implementation of ADSR using a State Machine
+#-------------------------------------------------------------------
+class ADSRState(ABC):
+    def __init__(self, sampleRate, samplePerRead):
+        self.sampleRate = sampleRate
+        self.samplePerRead = samplePerRead
+
+    # generate the buffer of values
+    @abstractmethod
+    def process(self, amplitude):
+        pass
+
+    # time: time in seconds for each steps
+    # internally steps the amplitude step for the state
+    @abstractmethod
+    def setTime(self, time):
+        pass
+
+class AState(ADSRState):
+    
+    def __init__(self, sampleRate, samplePerRead, time=1):
+        super().__init__(sampleRate, samplePerRead)
+        self.setTime(time)
+
+    def process(self, amp):
+        # calculate the amplitude we want to get to
+        newAmp = amp + self.step
+        # if it is higher thank 1, clamp and set the next state to decay        
+        if newAmp &gt;= 1:
+            newAmp = 1
+            nextState = &#34;decay&#34;
+        else:
+            nextState = &#34;attack&#34;
+        
+        # generate the buffer
+        result = np.linspace(amp, newAmp, self.samplePerRead)
+
+        return newAmp, nextState, result
+
+    def setTime(self, time):
+        self.step = self.samplePerRead / (self.sampleRate*time) 
+        print(&#34;A: &#34; + str(self.step))
+
+
+
+class DState(ADSRState):
+    
+    def __init__(self, sampleRate, samplePerRead, time=1, sustain=0.7):
+        super().__init__(sampleRate, samplePerRead) 
+        self.sustain = sustain
+        self.setTime(time, self.sustain)
+
+    def process(self, amp):
+        newAmp = amp + self.step
+
+        if newAmp &lt; self.sustain:
+            newAmp = self.sustain
+            nextState = &#34;sustain&#34;
+        else:
+            nextState = &#34;decay&#34;
+
+        result = np.linspace(amp, newAmp, self.samplePerRead)
+
+        return newAmp, nextState, result
+
+    def setTime(self, time, sustain):
+        self.step = self.samplePerRead * (self.sustain - 1)/(self.sampleRate * time)
+        print(&#34;D: &#34; + str(self.step))
+
+
+
+class SState(ADSRState):
+    
+    def __init__(self, sampleRate, samplePerRead, sustain=0.7):
+        super().__init__(sampleRate, samplePerRead)
+        self.setSustain(sustain)
+
+    def process(self, amplitude):
+        newAmp = self.sustain
+        nextState = &#34;sustain&#34;
+        result = np.full(self.samplePerRead, self.sustain)
+        return newAmp, nextState, result
+
+    # needs a reference to the sustain value of the DState
+    # or it is taken care of in the ADSR class
+    def setSustain(self, sustain):
+        if sustain &gt; 1:
+            self.sustain = 1
+        elif sustain &lt; 0:
+            self.sustain = 0
+        else:
+            self.sustain = sustain
+
+    def setTime(self, time):
+        return 0
+
+
+class RState(ADSRState):
+    
+    def __init__(self, sampleRate, samplePerRead, time=2, sustain=0.7):
+        super().__init__(sampleRate, samplePerRead)
+        self.setTime(time, sustain)
+
+    def process(self, amp):
+        newAmp = amp + self.step
+
+        if newAmp &lt; 0 :
+            newAmp = 0
+
+        nextState = &#34;release&#34;
+        result = np.linspace(amp, newAmp, self.samplePerRead)
+        return newAmp, nextState, result
+
+    def setTime(self, time, sustain=0.7):
+        self.sustain = sustain
+        self.step = self.samplePerRead * (-self.sustain)/(self.sampleRate * time)
+        print(&#34;R: &#34; + str(self.step))
+
+# ADSR modifier and state manager
+class ADSR_V2(sf.Modifier):
+    
+    def __init__(self, samplePerRead = 2048, sampleRate = 44100, A=1,D=1,S=0.7,R=2):
+        self.samplePerRead = samplePerRead
+        self.sampleRate = sampleRate
+        self.noteOn = False
+        self.amplitude = 0.0
+        self.R = R
+        
+        aState = AState(self.sampleRate, self.samplePerRead, A)
+        dState = DState(self.sampleRate, self.samplePerRead, D, S)
+        sState = SState(self.sampleRate, self.samplePerRead, S)
+        rState = RState(self.sampleRate, self.samplePerRead, R, S)
+
+        self.states = {
+            &#34;attack&#34;  : aState, 
+            &#34;decay&#34;   : dState, 
+            &#34;sustain&#34; : sState,
+            &#34;release&#34; : rState 
+                       }
+        
+        self.currentState = self.states[&#34;release&#34;]
+
+    def modBuffer(self, input_arr):
+        
+        self.amplitude, nextState, modifier = self.currentState.process(self.amplitude)
+        
+        if self.currentState != self.states[nextState]:
+            self.currentState = self.states[nextState]
+
+        return modifier * input_arr
+
+    def setADSR(self, A, D, S, R):
+        self.R = R
+
+        self.states[&#34;attack&#34;].setTime(A)
+        self.states[&#34;decay&#34;].setTime(D, S)
+        self.states[&#34;sustain&#34;].setSustain(S)
+        self.states[&#34;release&#34;].setTime(R)
+
+
+    def setNote(self, status):
+        
+        self.noteOn = status
+        if self.noteOn is True:
+            self.currentState = self.states[&#34;attack&#34;]
+
+        if self.noteOn is False:
+            self.currentState = self.states[&#34;release&#34;]
+            #ensure equal release time from any amplitude
+            self.currentState.setTime(self.R , self.amplitude)
+
+
+
+if __name__ == &#34;__main__&#34;:
+
+    import matplotlib.pyplot as plot
+
+    d = PyDelay(10, 10)
+    d.process(1)
+    d.process(2)
+    print(d.process_arr)
+
+    g = Gain(2)
+    print(&#34;Gain modifier&#34;)
+    print(g.modBuffer(d.process_arr))
+
+    adsrmod = ADSR_V2(20, 60, S=0.2)
+    random =  np.random.standard_normal(360)
+    result = np.zeros(360)
+    
+    adsrmod.setNote(True)
+    for i in range(0,100,20):
+        result[i:i+20] = adsrmod.modBuffer(random[i:i+20])
+    adsrmod.setNote(False)
+    for i in range(100,140,20):
+        result[i:i+20] = adsrmod.modBuffer(random[i:i+20])
+    adsrmod.setNote(True)
+    for i in range(140,200,20):
+        result[i:i+20] = adsrmod.modBuffer(random[i:i+20])
+    adsrmod.setNote(False)
+    for i in range(200,360,20):
+        result[i:i+20] = adsrmod.modBuffer(random[i:i+20])
+    
+
+    plot.plot(result)
+    plot.show()</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="src.pylib.modifiers.ADSR"><code class="flex name class">
+<span>class <span class="ident">ADSR</span></span>
+<span>(</span><span>samplePerRead, sampleRate=44100, A=0.1, D=0.1, S=0.7, R=1.0)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class ADSR(sf.Modifier):
+
+    def __init__(self, samplePerRead, sampleRate = 44100, A=0.1, D=0.1, S=0.7, R=1.0):
+        self.noteOn = False
+        self.index = 0
+        self.sampleRate = sampleRate
+        self.samplePerRead = samplePerRead
+
+        self.maxA = int(1 * self.sampleRate)
+        self.maxD = int(1 * self.sampleRate)
+        self.maxR = int(4 * self.sampleRate)
+        self.setS(S)
+
+        # calculate the maximum size of the Attack and Delay Buffer
+        # Make sure it is a multiple of the sample per read rate
+        ADmaxsize = self.maxA + self.maxD 
+        ADmaxsize += (self.samplePerRead - ADmaxsize % self.samplePerRead)
+        self.ADbuffer = np.full(ADmaxsize,self.S)
+        print(ADmaxsize)
+
+        # same but for the release buffer
+        Rmaxsize = self.maxR
+        Rmaxsize += (self.samplePerRead - Rmaxsize % self.samplePerRead)
+        self.Rbuffer = np.full(Rmaxsize,self.S)
+        print(Rmaxsize)
+
+        # set the buffer values and sustain
+        self.setAD(A, D)
+        self.setR(R)
+
+
+    def modBuffer(self, input_arr):
+        
+        # this could be done by allocating the buffers to an active buffer
+        # however this require more memory allocation
+        # could also implement the active buffer in the setNote method
+        if self.noteOn is True:
+            
+            # if the note is maintained further than the attack and delay
+            # multiply the input value with the sustain value
+            if self.index &gt;= len(self.ADbuffer):
+                return input_arr*self.S
+
+            result_buffer = input_arr * self.ADbuffer[self.index:(self.index+self.samplePerRead)]
+            self.index += self.index+self.samplePerRead
+            return result_buffer
+
+        else:
+            # if the note is maintained further than the release
+            # multiply the input value with 0
+            if self.index &gt;= len(self.Rbuffer):
+                return input_arr*0
+
+            result_buffer = input_arr * self.Rbuffer[self.index:(self.index+self.samplePerRead)]
+            self.index += self.index+self.samplePerRead
+            return result_buffer
+            
+        return input_arr
+
+    #generate the buffer for the attack and decay
+    def setAD(self, A, D):
+        if A &lt;= self.maxA:
+            self.A = int(A * self.sampleRate)
+        else:
+            self.A = self.maxA
+
+        if D &lt;= self.maxD:
+            self.D = int(D * self.sampleRate)
+        else:
+            self.D = self.maxD
+
+        # set frames for A, D, and extra sustain 
+        self.ADbuffer[0:self.A] = np.linspace(0,1,self.A)
+        self.ADbuffer[self.A:self.A + self.D ] = np.linspace(1, self.S, self.D)
+        self.ADbuffer[self.A + self.D:] = self.S
+
+
+    #generate the buffer for the release
+    def setR(self, R):
+        if R &lt;= self.maxR:
+            self.R = int(R * self.sampleRate)
+        else:
+            self.R = self.maxR
+
+        self.Rbuffer[0:self.R] = np.linspace(self.S,0,self.R)
+        self.Rbuffer[self.R:] = 0
+
+    def setS(self, S):
+        if S &lt;= 1:
+            self.S = S
+        else:
+            self.S = 1
+
+    def setNote(self):
+        self.noteOn = not self.noteOn
+        self.index = 0</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.filter_ext.swig_filter.Modifier" href="../filter_ext/swig_filter.html#src.filter_ext.swig_filter.Modifier">Modifier</a></li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="src.pylib.modifiers.ADSR.modBuffer"><code class="name flex">
+<span>def <span class="ident">modBuffer</span></span>(<span>self, input_arr)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def modBuffer(self, input_arr):
+    
+    # this could be done by allocating the buffers to an active buffer
+    # however this require more memory allocation
+    # could also implement the active buffer in the setNote method
+    if self.noteOn is True:
+        
+        # if the note is maintained further than the attack and delay
+        # multiply the input value with the sustain value
+        if self.index &gt;= len(self.ADbuffer):
+            return input_arr*self.S
+
+        result_buffer = input_arr * self.ADbuffer[self.index:(self.index+self.samplePerRead)]
+        self.index += self.index+self.samplePerRead
+        return result_buffer
+
+    else:
+        # if the note is maintained further than the release
+        # multiply the input value with 0
+        if self.index &gt;= len(self.Rbuffer):
+            return input_arr*0
+
+        result_buffer = input_arr * self.Rbuffer[self.index:(self.index+self.samplePerRead)]
+        self.index += self.index+self.samplePerRead
+        return result_buffer
+        
+    return input_arr</code></pre>
+</details>
+</dd>
+<dt id="src.pylib.modifiers.ADSR.setAD"><code class="name flex">
+<span>def <span class="ident">setAD</span></span>(<span>self, A, D)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def setAD(self, A, D):
+    if A &lt;= self.maxA:
+        self.A = int(A * self.sampleRate)
+    else:
+        self.A = self.maxA
+
+    if D &lt;= self.maxD:
+        self.D = int(D * self.sampleRate)
+    else:
+        self.D = self.maxD
+
+    # set frames for A, D, and extra sustain 
+    self.ADbuffer[0:self.A] = np.linspace(0,1,self.A)
+    self.ADbuffer[self.A:self.A + self.D ] = np.linspace(1, self.S, self.D)
+    self.ADbuffer[self.A + self.D:] = self.S</code></pre>
+</details>
+</dd>
+<dt id="src.pylib.modifiers.ADSR.setNote"><code class="name flex">
+<span>def <span class="ident">setNote</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def setNote(self):
+    self.noteOn = not self.noteOn
+    self.index = 0</code></pre>
+</details>
+</dd>
+<dt id="src.pylib.modifiers.ADSR.setR"><code class="name flex">
+<span>def <span class="ident">setR</span></span>(<span>self, R)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def setR(self, R):
+    if R &lt;= self.maxR:
+        self.R = int(R * self.sampleRate)
+    else:
+        self.R = self.maxR
+
+    self.Rbuffer[0:self.R] = np.linspace(self.S,0,self.R)
+    self.Rbuffer[self.R:] = 0</code></pre>
+</details>
+</dd>
+<dt id="src.pylib.modifiers.ADSR.setS"><code class="name flex">
+<span>def <span class="ident">setS</span></span>(<span>self, S)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def setS(self, S):
+    if S &lt;= 1:
+        self.S = S
+    else:
+        self.S = 1</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="src.filter_ext.swig_filter.Modifier" href="../filter_ext/swig_filter.html#src.filter_ext.swig_filter.Modifier">Modifier</a></b></code>:
+<ul class="hlist">
+<li><code><a title="src.filter_ext.swig_filter.Modifier.thisown" href="../filter_ext/swig_filter.html#src.filter_ext.swig_filter.Modifier.thisown">thisown</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="src.pylib.modifiers.ADSRState"><code class="flex name class">
+<span>class <span class="ident">ADSRState</span></span>
+<span>(</span><span>sampleRate, samplePerRead)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Helper class that provides a standard way to create an ABC using
+inheritance.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class ADSRState(ABC):
+    def __init__(self, sampleRate, samplePerRead):
+        self.sampleRate = sampleRate
+        self.samplePerRead = samplePerRead
+
+    # generate the buffer of values
+    @abstractmethod
+    def process(self, amplitude):
+        pass
+
+    # time: time in seconds for each steps
+    # internally steps the amplitude step for the state
+    @abstractmethod
+    def setTime(self, time):
+        pass</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>abc.ABC</li>
+</ul>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="src.pylib.modifiers.AState" href="#src.pylib.modifiers.AState">AState</a></li>
+<li><a title="src.pylib.modifiers.DState" href="#src.pylib.modifiers.DState">DState</a></li>
+<li><a title="src.pylib.modifiers.RState" href="#src.pylib.modifiers.RState">RState</a></li>
+<li><a title="src.pylib.modifiers.SState" href="#src.pylib.modifiers.SState">SState</a></li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="src.pylib.modifiers.ADSRState.process"><code class="name flex">
+<span>def <span class="ident">process</span></span>(<span>self, amplitude)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@abstractmethod
+def process(self, amplitude):
+    pass</code></pre>
+</details>
+</dd>
+<dt id="src.pylib.modifiers.ADSRState.setTime"><code class="name flex">
+<span>def <span class="ident">setTime</span></span>(<span>self, time)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@abstractmethod
+def setTime(self, time):
+    pass</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="src.pylib.modifiers.ADSR_V2"><code class="flex name class">
+<span>class <span class="ident">ADSR_V2</span></span>
+<span>(</span><span>samplePerRead=2048, sampleRate=44100, A=1, D=1, S=0.7, R=2)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class ADSR_V2(sf.Modifier):
+    
+    def __init__(self, samplePerRead = 2048, sampleRate = 44100, A=1,D=1,S=0.7,R=2):
+        self.samplePerRead = samplePerRead
+        self.sampleRate = sampleRate
+        self.noteOn = False
+        self.amplitude = 0.0
+        self.R = R
+        
+        aState = AState(self.sampleRate, self.samplePerRead, A)
+        dState = DState(self.sampleRate, self.samplePerRead, D, S)
+        sState = SState(self.sampleRate, self.samplePerRead, S)
+        rState = RState(self.sampleRate, self.samplePerRead, R, S)
+
+        self.states = {
+            &#34;attack&#34;  : aState, 
+            &#34;decay&#34;   : dState, 
+            &#34;sustain&#34; : sState,
+            &#34;release&#34; : rState 
+                       }
+        
+        self.currentState = self.states[&#34;release&#34;]
+
+    def modBuffer(self, input_arr):
+        
+        self.amplitude, nextState, modifier = self.currentState.process(self.amplitude)
+        
+        if self.currentState != self.states[nextState]:
+            self.currentState = self.states[nextState]
+
+        return modifier * input_arr
+
+    def setADSR(self, A, D, S, R):
+        self.R = R
+
+        self.states[&#34;attack&#34;].setTime(A)
+        self.states[&#34;decay&#34;].setTime(D, S)
+        self.states[&#34;sustain&#34;].setSustain(S)
+        self.states[&#34;release&#34;].setTime(R)
+
+
+    def setNote(self, status):
+        
+        self.noteOn = status
+        if self.noteOn is True:
+            self.currentState = self.states[&#34;attack&#34;]
+
+        if self.noteOn is False:
+            self.currentState = self.states[&#34;release&#34;]
+            #ensure equal release time from any amplitude
+            self.currentState.setTime(self.R , self.amplitude)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.filter_ext.swig_filter.Modifier" href="../filter_ext/swig_filter.html#src.filter_ext.swig_filter.Modifier">Modifier</a></li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="src.pylib.modifiers.ADSR_V2.modBuffer"><code class="name flex">
+<span>def <span class="ident">modBuffer</span></span>(<span>self, input_arr)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def modBuffer(self, input_arr):
+    
+    self.amplitude, nextState, modifier = self.currentState.process(self.amplitude)
+    
+    if self.currentState != self.states[nextState]:
+        self.currentState = self.states[nextState]
+
+    return modifier * input_arr</code></pre>
+</details>
+</dd>
+<dt id="src.pylib.modifiers.ADSR_V2.setADSR"><code class="name flex">
+<span>def <span class="ident">setADSR</span></span>(<span>self, A, D, S, R)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def setADSR(self, A, D, S, R):
+    self.R = R
+
+    self.states[&#34;attack&#34;].setTime(A)
+    self.states[&#34;decay&#34;].setTime(D, S)
+    self.states[&#34;sustain&#34;].setSustain(S)
+    self.states[&#34;release&#34;].setTime(R)</code></pre>
+</details>
+</dd>
+<dt id="src.pylib.modifiers.ADSR_V2.setNote"><code class="name flex">
+<span>def <span class="ident">setNote</span></span>(<span>self, status)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def setNote(self, status):
+    
+    self.noteOn = status
+    if self.noteOn is True:
+        self.currentState = self.states[&#34;attack&#34;]
+
+    if self.noteOn is False:
+        self.currentState = self.states[&#34;release&#34;]
+        #ensure equal release time from any amplitude
+        self.currentState.setTime(self.R , self.amplitude)</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="src.filter_ext.swig_filter.Modifier" href="../filter_ext/swig_filter.html#src.filter_ext.swig_filter.Modifier">Modifier</a></b></code>:
+<ul class="hlist">
+<li><code><a title="src.filter_ext.swig_filter.Modifier.thisown" href="../filter_ext/swig_filter.html#src.filter_ext.swig_filter.Modifier.thisown">thisown</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="src.pylib.modifiers.AState"><code class="flex name class">
+<span>class <span class="ident">AState</span></span>
+<span>(</span><span>sampleRate, samplePerRead, time=1)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Helper class that provides a standard way to create an ABC using
+inheritance.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class AState(ADSRState):
+    
+    def __init__(self, sampleRate, samplePerRead, time=1):
+        super().__init__(sampleRate, samplePerRead)
+        self.setTime(time)
+
+    def process(self, amp):
+        # calculate the amplitude we want to get to
+        newAmp = amp + self.step
+        # if it is higher thank 1, clamp and set the next state to decay        
+        if newAmp &gt;= 1:
+            newAmp = 1
+            nextState = &#34;decay&#34;
+        else:
+            nextState = &#34;attack&#34;
+        
+        # generate the buffer
+        result = np.linspace(amp, newAmp, self.samplePerRead)
+
+        return newAmp, nextState, result
+
+    def setTime(self, time):
+        self.step = self.samplePerRead / (self.sampleRate*time) 
+        print(&#34;A: &#34; + str(self.step))</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.pylib.modifiers.ADSRState" href="#src.pylib.modifiers.ADSRState">ADSRState</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="src.pylib.modifiers.AState.process"><code class="name flex">
+<span>def <span class="ident">process</span></span>(<span>self, amp)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def process(self, amp):
+    # calculate the amplitude we want to get to
+    newAmp = amp + self.step
+    # if it is higher thank 1, clamp and set the next state to decay        
+    if newAmp &gt;= 1:
+        newAmp = 1
+        nextState = &#34;decay&#34;
+    else:
+        nextState = &#34;attack&#34;
+    
+    # generate the buffer
+    result = np.linspace(amp, newAmp, self.samplePerRead)
+
+    return newAmp, nextState, result</code></pre>
+</details>
+</dd>
+<dt id="src.pylib.modifiers.AState.setTime"><code class="name flex">
+<span>def <span class="ident">setTime</span></span>(<span>self, time)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def setTime(self, time):
+    self.step = self.samplePerRead / (self.sampleRate*time) 
+    print(&#34;A: &#34; + str(self.step))</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="src.pylib.modifiers.DState"><code class="flex name class">
+<span>class <span class="ident">DState</span></span>
+<span>(</span><span>sampleRate, samplePerRead, time=1, sustain=0.7)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Helper class that provides a standard way to create an ABC using
+inheritance.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class DState(ADSRState):
+    
+    def __init__(self, sampleRate, samplePerRead, time=1, sustain=0.7):
+        super().__init__(sampleRate, samplePerRead) 
+        self.sustain = sustain
+        self.setTime(time, self.sustain)
+
+    def process(self, amp):
+        newAmp = amp + self.step
+
+        if newAmp &lt; self.sustain:
+            newAmp = self.sustain
+            nextState = &#34;sustain&#34;
+        else:
+            nextState = &#34;decay&#34;
+
+        result = np.linspace(amp, newAmp, self.samplePerRead)
+
+        return newAmp, nextState, result
+
+    def setTime(self, time, sustain):
+        self.step = self.samplePerRead * (self.sustain - 1)/(self.sampleRate * time)
+        print(&#34;D: &#34; + str(self.step))</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.pylib.modifiers.ADSRState" href="#src.pylib.modifiers.ADSRState">ADSRState</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="src.pylib.modifiers.DState.process"><code class="name flex">
+<span>def <span class="ident">process</span></span>(<span>self, amp)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def process(self, amp):
+    newAmp = amp + self.step
+
+    if newAmp &lt; self.sustain:
+        newAmp = self.sustain
+        nextState = &#34;sustain&#34;
+    else:
+        nextState = &#34;decay&#34;
+
+    result = np.linspace(amp, newAmp, self.samplePerRead)
+
+    return newAmp, nextState, result</code></pre>
+</details>
+</dd>
+<dt id="src.pylib.modifiers.DState.setTime"><code class="name flex">
+<span>def <span class="ident">setTime</span></span>(<span>self, time, sustain)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def setTime(self, time, sustain):
+    self.step = self.samplePerRead * (self.sustain - 1)/(self.sampleRate * time)
+    print(&#34;D: &#34; + str(self.step))</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="src.pylib.modifiers.Gain"><code class="flex name class">
+<span>class <span class="ident">Gain</span></span>
+<span>(</span><span>gain)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Gain(sf.Modifier):
+
+    def __init__(self, gain):
+        self.setGain(gain)
+        
+    def setGain(self, gain):
+        self.gain = gain
+
+    def modBuffer(self, input_arr):
+        return  input_arr * self.gain</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.filter_ext.swig_filter.Modifier" href="../filter_ext/swig_filter.html#src.filter_ext.swig_filter.Modifier">Modifier</a></li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="src.pylib.modifiers.Gain.modBuffer"><code class="name flex">
+<span>def <span class="ident">modBuffer</span></span>(<span>self, input_arr)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def modBuffer(self, input_arr):
+    return  input_arr * self.gain</code></pre>
+</details>
+</dd>
+<dt id="src.pylib.modifiers.Gain.setGain"><code class="name flex">
+<span>def <span class="ident">setGain</span></span>(<span>self, gain)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def setGain(self, gain):
+    self.gain = gain</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="src.filter_ext.swig_filter.Modifier" href="../filter_ext/swig_filter.html#src.filter_ext.swig_filter.Modifier">Modifier</a></b></code>:
+<ul class="hlist">
+<li><code><a title="src.filter_ext.swig_filter.Modifier.thisown" href="../filter_ext/swig_filter.html#src.filter_ext.swig_filter.Modifier.thisown">thisown</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="src.pylib.modifiers.PyDelay"><code class="flex name class">
+<span>class <span class="ident">PyDelay</span></span>
+<span>(</span><span>nsamp_delay, process_delay)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class PyDelay:
+
+    def __init__(self, nsamp_delay, process_delay):
+        self.n = nsamp_delay
+        self.delay_store = np.zeros(nsamp_delay)
+        self.delay_inter = np.zeros(nsamp_delay)
+        self.process_arr = np.zeros(process_delay)
+
+    def delay(self, input_arr):
+
+        try:
+            
+            self.delay_inter = input_arr[-self.n:]
+            input_arr = np.concatenate((self.delay_store, input_arr[:-self.n]))
+           
+            self.delay_store = self.delay_inter
+
+            return input_arr
+
+        except IndexError:
+            print(&#34;IndexError : input array smaller than delay, return Input Array&#34;)
+            return input_arr
+
+    def process(self, audio_sample):
+        self.process_arr = np.concatenate(([audio_sample], self.process_arr[:(len(self.process_arr)-1)]))
+        return self.process_arr</code></pre>
+</details>
+<h3>Methods</h3>
+<dl>
+<dt id="src.pylib.modifiers.PyDelay.delay"><code class="name flex">
+<span>def <span class="ident">delay</span></span>(<span>self, input_arr)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def delay(self, input_arr):
+
+    try:
+        
+        self.delay_inter = input_arr[-self.n:]
+        input_arr = np.concatenate((self.delay_store, input_arr[:-self.n]))
+       
+        self.delay_store = self.delay_inter
+
+        return input_arr
+
+    except IndexError:
+        print(&#34;IndexError : input array smaller than delay, return Input Array&#34;)
+        return input_arr</code></pre>
+</details>
+</dd>
+<dt id="src.pylib.modifiers.PyDelay.process"><code class="name flex">
+<span>def <span class="ident">process</span></span>(<span>self, audio_sample)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def process(self, audio_sample):
+    self.process_arr = np.concatenate(([audio_sample], self.process_arr[:(len(self.process_arr)-1)]))
+    return self.process_arr</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="src.pylib.modifiers.RState"><code class="flex name class">
+<span>class <span class="ident">RState</span></span>
+<span>(</span><span>sampleRate, samplePerRead, time=2, sustain=0.7)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Helper class that provides a standard way to create an ABC using
+inheritance.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class RState(ADSRState):
+    
+    def __init__(self, sampleRate, samplePerRead, time=2, sustain=0.7):
+        super().__init__(sampleRate, samplePerRead)
+        self.setTime(time, sustain)
+
+    def process(self, amp):
+        newAmp = amp + self.step
+
+        if newAmp &lt; 0 :
+            newAmp = 0
+
+        nextState = &#34;release&#34;
+        result = np.linspace(amp, newAmp, self.samplePerRead)
+        return newAmp, nextState, result
+
+    def setTime(self, time, sustain=0.7):
+        self.sustain = sustain
+        self.step = self.samplePerRead * (-self.sustain)/(self.sampleRate * time)
+        print(&#34;R: &#34; + str(self.step))</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.pylib.modifiers.ADSRState" href="#src.pylib.modifiers.ADSRState">ADSRState</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="src.pylib.modifiers.RState.process"><code class="name flex">
+<span>def <span class="ident">process</span></span>(<span>self, amp)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def process(self, amp):
+    newAmp = amp + self.step
+
+    if newAmp &lt; 0 :
+        newAmp = 0
+
+    nextState = &#34;release&#34;
+    result = np.linspace(amp, newAmp, self.samplePerRead)
+    return newAmp, nextState, result</code></pre>
+</details>
+</dd>
+<dt id="src.pylib.modifiers.RState.setTime"><code class="name flex">
+<span>def <span class="ident">setTime</span></span>(<span>self, time, sustain=0.7)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def setTime(self, time, sustain=0.7):
+    self.sustain = sustain
+    self.step = self.samplePerRead * (-self.sustain)/(self.sampleRate * time)
+    print(&#34;R: &#34; + str(self.step))</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="src.pylib.modifiers.SState"><code class="flex name class">
+<span>class <span class="ident">SState</span></span>
+<span>(</span><span>sampleRate, samplePerRead, sustain=0.7)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Helper class that provides a standard way to create an ABC using
+inheritance.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class SState(ADSRState):
+    
+    def __init__(self, sampleRate, samplePerRead, sustain=0.7):
+        super().__init__(sampleRate, samplePerRead)
+        self.setSustain(sustain)
+
+    def process(self, amplitude):
+        newAmp = self.sustain
+        nextState = &#34;sustain&#34;
+        result = np.full(self.samplePerRead, self.sustain)
+        return newAmp, nextState, result
+
+    # needs a reference to the sustain value of the DState
+    # or it is taken care of in the ADSR class
+    def setSustain(self, sustain):
+        if sustain &gt; 1:
+            self.sustain = 1
+        elif sustain &lt; 0:
+            self.sustain = 0
+        else:
+            self.sustain = sustain
+
+    def setTime(self, time):
+        return 0</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.pylib.modifiers.ADSRState" href="#src.pylib.modifiers.ADSRState">ADSRState</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="src.pylib.modifiers.SState.process"><code class="name flex">
+<span>def <span class="ident">process</span></span>(<span>self, amplitude)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def process(self, amplitude):
+    newAmp = self.sustain
+    nextState = &#34;sustain&#34;
+    result = np.full(self.samplePerRead, self.sustain)
+    return newAmp, nextState, result</code></pre>
+</details>
+</dd>
+<dt id="src.pylib.modifiers.SState.setSustain"><code class="name flex">
+<span>def <span class="ident">setSustain</span></span>(<span>self, sustain)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def setSustain(self, sustain):
+    if sustain &gt; 1:
+        self.sustain = 1
+    elif sustain &lt; 0:
+        self.sustain = 0
+    else:
+        self.sustain = sustain</code></pre>
+</details>
+</dd>
+<dt id="src.pylib.modifiers.SState.setTime"><code class="name flex">
+<span>def <span class="ident">setTime</span></span>(<span>self, time)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def setTime(self, time):
+    return 0</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="src.pylib" href="index.html">src.pylib</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="src.pylib.modifiers.ADSR" href="#src.pylib.modifiers.ADSR">ADSR</a></code></h4>
+<ul class="">
+<li><code><a title="src.pylib.modifiers.ADSR.modBuffer" href="#src.pylib.modifiers.ADSR.modBuffer">modBuffer</a></code></li>
+<li><code><a title="src.pylib.modifiers.ADSR.setAD" href="#src.pylib.modifiers.ADSR.setAD">setAD</a></code></li>
+<li><code><a title="src.pylib.modifiers.ADSR.setNote" href="#src.pylib.modifiers.ADSR.setNote">setNote</a></code></li>
+<li><code><a title="src.pylib.modifiers.ADSR.setR" href="#src.pylib.modifiers.ADSR.setR">setR</a></code></li>
+<li><code><a title="src.pylib.modifiers.ADSR.setS" href="#src.pylib.modifiers.ADSR.setS">setS</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="src.pylib.modifiers.ADSRState" href="#src.pylib.modifiers.ADSRState">ADSRState</a></code></h4>
+<ul class="">
+<li><code><a title="src.pylib.modifiers.ADSRState.process" href="#src.pylib.modifiers.ADSRState.process">process</a></code></li>
+<li><code><a title="src.pylib.modifiers.ADSRState.setTime" href="#src.pylib.modifiers.ADSRState.setTime">setTime</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="src.pylib.modifiers.ADSR_V2" href="#src.pylib.modifiers.ADSR_V2">ADSR_V2</a></code></h4>
+<ul class="">
+<li><code><a title="src.pylib.modifiers.ADSR_V2.modBuffer" href="#src.pylib.modifiers.ADSR_V2.modBuffer">modBuffer</a></code></li>
+<li><code><a title="src.pylib.modifiers.ADSR_V2.setADSR" href="#src.pylib.modifiers.ADSR_V2.setADSR">setADSR</a></code></li>
+<li><code><a title="src.pylib.modifiers.ADSR_V2.setNote" href="#src.pylib.modifiers.ADSR_V2.setNote">setNote</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="src.pylib.modifiers.AState" href="#src.pylib.modifiers.AState">AState</a></code></h4>
+<ul class="">
+<li><code><a title="src.pylib.modifiers.AState.process" href="#src.pylib.modifiers.AState.process">process</a></code></li>
+<li><code><a title="src.pylib.modifiers.AState.setTime" href="#src.pylib.modifiers.AState.setTime">setTime</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="src.pylib.modifiers.DState" href="#src.pylib.modifiers.DState">DState</a></code></h4>
+<ul class="">
+<li><code><a title="src.pylib.modifiers.DState.process" href="#src.pylib.modifiers.DState.process">process</a></code></li>
+<li><code><a title="src.pylib.modifiers.DState.setTime" href="#src.pylib.modifiers.DState.setTime">setTime</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="src.pylib.modifiers.Gain" href="#src.pylib.modifiers.Gain">Gain</a></code></h4>
+<ul class="">
+<li><code><a title="src.pylib.modifiers.Gain.modBuffer" href="#src.pylib.modifiers.Gain.modBuffer">modBuffer</a></code></li>
+<li><code><a title="src.pylib.modifiers.Gain.setGain" href="#src.pylib.modifiers.Gain.setGain">setGain</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="src.pylib.modifiers.PyDelay" href="#src.pylib.modifiers.PyDelay">PyDelay</a></code></h4>
+<ul class="">
+<li><code><a title="src.pylib.modifiers.PyDelay.delay" href="#src.pylib.modifiers.PyDelay.delay">delay</a></code></li>
+<li><code><a title="src.pylib.modifiers.PyDelay.process" href="#src.pylib.modifiers.PyDelay.process">process</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="src.pylib.modifiers.RState" href="#src.pylib.modifiers.RState">RState</a></code></h4>
+<ul class="">
+<li><code><a title="src.pylib.modifiers.RState.process" href="#src.pylib.modifiers.RState.process">process</a></code></li>
+<li><code><a title="src.pylib.modifiers.RState.setTime" href="#src.pylib.modifiers.RState.setTime">setTime</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="src.pylib.modifiers.SState" href="#src.pylib.modifiers.SState">SState</a></code></h4>
+<ul class="">
+<li><code><a title="src.pylib.modifiers.SState.process" href="#src.pylib.modifiers.SState.process">process</a></code></li>
+<li><code><a title="src.pylib.modifiers.SState.setSustain" href="#src.pylib.modifiers.SState.setSustain">setSustain</a></code></li>
+<li><code><a title="src.pylib.modifiers.SState.setTime" href="#src.pylib.modifiers.SState.setTime">setTime</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.8.1</a>.</p>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad()</script>
+</body>
+</html>

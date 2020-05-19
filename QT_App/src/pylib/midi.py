@@ -1,7 +1,7 @@
+import math
 import mido
 import rtmidi
 from PyQt5.QtCore import QObject, pyqtSignal
-import math
 
 
 class MidiPortReader(QObject):

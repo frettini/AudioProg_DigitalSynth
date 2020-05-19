@@ -1,0 +1,1294 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.8.1" />
+<title>src.view.sliders API documentation</title>
+<meta name="description" content="" />
+<link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
+<link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
+<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>src.view.sliders</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">import os
+from PyQt5.QtCore import \
+    Qt, pyqtSlot, pyqtSignal, QObject, QFile
+from PyQt5.QtWidgets import \
+    QWidget, \
+    QSlider, QPushButton, QLabel, \
+    QVBoxLayout, QHBoxLayout, QGroupBox
+
+class UIHelper:
+    &#34;&#34;&#34;
+    Static class which provides helper functions to build the view.
+    &#34;&#34;&#34;
+
+    @staticmethod
+    def labSlidLayout(slider, label, labelName):
+        &#34;&#34;&#34; 
+        Returns a layout containing a label with a set name on top of a slider. 
+        &#34;&#34;&#34;
+        
+        layout = QVBoxLayout()
+
+        # set label name and constraints
+        label.setText(labelName)
+        label.setMaximumHeight(50)
+        label.setAlignment(Qt.AlignCenter)
+        label.setMargin(5)
+        
+        # set slider constraint
+        slider.setMinimumHeight(100)
+
+        # add the widgets to the vertical layout
+        layout.addWidget(label)
+        layout.addWidget(slider)
+        layout.setAlignment(slider, Qt.AlignJustify)
+
+        return layout
+
+
+class ADSRSlider(QWidget):
+    &#34;&#34;&#34; 
+    Defines the view of the ADSR sliders.
+
+    Initializes the widgets, layout and constraints in the createUI method. 
+    Each slider has a dedicated receiver slot which is connected to the 
+    release slider event. The slot methods call the setADSR method which updates
+    the ADSR values.
+    &#34;&#34;&#34;
+    def __init__(self, activeGen, parent=None):
+        QWidget.__init__(self,parent)   
+        self.activeGen = activeGen     
+        # self.createUI(parent)
+
+    def createUI(self, parent):
+        &#34;&#34;&#34; Receives a parent QWidget and produces the ADSR groupBox.&#34;&#34;&#34;
+
+        # groupbox add a border and the ability to resize the frame
+        groupBox = QGroupBox(&#34;Envelope&#34;) 
+        subLayout = QHBoxLayout()
+        
+        # create the middle sliders for ADSR
+        self.ASlid = QSlider(Qt.Vertical)
+        self.DSlid = QSlider(Qt.Vertical)
+        self.SSlid = QSlider(Qt.Vertical)
+        self.RSlid = QSlider(Qt.Vertical)
+
+        # make sure range slider cannot be equal to 0
+        self.ASlid.setRange(1,100)
+        self.DSlid.setRange(1,100)
+        self.SSlid.setRange(1,100)
+        self.RSlid.setRange(1,100)
+
+        # set ticker to an initial value
+        self.ASlid.setValue(50)
+        self.DSlid.setValue(50)
+        self.SSlid.setValue(70)
+        self.RSlid.setValue(40)
+
+        # slider titles
+        self.ALabel = QLabel(self)
+        self.DLabel = QLabel(self)
+        self.SLabel = QLabel(self)
+        self.RLabel = QLabel(self)
+
+        # add them to a sublayout (to add the section title)
+        subLayout.addStretch(1)
+        subLayout.addLayout(UIHelper.labSlidLayout(self.ASlid, self.ALabel, &#34;Attack&#34;))
+        subLayout.addStretch(1)
+        subLayout.addLayout(UIHelper.labSlidLayout(self.DSlid, self.DLabel, &#34;Decay&#34;))
+        subLayout.addStretch(1)
+        subLayout.addLayout(UIHelper.labSlidLayout(self.SSlid, self.SLabel, &#34;Sustain&#34;))
+        subLayout.addStretch(1)
+        subLayout.addLayout(UIHelper.labSlidLayout(self.RSlid, self.RLabel, &#34;Release&#34;))
+        subLayout.addStretch(1)
+
+        # add margin arround each element
+        # Justify the widget to be equally spaced in the layout
+        subLayout.setContentsMargins(20,20,20,20)
+        subLayout.setAlignment(Qt.AlignJustify)
+        
+        # connect the release signals to the slots 
+        self.ASlid.sliderReleased.connect(
+            self.AReleased
+        )
+        self.DSlid.sliderReleased.connect(
+            self.DReleased
+        )
+        self.SSlid.sliderReleased.connect(
+            self.SReleased
+        )
+        self.RSlid.sliderReleased.connect(
+            self.RReleased
+        )
+
+        # add the final layout to a groupbox
+        groupBox.setLayout(subLayout)
+
+        # load and apply the style sheet
+        styleSheet = open(os.path.join(&#34;src&#34;, &#34;view&#34;, &#34;style.qss&#34;), &#34;r&#34;)
+        groupBox.setStyleSheet(styleSheet.read())
+
+        return groupBox
+
+    # 
+    @pyqtSlot()
+    def AReleased(self):
+        # range from 0 to 2
+        print(&#34;A value changed to {}&#34;.format(self.ASlid.value()))
+        self.sendADSR()
+        
+    @pyqtSlot()
+    def DReleased(self):
+        # range from 0 to 2
+        print(&#34;D value changed to {}&#34;.format(self.DSlid.value()))
+        self.sendADSR()
+
+    @pyqtSlot()
+    def SReleased(self):
+        # range from 0 to 1
+        print(&#34;S value changed to {}&#34;.format(self.SSlid.value()))
+        self.sendADSR()
+
+
+    @pyqtSlot()
+    def RReleased(self):
+        # range from 0 ro 5 s
+        print(&#34;R value changed to {}&#34;.format(self.RSlid.value()))
+        self.sendADSR()
+
+    def sendADSR(self):
+        &#34;&#34;&#34; Update the adsr modifier with the current values of the sliders. &#34;&#34;&#34;
+        
+        self.activeGen.adsr.setADSR(
+            A = self.ASlid.value()/50,
+            D = self.DSlid.value()/50,
+            S = self.SSlid.value()/100,
+            R = self.RSlid.value()/20
+        )
+
+
+
+class FiltSlider(QWidget):
+    &#34;&#34;&#34; 
+    Defines the view of the filter sharpness slider. 
+
+    Initializes the widgets, layout and constraints in the createUI method. 
+    The slider release event is connected to a slot method which updates the 
+    sharpness of the filtered noise generator.
+    &#34;&#34;&#34;
+
+    def __init__(self, activeGen, parent=None, styleSheet = None):
+        QWidget.__init__(self,parent) 
+        self.activeGen = activeGen
+    
+
+    def createUI(self, parent):
+        &#34;&#34;&#34; Receives a parent QWidget and returns the Filter Q groupBox.&#34;&#34;&#34;
+
+        #Box Layout which groups sliders with a title and borders
+        filterBox = QGroupBox(&#34;Filter Q&#34;)
+        filterBox.setFixedWidth(85)
+
+        #create sub widget
+        self.filterLabel = QLabel(self)
+
+        # initialize the slider, its range and value
+        self.filterSlid = QSlider(Qt.Vertical)
+        self.filterSlid.setRange(1,100)
+        self.filterSlid.setValue(100)
+
+        # connect the release signal to the update function
+        self.filterSlid.sliderReleased.connect(
+            self.filterReleased
+        )
+
+        # add a label to the slider
+        subLayout = UIHelper.labSlidLayout(self.filterSlid, self.filterLabel, &#34;Q&#34;)
+        subLayout.setContentsMargins(20,20,20,20)
+
+        #create layout with label on top of slider
+        filterBox.setLayout(subLayout)
+
+        # load and apply the style sheet
+        styleSheet = open(os.path.join(&#34;src&#34;, &#34;view&#34;, &#34;style.qss&#34;), &#34;r&#34;)
+        filterBox.setStyleSheet(styleSheet.read())
+        
+        return filterBox
+
+    @pyqtSlot()
+    def filterReleased(self):
+        &#34;&#34;&#34; Update the filter generator with a modified value of the slider. &#34;&#34;&#34;
+
+
+        print(&#34;Filter value changed to {}&#34;.format(self.filterSlid.value()))
+        self.activeGen.fNoise.setQ(self.filterSlid.value()*-1 + 100)
+
+
+# Deals with Master slider view and sliders signals
+class MasterSlider(QWidget):
+    &#34;&#34;&#34; 
+    Defines the view of the master gain slider. 
+
+    Initializes the widgets, layout and constraints in the createUI method. 
+    The slider release event is connected to a slot method which updates the 
+    overall master gain.
+    &#34;&#34;&#34;
+
+    def __init__(self, activeGen, parent=None):
+        QWidget.__init__(self,parent) 
+        self.activeGen = activeGen
+        
+    
+    def createUI(self, parent):
+        &#34;&#34;&#34; Receives a parent QWidget and produces the master groupBox&#34;&#34;&#34;
+
+        masterBox = QGroupBox(&#34;Master&#34;)
+        masterBox.setMinimumWidth(85)
+
+        self.masterLabel = QLabel(self)
+        
+        # initialize the slider, its range and value
+        self.masterSlid = QSlider(Qt.Vertical)
+        self.masterSlid.setRange(0,100)
+        self.masterSlid.setValue(70)
+
+        # connect the release signal to the update function
+        self.masterSlid.sliderReleased.connect(
+            self.masterReleased
+        )
+
+        # add a label to the slider
+        masterLayout = UIHelper.labSlidLayout(self.masterSlid, self.masterLabel, &#34;Gain&#34;)
+        masterLayout.setContentsMargins(20,20,20,20)
+
+        masterBox.setLayout(masterLayout)
+
+        # load and apply the style sheet
+        styleSheet = open(os.path.join(&#34;src&#34;, &#34;view&#34;, &#34;style.qss&#34;), &#34;r&#34;)
+        masterBox.setStyleSheet(styleSheet.read())
+
+        return masterBox
+
+    @pyqtSlot()
+    def masterReleased(self):
+        &#34;&#34;&#34; Update the master gain with a modified value of the slider. &#34;&#34;&#34;
+
+        print(&#34;Master value changed to {}&#34;.format(self.masterSlid.value()/100))
+        self.activeGen.master.setGain(self.masterSlid.value()/100)
+
+
+class GenSlider(QWidget):
+    &#34;&#34;&#34; 
+    Defines the view of the Active Generator Selector. 
+
+    Initializes the widgets, layout and constraints in the createUI method. 
+    The slider release event is connected to a slot method which updates the 
+    the active generator.
+    &#34;&#34;&#34;
+
+    def __init__(self, activeGen, parent=None):
+        QWidget.__init__(self,parent) 
+        self.activeGen = activeGen
+
+    def createUI(self, parent):
+        &#34;&#34;&#34; Receives a parent QWidget and produces the active generator groupBox.&#34;&#34;&#34;
+
+        # create active generator slider
+        # set range from 0 to 2 and add ticks
+        # the slider will be used as a switch between generators
+        max = 2
+        self.genSlid = QSlider(Qt.Horizontal)
+        self.genSlid.setRange(0,max)
+        self.genSlid.setTickPosition(QSlider.TicksBelow)
+        self.genSlid.setMinimumWidth(400)
+        self.genSlid.setMaximumWidth(800)
+        
+
+        # define generator labels
+        # iterate through the list and add a label per generator
+        labels = [&#34;Filter&#34;, &#34;Sine&#34;, &#34;Noise&#34;]
+        labelLayout = QHBoxLayout()
+
+        ind = 0
+        for lab in labels:
+            label = QLabel(lab)
+            labelLayout.addWidget(label)
+            if ind &lt; max:
+                labelLayout.addStretch()
+                ind += 1
+
+        # align to the ticks
+        labelLayout.setAlignment(Qt.AlignJustify)
+        labelLayout.setAlignment(Qt.AlignTop)
+
+        subLayout = QVBoxLayout()
+
+        # add sliders and labels to a layout
+        subLayout.addWidget(self.genSlid)
+        subLayout.addLayout(labelLayout)
+        subLayout.setAlignment(self.genSlid, Qt.AlignCenter)
+        subLayout.setAlignment(self.genSlid, Qt.AlignJustify)
+
+        # connect the release signal to the update function
+        self.genSlid.sliderReleased.connect(
+            self.genReleased
+        )
+
+        # add title and constraints
+        genGroup = QGroupBox(&#34;Active Generator&#34;)
+        genGroup.setAlignment(Qt.AlignCenter)
+        genGroup.setMaximumHeight(200)
+        genGroup.setLayout(subLayout)
+
+        # load and apply the style sheet
+        styleSheet = open(os.path.join(&#34;src&#34;, &#34;view&#34;, &#34;style.qss&#34;), &#34;r&#34;)
+        genGroup.setStyleSheet(styleSheet.read())
+        
+        return genGroup
+
+
+    @pyqtSlot()
+    def genReleased(self):
+        &#34;&#34;&#34; Update the active generator with a modified value of the slider.&#34;&#34;&#34;
+
+        print(&#34;Gen value changed to {}&#34;.format(self.genSlid.value()))
+        self.activeGen.setActive(self.genSlid.value())
+        </code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="src.view.sliders.ADSRSlider"><code class="flex name class">
+<span>class <span class="ident">ADSRSlider</span></span>
+<span>(</span><span>activeGen, parent=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Defines the view of the ADSR sliders.</p>
+<p>Initializes the widgets, layout and constraints in the createUI method.
+Each slider has a dedicated receiver slot which is connected to the
+release slider event. The slot methods call the setADSR method which updates
+the ADSR values.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class ADSRSlider(QWidget):
+    &#34;&#34;&#34; 
+    Defines the view of the ADSR sliders.
+
+    Initializes the widgets, layout and constraints in the createUI method. 
+    Each slider has a dedicated receiver slot which is connected to the 
+    release slider event. The slot methods call the setADSR method which updates
+    the ADSR values.
+    &#34;&#34;&#34;
+    def __init__(self, activeGen, parent=None):
+        QWidget.__init__(self,parent)   
+        self.activeGen = activeGen     
+        # self.createUI(parent)
+
+    def createUI(self, parent):
+        &#34;&#34;&#34; Receives a parent QWidget and produces the ADSR groupBox.&#34;&#34;&#34;
+
+        # groupbox add a border and the ability to resize the frame
+        groupBox = QGroupBox(&#34;Envelope&#34;) 
+        subLayout = QHBoxLayout()
+        
+        # create the middle sliders for ADSR
+        self.ASlid = QSlider(Qt.Vertical)
+        self.DSlid = QSlider(Qt.Vertical)
+        self.SSlid = QSlider(Qt.Vertical)
+        self.RSlid = QSlider(Qt.Vertical)
+
+        # make sure range slider cannot be equal to 0
+        self.ASlid.setRange(1,100)
+        self.DSlid.setRange(1,100)
+        self.SSlid.setRange(1,100)
+        self.RSlid.setRange(1,100)
+
+        # set ticker to an initial value
+        self.ASlid.setValue(50)
+        self.DSlid.setValue(50)
+        self.SSlid.setValue(70)
+        self.RSlid.setValue(40)
+
+        # slider titles
+        self.ALabel = QLabel(self)
+        self.DLabel = QLabel(self)
+        self.SLabel = QLabel(self)
+        self.RLabel = QLabel(self)
+
+        # add them to a sublayout (to add the section title)
+        subLayout.addStretch(1)
+        subLayout.addLayout(UIHelper.labSlidLayout(self.ASlid, self.ALabel, &#34;Attack&#34;))
+        subLayout.addStretch(1)
+        subLayout.addLayout(UIHelper.labSlidLayout(self.DSlid, self.DLabel, &#34;Decay&#34;))
+        subLayout.addStretch(1)
+        subLayout.addLayout(UIHelper.labSlidLayout(self.SSlid, self.SLabel, &#34;Sustain&#34;))
+        subLayout.addStretch(1)
+        subLayout.addLayout(UIHelper.labSlidLayout(self.RSlid, self.RLabel, &#34;Release&#34;))
+        subLayout.addStretch(1)
+
+        # add margin arround each element
+        # Justify the widget to be equally spaced in the layout
+        subLayout.setContentsMargins(20,20,20,20)
+        subLayout.setAlignment(Qt.AlignJustify)
+        
+        # connect the release signals to the slots 
+        self.ASlid.sliderReleased.connect(
+            self.AReleased
+        )
+        self.DSlid.sliderReleased.connect(
+            self.DReleased
+        )
+        self.SSlid.sliderReleased.connect(
+            self.SReleased
+        )
+        self.RSlid.sliderReleased.connect(
+            self.RReleased
+        )
+
+        # add the final layout to a groupbox
+        groupBox.setLayout(subLayout)
+
+        # load and apply the style sheet
+        styleSheet = open(os.path.join(&#34;src&#34;, &#34;view&#34;, &#34;style.qss&#34;), &#34;r&#34;)
+        groupBox.setStyleSheet(styleSheet.read())
+
+        return groupBox
+
+    # 
+    @pyqtSlot()
+    def AReleased(self):
+        # range from 0 to 2
+        print(&#34;A value changed to {}&#34;.format(self.ASlid.value()))
+        self.sendADSR()
+        
+    @pyqtSlot()
+    def DReleased(self):
+        # range from 0 to 2
+        print(&#34;D value changed to {}&#34;.format(self.DSlid.value()))
+        self.sendADSR()
+
+    @pyqtSlot()
+    def SReleased(self):
+        # range from 0 to 1
+        print(&#34;S value changed to {}&#34;.format(self.SSlid.value()))
+        self.sendADSR()
+
+
+    @pyqtSlot()
+    def RReleased(self):
+        # range from 0 ro 5 s
+        print(&#34;R value changed to {}&#34;.format(self.RSlid.value()))
+        self.sendADSR()
+
+    def sendADSR(self):
+        &#34;&#34;&#34; Update the adsr modifier with the current values of the sliders. &#34;&#34;&#34;
+        
+        self.activeGen.adsr.setADSR(
+            A = self.ASlid.value()/50,
+            D = self.DSlid.value()/50,
+            S = self.SSlid.value()/100,
+            R = self.RSlid.value()/20
+        )</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>PyQt5.QtWidgets.QWidget</li>
+<li>PyQt5.QtCore.QObject</li>
+<li>sip.wrapper</li>
+<li>PyQt5.QtGui.QPaintDevice</li>
+<li>sip.simplewrapper</li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="src.view.sliders.ADSRSlider.AReleased"><code class="name flex">
+<span>def <span class="ident">AReleased</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@pyqtSlot()
+def AReleased(self):
+    # range from 0 to 2
+    print(&#34;A value changed to {}&#34;.format(self.ASlid.value()))
+    self.sendADSR()</code></pre>
+</details>
+</dd>
+<dt id="src.view.sliders.ADSRSlider.DReleased"><code class="name flex">
+<span>def <span class="ident">DReleased</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@pyqtSlot()
+def DReleased(self):
+    # range from 0 to 2
+    print(&#34;D value changed to {}&#34;.format(self.DSlid.value()))
+    self.sendADSR()</code></pre>
+</details>
+</dd>
+<dt id="src.view.sliders.ADSRSlider.RReleased"><code class="name flex">
+<span>def <span class="ident">RReleased</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@pyqtSlot()
+def RReleased(self):
+    # range from 0 ro 5 s
+    print(&#34;R value changed to {}&#34;.format(self.RSlid.value()))
+    self.sendADSR()</code></pre>
+</details>
+</dd>
+<dt id="src.view.sliders.ADSRSlider.SReleased"><code class="name flex">
+<span>def <span class="ident">SReleased</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@pyqtSlot()
+def SReleased(self):
+    # range from 0 to 1
+    print(&#34;S value changed to {}&#34;.format(self.SSlid.value()))
+    self.sendADSR()</code></pre>
+</details>
+</dd>
+<dt id="src.view.sliders.ADSRSlider.createUI"><code class="name flex">
+<span>def <span class="ident">createUI</span></span>(<span>self, parent)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Receives a parent QWidget and produces the ADSR groupBox.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def createUI(self, parent):
+    &#34;&#34;&#34; Receives a parent QWidget and produces the ADSR groupBox.&#34;&#34;&#34;
+
+    # groupbox add a border and the ability to resize the frame
+    groupBox = QGroupBox(&#34;Envelope&#34;) 
+    subLayout = QHBoxLayout()
+    
+    # create the middle sliders for ADSR
+    self.ASlid = QSlider(Qt.Vertical)
+    self.DSlid = QSlider(Qt.Vertical)
+    self.SSlid = QSlider(Qt.Vertical)
+    self.RSlid = QSlider(Qt.Vertical)
+
+    # make sure range slider cannot be equal to 0
+    self.ASlid.setRange(1,100)
+    self.DSlid.setRange(1,100)
+    self.SSlid.setRange(1,100)
+    self.RSlid.setRange(1,100)
+
+    # set ticker to an initial value
+    self.ASlid.setValue(50)
+    self.DSlid.setValue(50)
+    self.SSlid.setValue(70)
+    self.RSlid.setValue(40)
+
+    # slider titles
+    self.ALabel = QLabel(self)
+    self.DLabel = QLabel(self)
+    self.SLabel = QLabel(self)
+    self.RLabel = QLabel(self)
+
+    # add them to a sublayout (to add the section title)
+    subLayout.addStretch(1)
+    subLayout.addLayout(UIHelper.labSlidLayout(self.ASlid, self.ALabel, &#34;Attack&#34;))
+    subLayout.addStretch(1)
+    subLayout.addLayout(UIHelper.labSlidLayout(self.DSlid, self.DLabel, &#34;Decay&#34;))
+    subLayout.addStretch(1)
+    subLayout.addLayout(UIHelper.labSlidLayout(self.SSlid, self.SLabel, &#34;Sustain&#34;))
+    subLayout.addStretch(1)
+    subLayout.addLayout(UIHelper.labSlidLayout(self.RSlid, self.RLabel, &#34;Release&#34;))
+    subLayout.addStretch(1)
+
+    # add margin arround each element
+    # Justify the widget to be equally spaced in the layout
+    subLayout.setContentsMargins(20,20,20,20)
+    subLayout.setAlignment(Qt.AlignJustify)
+    
+    # connect the release signals to the slots 
+    self.ASlid.sliderReleased.connect(
+        self.AReleased
+    )
+    self.DSlid.sliderReleased.connect(
+        self.DReleased
+    )
+    self.SSlid.sliderReleased.connect(
+        self.SReleased
+    )
+    self.RSlid.sliderReleased.connect(
+        self.RReleased
+    )
+
+    # add the final layout to a groupbox
+    groupBox.setLayout(subLayout)
+
+    # load and apply the style sheet
+    styleSheet = open(os.path.join(&#34;src&#34;, &#34;view&#34;, &#34;style.qss&#34;), &#34;r&#34;)
+    groupBox.setStyleSheet(styleSheet.read())
+
+    return groupBox</code></pre>
+</details>
+</dd>
+<dt id="src.view.sliders.ADSRSlider.sendADSR"><code class="name flex">
+<span>def <span class="ident">sendADSR</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Update the adsr modifier with the current values of the sliders.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def sendADSR(self):
+    &#34;&#34;&#34; Update the adsr modifier with the current values of the sliders. &#34;&#34;&#34;
+    
+    self.activeGen.adsr.setADSR(
+        A = self.ASlid.value()/50,
+        D = self.DSlid.value()/50,
+        S = self.SSlid.value()/100,
+        R = self.RSlid.value()/20
+    )</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="src.view.sliders.FiltSlider"><code class="flex name class">
+<span>class <span class="ident">FiltSlider</span></span>
+<span>(</span><span>activeGen, parent=None, styleSheet=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Defines the view of the filter sharpness slider. </p>
+<p>Initializes the widgets, layout and constraints in the createUI method.
+The slider release event is connected to a slot method which updates the
+sharpness of the filtered noise generator.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class FiltSlider(QWidget):
+    &#34;&#34;&#34; 
+    Defines the view of the filter sharpness slider. 
+
+    Initializes the widgets, layout and constraints in the createUI method. 
+    The slider release event is connected to a slot method which updates the 
+    sharpness of the filtered noise generator.
+    &#34;&#34;&#34;
+
+    def __init__(self, activeGen, parent=None, styleSheet = None):
+        QWidget.__init__(self,parent) 
+        self.activeGen = activeGen
+    
+
+    def createUI(self, parent):
+        &#34;&#34;&#34; Receives a parent QWidget and returns the Filter Q groupBox.&#34;&#34;&#34;
+
+        #Box Layout which groups sliders with a title and borders
+        filterBox = QGroupBox(&#34;Filter Q&#34;)
+        filterBox.setFixedWidth(85)
+
+        #create sub widget
+        self.filterLabel = QLabel(self)
+
+        # initialize the slider, its range and value
+        self.filterSlid = QSlider(Qt.Vertical)
+        self.filterSlid.setRange(1,100)
+        self.filterSlid.setValue(100)
+
+        # connect the release signal to the update function
+        self.filterSlid.sliderReleased.connect(
+            self.filterReleased
+        )
+
+        # add a label to the slider
+        subLayout = UIHelper.labSlidLayout(self.filterSlid, self.filterLabel, &#34;Q&#34;)
+        subLayout.setContentsMargins(20,20,20,20)
+
+        #create layout with label on top of slider
+        filterBox.setLayout(subLayout)
+
+        # load and apply the style sheet
+        styleSheet = open(os.path.join(&#34;src&#34;, &#34;view&#34;, &#34;style.qss&#34;), &#34;r&#34;)
+        filterBox.setStyleSheet(styleSheet.read())
+        
+        return filterBox
+
+    @pyqtSlot()
+    def filterReleased(self):
+        &#34;&#34;&#34; Update the filter generator with a modified value of the slider. &#34;&#34;&#34;
+
+
+        print(&#34;Filter value changed to {}&#34;.format(self.filterSlid.value()))
+        self.activeGen.fNoise.setQ(self.filterSlid.value()*-1 + 100)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>PyQt5.QtWidgets.QWidget</li>
+<li>PyQt5.QtCore.QObject</li>
+<li>sip.wrapper</li>
+<li>PyQt5.QtGui.QPaintDevice</li>
+<li>sip.simplewrapper</li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="src.view.sliders.FiltSlider.createUI"><code class="name flex">
+<span>def <span class="ident">createUI</span></span>(<span>self, parent)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Receives a parent QWidget and returns the Filter Q groupBox.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def createUI(self, parent):
+    &#34;&#34;&#34; Receives a parent QWidget and returns the Filter Q groupBox.&#34;&#34;&#34;
+
+    #Box Layout which groups sliders with a title and borders
+    filterBox = QGroupBox(&#34;Filter Q&#34;)
+    filterBox.setFixedWidth(85)
+
+    #create sub widget
+    self.filterLabel = QLabel(self)
+
+    # initialize the slider, its range and value
+    self.filterSlid = QSlider(Qt.Vertical)
+    self.filterSlid.setRange(1,100)
+    self.filterSlid.setValue(100)
+
+    # connect the release signal to the update function
+    self.filterSlid.sliderReleased.connect(
+        self.filterReleased
+    )
+
+    # add a label to the slider
+    subLayout = UIHelper.labSlidLayout(self.filterSlid, self.filterLabel, &#34;Q&#34;)
+    subLayout.setContentsMargins(20,20,20,20)
+
+    #create layout with label on top of slider
+    filterBox.setLayout(subLayout)
+
+    # load and apply the style sheet
+    styleSheet = open(os.path.join(&#34;src&#34;, &#34;view&#34;, &#34;style.qss&#34;), &#34;r&#34;)
+    filterBox.setStyleSheet(styleSheet.read())
+    
+    return filterBox</code></pre>
+</details>
+</dd>
+<dt id="src.view.sliders.FiltSlider.filterReleased"><code class="name flex">
+<span>def <span class="ident">filterReleased</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Update the filter generator with a modified value of the slider.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@pyqtSlot()
+def filterReleased(self):
+    &#34;&#34;&#34; Update the filter generator with a modified value of the slider. &#34;&#34;&#34;
+
+
+    print(&#34;Filter value changed to {}&#34;.format(self.filterSlid.value()))
+    self.activeGen.fNoise.setQ(self.filterSlid.value()*-1 + 100)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="src.view.sliders.GenSlider"><code class="flex name class">
+<span>class <span class="ident">GenSlider</span></span>
+<span>(</span><span>activeGen, parent=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Defines the view of the Active Generator Selector. </p>
+<p>Initializes the widgets, layout and constraints in the createUI method.
+The slider release event is connected to a slot method which updates the
+the active generator.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class GenSlider(QWidget):
+    &#34;&#34;&#34; 
+    Defines the view of the Active Generator Selector. 
+
+    Initializes the widgets, layout and constraints in the createUI method. 
+    The slider release event is connected to a slot method which updates the 
+    the active generator.
+    &#34;&#34;&#34;
+
+    def __init__(self, activeGen, parent=None):
+        QWidget.__init__(self,parent) 
+        self.activeGen = activeGen
+
+    def createUI(self, parent):
+        &#34;&#34;&#34; Receives a parent QWidget and produces the active generator groupBox.&#34;&#34;&#34;
+
+        # create active generator slider
+        # set range from 0 to 2 and add ticks
+        # the slider will be used as a switch between generators
+        max = 2
+        self.genSlid = QSlider(Qt.Horizontal)
+        self.genSlid.setRange(0,max)
+        self.genSlid.setTickPosition(QSlider.TicksBelow)
+        self.genSlid.setMinimumWidth(400)
+        self.genSlid.setMaximumWidth(800)
+        
+
+        # define generator labels
+        # iterate through the list and add a label per generator
+        labels = [&#34;Filter&#34;, &#34;Sine&#34;, &#34;Noise&#34;]
+        labelLayout = QHBoxLayout()
+
+        ind = 0
+        for lab in labels:
+            label = QLabel(lab)
+            labelLayout.addWidget(label)
+            if ind &lt; max:
+                labelLayout.addStretch()
+                ind += 1
+
+        # align to the ticks
+        labelLayout.setAlignment(Qt.AlignJustify)
+        labelLayout.setAlignment(Qt.AlignTop)
+
+        subLayout = QVBoxLayout()
+
+        # add sliders and labels to a layout
+        subLayout.addWidget(self.genSlid)
+        subLayout.addLayout(labelLayout)
+        subLayout.setAlignment(self.genSlid, Qt.AlignCenter)
+        subLayout.setAlignment(self.genSlid, Qt.AlignJustify)
+
+        # connect the release signal to the update function
+        self.genSlid.sliderReleased.connect(
+            self.genReleased
+        )
+
+        # add title and constraints
+        genGroup = QGroupBox(&#34;Active Generator&#34;)
+        genGroup.setAlignment(Qt.AlignCenter)
+        genGroup.setMaximumHeight(200)
+        genGroup.setLayout(subLayout)
+
+        # load and apply the style sheet
+        styleSheet = open(os.path.join(&#34;src&#34;, &#34;view&#34;, &#34;style.qss&#34;), &#34;r&#34;)
+        genGroup.setStyleSheet(styleSheet.read())
+        
+        return genGroup
+
+
+    @pyqtSlot()
+    def genReleased(self):
+        &#34;&#34;&#34; Update the active generator with a modified value of the slider.&#34;&#34;&#34;
+
+        print(&#34;Gen value changed to {}&#34;.format(self.genSlid.value()))
+        self.activeGen.setActive(self.genSlid.value())</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>PyQt5.QtWidgets.QWidget</li>
+<li>PyQt5.QtCore.QObject</li>
+<li>sip.wrapper</li>
+<li>PyQt5.QtGui.QPaintDevice</li>
+<li>sip.simplewrapper</li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="src.view.sliders.GenSlider.createUI"><code class="name flex">
+<span>def <span class="ident">createUI</span></span>(<span>self, parent)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Receives a parent QWidget and produces the active generator groupBox.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def createUI(self, parent):
+    &#34;&#34;&#34; Receives a parent QWidget and produces the active generator groupBox.&#34;&#34;&#34;
+
+    # create active generator slider
+    # set range from 0 to 2 and add ticks
+    # the slider will be used as a switch between generators
+    max = 2
+    self.genSlid = QSlider(Qt.Horizontal)
+    self.genSlid.setRange(0,max)
+    self.genSlid.setTickPosition(QSlider.TicksBelow)
+    self.genSlid.setMinimumWidth(400)
+    self.genSlid.setMaximumWidth(800)
+    
+
+    # define generator labels
+    # iterate through the list and add a label per generator
+    labels = [&#34;Filter&#34;, &#34;Sine&#34;, &#34;Noise&#34;]
+    labelLayout = QHBoxLayout()
+
+    ind = 0
+    for lab in labels:
+        label = QLabel(lab)
+        labelLayout.addWidget(label)
+        if ind &lt; max:
+            labelLayout.addStretch()
+            ind += 1
+
+    # align to the ticks
+    labelLayout.setAlignment(Qt.AlignJustify)
+    labelLayout.setAlignment(Qt.AlignTop)
+
+    subLayout = QVBoxLayout()
+
+    # add sliders and labels to a layout
+    subLayout.addWidget(self.genSlid)
+    subLayout.addLayout(labelLayout)
+    subLayout.setAlignment(self.genSlid, Qt.AlignCenter)
+    subLayout.setAlignment(self.genSlid, Qt.AlignJustify)
+
+    # connect the release signal to the update function
+    self.genSlid.sliderReleased.connect(
+        self.genReleased
+    )
+
+    # add title and constraints
+    genGroup = QGroupBox(&#34;Active Generator&#34;)
+    genGroup.setAlignment(Qt.AlignCenter)
+    genGroup.setMaximumHeight(200)
+    genGroup.setLayout(subLayout)
+
+    # load and apply the style sheet
+    styleSheet = open(os.path.join(&#34;src&#34;, &#34;view&#34;, &#34;style.qss&#34;), &#34;r&#34;)
+    genGroup.setStyleSheet(styleSheet.read())
+    
+    return genGroup</code></pre>
+</details>
+</dd>
+<dt id="src.view.sliders.GenSlider.genReleased"><code class="name flex">
+<span>def <span class="ident">genReleased</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Update the active generator with a modified value of the slider.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@pyqtSlot()
+def genReleased(self):
+    &#34;&#34;&#34; Update the active generator with a modified value of the slider.&#34;&#34;&#34;
+
+    print(&#34;Gen value changed to {}&#34;.format(self.genSlid.value()))
+    self.activeGen.setActive(self.genSlid.value())</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="src.view.sliders.MasterSlider"><code class="flex name class">
+<span>class <span class="ident">MasterSlider</span></span>
+<span>(</span><span>activeGen, parent=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Defines the view of the master gain slider. </p>
+<p>Initializes the widgets, layout and constraints in the createUI method.
+The slider release event is connected to a slot method which updates the
+overall master gain.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class MasterSlider(QWidget):
+    &#34;&#34;&#34; 
+    Defines the view of the master gain slider. 
+
+    Initializes the widgets, layout and constraints in the createUI method. 
+    The slider release event is connected to a slot method which updates the 
+    overall master gain.
+    &#34;&#34;&#34;
+
+    def __init__(self, activeGen, parent=None):
+        QWidget.__init__(self,parent) 
+        self.activeGen = activeGen
+        
+    
+    def createUI(self, parent):
+        &#34;&#34;&#34; Receives a parent QWidget and produces the master groupBox&#34;&#34;&#34;
+
+        masterBox = QGroupBox(&#34;Master&#34;)
+        masterBox.setMinimumWidth(85)
+
+        self.masterLabel = QLabel(self)
+        
+        # initialize the slider, its range and value
+        self.masterSlid = QSlider(Qt.Vertical)
+        self.masterSlid.setRange(0,100)
+        self.masterSlid.setValue(70)
+
+        # connect the release signal to the update function
+        self.masterSlid.sliderReleased.connect(
+            self.masterReleased
+        )
+
+        # add a label to the slider
+        masterLayout = UIHelper.labSlidLayout(self.masterSlid, self.masterLabel, &#34;Gain&#34;)
+        masterLayout.setContentsMargins(20,20,20,20)
+
+        masterBox.setLayout(masterLayout)
+
+        # load and apply the style sheet
+        styleSheet = open(os.path.join(&#34;src&#34;, &#34;view&#34;, &#34;style.qss&#34;), &#34;r&#34;)
+        masterBox.setStyleSheet(styleSheet.read())
+
+        return masterBox
+
+    @pyqtSlot()
+    def masterReleased(self):
+        &#34;&#34;&#34; Update the master gain with a modified value of the slider. &#34;&#34;&#34;
+
+        print(&#34;Master value changed to {}&#34;.format(self.masterSlid.value()/100))
+        self.activeGen.master.setGain(self.masterSlid.value()/100)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>PyQt5.QtWidgets.QWidget</li>
+<li>PyQt5.QtCore.QObject</li>
+<li>sip.wrapper</li>
+<li>PyQt5.QtGui.QPaintDevice</li>
+<li>sip.simplewrapper</li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="src.view.sliders.MasterSlider.createUI"><code class="name flex">
+<span>def <span class="ident">createUI</span></span>(<span>self, parent)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Receives a parent QWidget and produces the master groupBox</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def createUI(self, parent):
+    &#34;&#34;&#34; Receives a parent QWidget and produces the master groupBox&#34;&#34;&#34;
+
+    masterBox = QGroupBox(&#34;Master&#34;)
+    masterBox.setMinimumWidth(85)
+
+    self.masterLabel = QLabel(self)
+    
+    # initialize the slider, its range and value
+    self.masterSlid = QSlider(Qt.Vertical)
+    self.masterSlid.setRange(0,100)
+    self.masterSlid.setValue(70)
+
+    # connect the release signal to the update function
+    self.masterSlid.sliderReleased.connect(
+        self.masterReleased
+    )
+
+    # add a label to the slider
+    masterLayout = UIHelper.labSlidLayout(self.masterSlid, self.masterLabel, &#34;Gain&#34;)
+    masterLayout.setContentsMargins(20,20,20,20)
+
+    masterBox.setLayout(masterLayout)
+
+    # load and apply the style sheet
+    styleSheet = open(os.path.join(&#34;src&#34;, &#34;view&#34;, &#34;style.qss&#34;), &#34;r&#34;)
+    masterBox.setStyleSheet(styleSheet.read())
+
+    return masterBox</code></pre>
+</details>
+</dd>
+<dt id="src.view.sliders.MasterSlider.masterReleased"><code class="name flex">
+<span>def <span class="ident">masterReleased</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Update the master gain with a modified value of the slider.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@pyqtSlot()
+def masterReleased(self):
+    &#34;&#34;&#34; Update the master gain with a modified value of the slider. &#34;&#34;&#34;
+
+    print(&#34;Master value changed to {}&#34;.format(self.masterSlid.value()/100))
+    self.activeGen.master.setGain(self.masterSlid.value()/100)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="src.view.sliders.UIHelper"><code class="flex name class">
+<span>class <span class="ident">UIHelper</span></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Static class which provides helper functions to build the view.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class UIHelper:
+    &#34;&#34;&#34;
+    Static class which provides helper functions to build the view.
+    &#34;&#34;&#34;
+
+    @staticmethod
+    def labSlidLayout(slider, label, labelName):
+        &#34;&#34;&#34; 
+        Returns a layout containing a label with a set name on top of a slider. 
+        &#34;&#34;&#34;
+        
+        layout = QVBoxLayout()
+
+        # set label name and constraints
+        label.setText(labelName)
+        label.setMaximumHeight(50)
+        label.setAlignment(Qt.AlignCenter)
+        label.setMargin(5)
+        
+        # set slider constraint
+        slider.setMinimumHeight(100)
+
+        # add the widgets to the vertical layout
+        layout.addWidget(label)
+        layout.addWidget(slider)
+        layout.setAlignment(slider, Qt.AlignJustify)
+
+        return layout</code></pre>
+</details>
+<h3>Static methods</h3>
+<dl>
+<dt id="src.view.sliders.UIHelper.labSlidLayout"><code class="name flex">
+<span>def <span class="ident">labSlidLayout</span></span>(<span>slider, label, labelName)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns a layout containing a label with a set name on top of a slider.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def labSlidLayout(slider, label, labelName):
+    &#34;&#34;&#34; 
+    Returns a layout containing a label with a set name on top of a slider. 
+    &#34;&#34;&#34;
+    
+    layout = QVBoxLayout()
+
+    # set label name and constraints
+    label.setText(labelName)
+    label.setMaximumHeight(50)
+    label.setAlignment(Qt.AlignCenter)
+    label.setMargin(5)
+    
+    # set slider constraint
+    slider.setMinimumHeight(100)
+
+    # add the widgets to the vertical layout
+    layout.addWidget(label)
+    layout.addWidget(slider)
+    layout.setAlignment(slider, Qt.AlignJustify)
+
+    return layout</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="src.view" href="index.html">src.view</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="src.view.sliders.ADSRSlider" href="#src.view.sliders.ADSRSlider">ADSRSlider</a></code></h4>
+<ul class="two-column">
+<li><code><a title="src.view.sliders.ADSRSlider.AReleased" href="#src.view.sliders.ADSRSlider.AReleased">AReleased</a></code></li>
+<li><code><a title="src.view.sliders.ADSRSlider.DReleased" href="#src.view.sliders.ADSRSlider.DReleased">DReleased</a></code></li>
+<li><code><a title="src.view.sliders.ADSRSlider.RReleased" href="#src.view.sliders.ADSRSlider.RReleased">RReleased</a></code></li>
+<li><code><a title="src.view.sliders.ADSRSlider.SReleased" href="#src.view.sliders.ADSRSlider.SReleased">SReleased</a></code></li>
+<li><code><a title="src.view.sliders.ADSRSlider.createUI" href="#src.view.sliders.ADSRSlider.createUI">createUI</a></code></li>
+<li><code><a title="src.view.sliders.ADSRSlider.sendADSR" href="#src.view.sliders.ADSRSlider.sendADSR">sendADSR</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="src.view.sliders.FiltSlider" href="#src.view.sliders.FiltSlider">FiltSlider</a></code></h4>
+<ul class="">
+<li><code><a title="src.view.sliders.FiltSlider.createUI" href="#src.view.sliders.FiltSlider.createUI">createUI</a></code></li>
+<li><code><a title="src.view.sliders.FiltSlider.filterReleased" href="#src.view.sliders.FiltSlider.filterReleased">filterReleased</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="src.view.sliders.GenSlider" href="#src.view.sliders.GenSlider">GenSlider</a></code></h4>
+<ul class="">
+<li><code><a title="src.view.sliders.GenSlider.createUI" href="#src.view.sliders.GenSlider.createUI">createUI</a></code></li>
+<li><code><a title="src.view.sliders.GenSlider.genReleased" href="#src.view.sliders.GenSlider.genReleased">genReleased</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="src.view.sliders.MasterSlider" href="#src.view.sliders.MasterSlider">MasterSlider</a></code></h4>
+<ul class="">
+<li><code><a title="src.view.sliders.MasterSlider.createUI" href="#src.view.sliders.MasterSlider.createUI">createUI</a></code></li>
+<li><code><a title="src.view.sliders.MasterSlider.masterReleased" href="#src.view.sliders.MasterSlider.masterReleased">masterReleased</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="src.view.sliders.UIHelper" href="#src.view.sliders.UIHelper">UIHelper</a></code></h4>
+<ul class="">
+<li><code><a title="src.view.sliders.UIHelper.labSlidLayout" href="#src.view.sliders.UIHelper.labSlidLayout">labSlidLayout</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.8.1</a>.</p>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad()</script>
+</body>
+</html>

@@ -1,32 +1,28 @@
-# needed to import a module when it is not contained within a package
-# used now as the swig filter is maintained at a top level
-# might be better to wrap the application in a pacakge or move swig_fitler with the modules
-
-from .gen import Generator
 import scipy.signal
 import numpy as np
 import math
 
-
-import os,sys,inspect
-current_dir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-parent_dir = os.path.dirname(current_dir)
-sys.path.insert(0, parent_dir) 
-
-import filter_ext.swig_filter as sf
+from .gen import Generator
+from ..filter_ext import swig_filter as sf
 
 
-# White Noise Generator
-# White noise created from the numpy random method
 class WhiteNoise(Generator):
+    """
+    White Noise generator using the numpy random function.
+
+    Accepts an optional initial sample rate. The buffer is generated thanks the 
+    genBuffer method. The set frequency exists but returns 0.
+    """
 
     def __init__(self, sample_rate = 44100):
         self.mean = 0
         self.std = 0
 
     def genBuffer(self, bufferSize):
-
-        if bufferSize == 0:
+        """ Return an array of size bufferSize containing audio samples """
+        
+        # check if the buffer size is invalid
+        if bufferSize <= 0:
             bufferSize = 2048
 
         result =  np.random.standard_normal(size=bufferSize)
@@ -39,6 +35,15 @@ class WhiteNoise(Generator):
 
 # Flute like generator, combines the White Noise and Filter Classes
 class FilteredNoise(Generator):
+    """
+    Filtered Noise generator using the filter extension found in the 
+    filter_ext package and the White Noise generator.
+
+    Accepts an optional initial sample rate and frequency. The buffer is generated thanks the 
+    genBuffer method. The set frequency exists but returns 0. The frequency is 
+    updated by recalculating the filters' coefficients using the getCoef method.
+    The sharpness of the filter is updated using the setQ method.
+    """
 
     def __init__(self, freq = 440, sample_rate = 44100):
         self._sampleRate = sample_rate
@@ -54,34 +59,43 @@ class FilteredNoise(Generator):
         self.fc = sf.FilterChain(self.getCoef())
         
     def genBuffer(self, bufferSize):
-
-        if bufferSize == 0:
+        """ Return an array of size bufferSize containing audio samples. """
+        
+        # check if the buffer size is invalid
+        if bufferSize <= 0:
             bufferSize = 2048
-        # shows the biggest flaw of this design! 
-        # the white noise and filter chain have different arguments for the function
+
+        # generate the buffer using the white noise instance
+        # modify it using the filter chain
         resultBuf = np.zeros(bufferSize)
         self.fc.modBuffer(resultBuf, self.wn.genBuffer(bufferSize))
 
-        try:
-            norm_result = resultBuf/np.max(resultBuf)
-        except ValueError:
-            norm_result = resultBuf
-        return norm_result 
+        return resultBuf/np.max(resultBuf)
 
-
-    
     def setFreq(self, freq):
+        """ 
+        Updates the generator's frequency and recalculates the filters' coefficients.
+        """
         self._frequency = freq
         self.fc.setCoef(self.getCoef())
 
     # calculate IIR coefficients
-    def getCoef(self):
+    def getCoef(self, freq = 0):
+        """
+        Updates the filters' iir coffecients using the scipy iirdesign method
+        """
+        if freq != 0:
+            self._frequency = freq
+        
         wp = [self._frequency*2/self._sampleRate, (self._frequency+1)*2/self._sampleRate ]    # multiply by two for nyquist frequency
         ws = [(self._frequency-self.bw)*2/self._sampleRate, (self._frequency-self.bw)*2/self._sampleRate ]
         coefs = scipy.signal.iirdesign(wp,ws,self.gpass,self.gstop,output='sos', ftype='ellip')
         return coefs
 
     def setQ(self, gstop):
+        """
+        Update the sharpness of the filter by taking the gstop value and resetting the frequency.
+        """
         if gstop > 100:
             self.gstop = 100
         elif gstop < 10:

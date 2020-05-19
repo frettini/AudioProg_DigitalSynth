@@ -3,31 +3,37 @@ import math
 
 from .gen import Generator
 
-# recursive oscillator done using the power of physics
 class RecOsc(Generator):
+    """
+    Cosine tone generator using recursive oscillatory techniques.
+
+    Accepts an optional initial frequency and sample rate. The frequency is then
+    set using a getter/setter or setFreq. The buffer is generated thanks the 
+    genBuffer method. The phase is calculated and maintained between each buffer
+    and at each frequency change using calPhase.
+    """
 
 
-    def __init__(self,  freq = 440, amp = 1, sample_rate = 44100):
+    def __init__(self,  freq = 440, sample_rate = 44100):
         
-        self.states = np.zeros(2)
         super().__init__(sample_rate)
+        
+        self._phase = 0
         self._frequency = freq
-        self._amplitude = amp 
+        self.states = np.zeros(2)
 
+        # initialize the delayed samples with preliminary sine values
         self.states[1] = math.sin(-1*2*math.pi*freq/sample_rate)
         self.states[0] = math.sin(-2*2*math.pi*freq/sample_rate)
         self.cos_omega_t = 2*math.cos(2*math.pi * freq /sample_rate)
 
-        self.firstLoop = True
-
-
-    #properties setters and getters---------------------------------
     @property
     def frequency(self):
         return self._frequency
 
     @frequency.setter
     def frequency(self, value):
+        # check the validity of the frequency value and update it
         if value >= 0 or value <= self._sampleRate/2:
             self.setFreq(value)
             
@@ -35,33 +41,9 @@ class RecOsc(Generator):
             self.setFreq(self._sampleRate/2)
         else:
             self._frequency = 0
-
-    @property
-    def amplitude(self):
-        print("get amp")
-        return self._amplitude
-
-    @amplitude.setter
-    def amplitude(self, value):
-        print("set amp")
-        if value >= 0 or value <= 1:
-            self._amplitude = value
-        elif value > 1:
-            self._amplitude = 1
-        else:
-            self._amplitude = 0
     
-    #-------------------------------------------------------------
-
-    
-
-    #sets the frequency and amplitude of the generator
-    def set_gen(self, freq, amp):
-        self.frequency = freq
-        self.amplitude = amp
-
-    #Calculate and return the phase of the 
-    def cal_phase(self):
+    def calPhase(self):
+        # calculate and return the phase of the generator
         
         phase = np.arcsin(self.states[1])
 
@@ -74,27 +56,33 @@ class RecOsc(Generator):
             self._phase = np.pi - phase
 
     def setFreq(self, freq):
+        """ 
+        Updates the generator's frequency and recalculates states to ensure phase continuity.
+        """
         self._frequency = freq
-        #need to recalculate the two previous samples with the new freq and phase
+        
+        # recalculate the two previous samples with the new freq and phase
         self.states[0] = math.sin(-1*2*math.pi*self._frequency/self._sampleRate + self._phase)
         self.cos_omega_t = 2*math.cos(2*math.pi * self._frequency /self._sampleRate)
 
 
     def genBuffer(self, buffer_size, end_freq = 0):
+        """ Return an array of size bufferSize containing audio samples. """
         
         #if given buffer size is 0 default to 2048
-        if buffer_size == 0:
+        if buffer_size <= 0:
             buffer_size = 2048
 
-        #takes in a buffer of any size in the form of nparray
-        if end_freq == 0:
-            end_freq = self._frequency
         
         self.buffer = np.arange(0,buffer_size)
         result = np.zeros(buffer_size)
         self._phase = self._phase % (2*math.pi)
         chirp = False
         
+        if end_freq == 0:
+            end_freq = self._frequency
+        
+        # if an end frequency is given, produce a chirp
         if end_freq != self._frequency:
             step = (end_freq - self._frequency)/buffer_size
             chirp = True
@@ -103,20 +91,20 @@ class RecOsc(Generator):
         for i in range(buffer_size):
 
             x = self.cos_omega_t*self.states[1] - self.states[0]
-            result[i] = float(self._amplitude * x)
+            result[i] = float(x)
             self.states[0] = self.states[1]
             self.states[1] = x
 
             #if end_freq is different, step the frequency
             if chirp == True and i > 2:
                 
-                self.cal_phase()
+                self.calPhase()
                 self.setFreq(self._frequency + step)
                 
-    
+        # normalize the result
         norm_result = result/np.max(result)
         
-        self.cal_phase()
+        self.calPhase()
 
         return norm_result
 

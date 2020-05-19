@@ -1,11 +1,14 @@
-import os,sys,inspect
-import numpy as np
 from abc import ABC, abstractmethod
+import numpy as np
 
-current_dir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-parent_dir = os.path.dirname(current_dir)
-sys.path.insert(0, parent_dir) 
-import filter_ext.swig_filter as sf
+# import os,sys,inspect
+# current_dir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+# parent_dir = os.path.dirname(current_dir)
+# sys.path.insert(0, parent_dir) 
+# import filter_ext.swig_filter as sf
+
+from ..filter_ext import swig_filter as sf
+
 
 # Delay Class implemented using Python 
 # another Delay class is implemented in c++ and is more efficient

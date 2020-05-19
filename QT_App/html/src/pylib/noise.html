@@ -1,0 +1,479 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.8.1" />
+<title>src.pylib.noise API documentation</title>
+<meta name="description" content="" />
+<link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
+<link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
+<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>src.pylib.noise</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">import scipy.signal
+import numpy as np
+import math
+
+from .gen import Generator
+from ..filter_ext import swig_filter as sf
+
+
+class WhiteNoise(Generator):
+    &#34;&#34;&#34;
+    White Noise generator using the numpy random function.
+
+    Accepts an optional initial sample rate. The buffer is generated thanks the 
+    genBuffer method. The set frequency exists but returns 0.
+    &#34;&#34;&#34;
+
+    def __init__(self, sample_rate = 44100):
+        self.mean = 0
+        self.std = 0
+
+    def genBuffer(self, bufferSize):
+        &#34;&#34;&#34; Return an array of size bufferSize containing audio samples &#34;&#34;&#34;
+        
+        # check if the buffer size is invalid
+        if bufferSize &lt;= 0:
+            bufferSize = 2048
+
+        result =  np.random.standard_normal(size=bufferSize)
+
+        return result 
+
+    def setFreq(self, freq):
+        return 0
+
+
+# Flute like generator, combines the White Noise and Filter Classes
+class FilteredNoise(Generator):
+    &#34;&#34;&#34;
+    Filtered Noise generator using the filter extension found in the 
+    filter_ext package and the White Noise generator.
+
+    Accepts an optional initial sample rate and frequency. The buffer is generated thanks the 
+    genBuffer method. The set frequency exists but returns 0. The frequency is 
+    updated by recalculating the filters&#39; coefficients using the getCoef method.
+    The sharpness of the filter is updated using the setQ method.
+    &#34;&#34;&#34;
+
+    def __init__(self, freq = 440, sample_rate = 44100):
+        self._sampleRate = sample_rate
+        self._frequency = freq
+
+        self.gpass = 9
+        self.gstop = 10
+        self.bw = 50
+
+        # init filterchain and white noise gen
+        # give init coefficients
+        self.wn = WhiteNoise()
+        self.fc = sf.FilterChain(self.getCoef())
+        
+    def genBuffer(self, bufferSize):
+        &#34;&#34;&#34; Return an array of size bufferSize containing audio samples. &#34;&#34;&#34;
+        
+        # check if the buffer size is invalid
+        if bufferSize &lt;= 0:
+            bufferSize = 2048
+
+        # generate the buffer using the white noise instance
+        # modify it using the filter chain
+        resultBuf = np.zeros(bufferSize)
+        self.fc.modBuffer(resultBuf, self.wn.genBuffer(bufferSize))
+
+        return resultBuf/np.max(resultBuf)
+
+    def setFreq(self, freq):
+        &#34;&#34;&#34; 
+        Updates the generator&#39;s frequency and recalculates the filters&#39; coefficients.
+        &#34;&#34;&#34;
+        self._frequency = freq
+        self.fc.setCoef(self.getCoef())
+
+    # calculate IIR coefficients
+    def getCoef(self, freq = 0):
+        &#34;&#34;&#34;
+        Updates the filters&#39; iir coffecients using the scipy iirdesign method
+        &#34;&#34;&#34;
+        if freq != 0:
+            self._frequency = freq
+        
+        wp = [self._frequency*2/self._sampleRate, (self._frequency+1)*2/self._sampleRate ]    # multiply by two for nyquist frequency
+        ws = [(self._frequency-self.bw)*2/self._sampleRate, (self._frequency-self.bw)*2/self._sampleRate ]
+        coefs = scipy.signal.iirdesign(wp,ws,self.gpass,self.gstop,output=&#39;sos&#39;, ftype=&#39;ellip&#39;)
+        return coefs
+
+    def setQ(self, gstop):
+        &#34;&#34;&#34;
+        Update the sharpness of the filter by taking the gstop value and resetting the frequency.
+        &#34;&#34;&#34;
+        if gstop &gt; 100:
+            self.gstop = 100
+        elif gstop &lt; 10:
+            self.gstop = 10
+        else:
+            self.gstop = gstop
+
+        self.setFreq(self._frequency)
+
+if __name__ == &#34;__main__&#34;:
+
+    import scipy.fftpack
+    import matplotlib.pyplot as plot
+
+    fn = FilteredNoise()
+
+    result = fn.genBuffer(2048)
+    print(fn._sampleRate)
+
+    norm_result = result/np.max(abs(result)) # normalize result (avoid blown filters)
+    result_freq = scipy.fftpack.fft(norm_result) # get spectrum
+    
+    _frequency = 400
+    _sampleRate= 44100
+    gpass = 9
+    gstop= 100
+
+    # starts with 3 filters
+
+    wp = [_frequency*2/_sampleRate, (_frequency+1)*2/_sampleRate ]    # multiply by two for nyquist frequency
+    ws = [(_frequency-25)*2/_sampleRate, (_frequency-25)*2/_sampleRate ]
+    coefs = scipy.signal.iirdesign(wp,ws,gpass,gstop,output=&#39;sos&#39;, ftype=&#39;ellip&#39;)
+    print(coefs)
+
+    fc = sf.FilterChain(coefs)
+
+    #removes one filter
+
+    wp = [_frequency*2/_sampleRate, (_frequency+1)*2/_sampleRate ]    # multiply by two for nyquist frequency
+    ws = [(_frequency-50)*2/_sampleRate, (_frequency-50)*2/_sampleRate ]
+    coefs = scipy.signal.iirdesign(wp,ws,gpass,gstop,output=&#39;sos&#39;, ftype=&#39;ellip&#39;)
+    print(coefs)
+
+    fc.setCoef(coefs)
+
+    # adds one filter
+
+    wp = [_frequency*2/_sampleRate, (_frequency+1)*2/_sampleRate ]    # multiply by two for nyquist frequency
+    ws = [(_frequency-25)*2/_sampleRate, (_frequency-25)*2/_sampleRate ]
+    coefs = scipy.signal.iirdesign(wp,ws,gpass,gstop,output=&#39;sos&#39;, ftype=&#39;ellip&#39;)
+    print(coefs)
+    
+    fc.setCoef(coefs)
+
+
+    print(&#34;Alles ist gut&#34;)
+
+
+    # plot.plot(np.real(result_freq))
+    # plot.plot(np.imag(result_freq))
+    # plot.show()</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="src.pylib.noise.FilteredNoise"><code class="flex name class">
+<span>class <span class="ident">FilteredNoise</span></span>
+<span>(</span><span>freq=440, sample_rate=44100)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Filtered Noise generator using the filter extension found in the
+filter_ext package and the White Noise generator.</p>
+<p>Accepts an optional initial sample rate and frequency. The buffer is generated thanks the
+genBuffer method. The set frequency exists but returns 0. The frequency is
+updated by recalculating the filters' coefficients using the getCoef method.
+The sharpness of the filter is updated using the setQ method.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class FilteredNoise(Generator):
+    &#34;&#34;&#34;
+    Filtered Noise generator using the filter extension found in the 
+    filter_ext package and the White Noise generator.
+
+    Accepts an optional initial sample rate and frequency. The buffer is generated thanks the 
+    genBuffer method. The set frequency exists but returns 0. The frequency is 
+    updated by recalculating the filters&#39; coefficients using the getCoef method.
+    The sharpness of the filter is updated using the setQ method.
+    &#34;&#34;&#34;
+
+    def __init__(self, freq = 440, sample_rate = 44100):
+        self._sampleRate = sample_rate
+        self._frequency = freq
+
+        self.gpass = 9
+        self.gstop = 10
+        self.bw = 50
+
+        # init filterchain and white noise gen
+        # give init coefficients
+        self.wn = WhiteNoise()
+        self.fc = sf.FilterChain(self.getCoef())
+        
+    def genBuffer(self, bufferSize):
+        &#34;&#34;&#34; Return an array of size bufferSize containing audio samples. &#34;&#34;&#34;
+        
+        # check if the buffer size is invalid
+        if bufferSize &lt;= 0:
+            bufferSize = 2048
+
+        # generate the buffer using the white noise instance
+        # modify it using the filter chain
+        resultBuf = np.zeros(bufferSize)
+        self.fc.modBuffer(resultBuf, self.wn.genBuffer(bufferSize))
+
+        return resultBuf/np.max(resultBuf)
+
+    def setFreq(self, freq):
+        &#34;&#34;&#34; 
+        Updates the generator&#39;s frequency and recalculates the filters&#39; coefficients.
+        &#34;&#34;&#34;
+        self._frequency = freq
+        self.fc.setCoef(self.getCoef())
+
+    # calculate IIR coefficients
+    def getCoef(self, freq = 0):
+        &#34;&#34;&#34;
+        Updates the filters&#39; iir coffecients using the scipy iirdesign method
+        &#34;&#34;&#34;
+        if freq != 0:
+            self._frequency = freq
+        
+        wp = [self._frequency*2/self._sampleRate, (self._frequency+1)*2/self._sampleRate ]    # multiply by two for nyquist frequency
+        ws = [(self._frequency-self.bw)*2/self._sampleRate, (self._frequency-self.bw)*2/self._sampleRate ]
+        coefs = scipy.signal.iirdesign(wp,ws,self.gpass,self.gstop,output=&#39;sos&#39;, ftype=&#39;ellip&#39;)
+        return coefs
+
+    def setQ(self, gstop):
+        &#34;&#34;&#34;
+        Update the sharpness of the filter by taking the gstop value and resetting the frequency.
+        &#34;&#34;&#34;
+        if gstop &gt; 100:
+            self.gstop = 100
+        elif gstop &lt; 10:
+            self.gstop = 10
+        else:
+            self.gstop = gstop
+
+        self.setFreq(self._frequency)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.pylib.gen.Generator" href="gen.html#src.pylib.gen.Generator">Generator</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="src.pylib.noise.FilteredNoise.getCoef"><code class="name flex">
+<span>def <span class="ident">getCoef</span></span>(<span>self, freq=0)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Updates the filters' iir coffecients using the scipy iirdesign method</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def getCoef(self, freq = 0):
+    &#34;&#34;&#34;
+    Updates the filters&#39; iir coffecients using the scipy iirdesign method
+    &#34;&#34;&#34;
+    if freq != 0:
+        self._frequency = freq
+    
+    wp = [self._frequency*2/self._sampleRate, (self._frequency+1)*2/self._sampleRate ]    # multiply by two for nyquist frequency
+    ws = [(self._frequency-self.bw)*2/self._sampleRate, (self._frequency-self.bw)*2/self._sampleRate ]
+    coefs = scipy.signal.iirdesign(wp,ws,self.gpass,self.gstop,output=&#39;sos&#39;, ftype=&#39;ellip&#39;)
+    return coefs</code></pre>
+</details>
+</dd>
+<dt id="src.pylib.noise.FilteredNoise.setFreq"><code class="name flex">
+<span>def <span class="ident">setFreq</span></span>(<span>self, freq)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Updates the generator's frequency and recalculates the filters' coefficients.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def setFreq(self, freq):
+    &#34;&#34;&#34; 
+    Updates the generator&#39;s frequency and recalculates the filters&#39; coefficients.
+    &#34;&#34;&#34;
+    self._frequency = freq
+    self.fc.setCoef(self.getCoef())</code></pre>
+</details>
+</dd>
+<dt id="src.pylib.noise.FilteredNoise.setQ"><code class="name flex">
+<span>def <span class="ident">setQ</span></span>(<span>self, gstop)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Update the sharpness of the filter by taking the gstop value and resetting the frequency.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def setQ(self, gstop):
+    &#34;&#34;&#34;
+    Update the sharpness of the filter by taking the gstop value and resetting the frequency.
+    &#34;&#34;&#34;
+    if gstop &gt; 100:
+        self.gstop = 100
+    elif gstop &lt; 10:
+        self.gstop = 10
+    else:
+        self.gstop = gstop
+
+    self.setFreq(self._frequency)</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="src.pylib.gen.Generator" href="gen.html#src.pylib.gen.Generator">Generator</a></b></code>:
+<ul class="hlist">
+<li><code><a title="src.pylib.gen.Generator.genBuffer" href="gen.html#src.pylib.gen.Generator.genBuffer">genBuffer</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="src.pylib.noise.WhiteNoise"><code class="flex name class">
+<span>class <span class="ident">WhiteNoise</span></span>
+<span>(</span><span>sample_rate=44100)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>White Noise generator using the numpy random function.</p>
+<p>Accepts an optional initial sample rate. The buffer is generated thanks the
+genBuffer method. The set frequency exists but returns 0.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class WhiteNoise(Generator):
+    &#34;&#34;&#34;
+    White Noise generator using the numpy random function.
+
+    Accepts an optional initial sample rate. The buffer is generated thanks the 
+    genBuffer method. The set frequency exists but returns 0.
+    &#34;&#34;&#34;
+
+    def __init__(self, sample_rate = 44100):
+        self.mean = 0
+        self.std = 0
+
+    def genBuffer(self, bufferSize):
+        &#34;&#34;&#34; Return an array of size bufferSize containing audio samples &#34;&#34;&#34;
+        
+        # check if the buffer size is invalid
+        if bufferSize &lt;= 0:
+            bufferSize = 2048
+
+        result =  np.random.standard_normal(size=bufferSize)
+
+        return result 
+
+    def setFreq(self, freq):
+        return 0</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.pylib.gen.Generator" href="gen.html#src.pylib.gen.Generator">Generator</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="src.pylib.noise.WhiteNoise.genBuffer"><code class="name flex">
+<span>def <span class="ident">genBuffer</span></span>(<span>self, bufferSize)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Return an array of size bufferSize containing audio samples</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def genBuffer(self, bufferSize):
+    &#34;&#34;&#34; Return an array of size bufferSize containing audio samples &#34;&#34;&#34;
+    
+    # check if the buffer size is invalid
+    if bufferSize &lt;= 0:
+        bufferSize = 2048
+
+    result =  np.random.standard_normal(size=bufferSize)
+
+    return result </code></pre>
+</details>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="src.pylib.gen.Generator" href="gen.html#src.pylib.gen.Generator">Generator</a></b></code>:
+<ul class="hlist">
+<li><code><a title="src.pylib.gen.Generator.setFreq" href="gen.html#src.pylib.gen.Generator.setFreq">setFreq</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="src.pylib" href="index.html">src.pylib</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="src.pylib.noise.FilteredNoise" href="#src.pylib.noise.FilteredNoise">FilteredNoise</a></code></h4>
+<ul class="">
+<li><code><a title="src.pylib.noise.FilteredNoise.getCoef" href="#src.pylib.noise.FilteredNoise.getCoef">getCoef</a></code></li>
+<li><code><a title="src.pylib.noise.FilteredNoise.setFreq" href="#src.pylib.noise.FilteredNoise.setFreq">setFreq</a></code></li>
+<li><code><a title="src.pylib.noise.FilteredNoise.setQ" href="#src.pylib.noise.FilteredNoise.setQ">setQ</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="src.pylib.noise.WhiteNoise" href="#src.pylib.noise.WhiteNoise">WhiteNoise</a></code></h4>
+<ul class="">
+<li><code><a title="src.pylib.noise.WhiteNoise.genBuffer" href="#src.pylib.noise.WhiteNoise.genBuffer">genBuffer</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.8.1</a>.</p>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad()</script>
+</body>
+</html>
