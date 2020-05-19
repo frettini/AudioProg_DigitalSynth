@@ -7,10 +7,12 @@
 
 class Delay{
 public:
-        Delay(int delaySize);           // constructor
+        Delay(int delaySize);     
         
+        // delay function 
         void process(double sample);
         void reset();
+        // get a value from the delay vector
         double get(int ind);
         void printArray();
 private :

@@ -11,7 +11,7 @@
 #include "delay.h"
 
 
-// abstract base class
+// Modifier abstract class. Modifiers return a modified version of the recieved input buffer
 class Modifier{
 private:
         float sampleRate;
@@ -46,9 +46,11 @@ private:
 class FilterChain: public Modifier{
 private:
         size_t size;
+        // vector of filter of size "size"
         std::vector<Filter> filterBank;
 
 public:
+        // define constructor : 2 dimensional array
         FilterChain(const double* in, 
                         std::size_t in_size1, 
                         std::size_t in_size2);
@@ -60,6 +62,7 @@ public:
                         std::size_t in_size1, 
                         std::size_t in_size2);
 
+        // add and remove filters from the filterbank
         void addFilter(const double* in , std::size_t in_size);
         void removeFilter();
 

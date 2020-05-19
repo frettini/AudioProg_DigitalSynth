@@ -3,7 +3,13 @@ from PyQt5.QtMultimedia import QAudioFormat
 import numpy as np
 
 class Meep(QIODevice):
+    """ Audio Playback Class.
     
+    Takes a format and generator and initializes the audio port with
+    the device. Reads and updates the audio buffer whenever needed
+    using the readData and generateData methods.
+    """
+
     SAMPLES_PER_READ = 2048
     
     def __init__(self, format, activeGen, parent = None):
@@ -15,6 +21,7 @@ class Meep(QIODevice):
         self.phase = 0
         self.freq = 440
 
+        # hold a reference to the active generator instance
         self.generator = activeGen
 
         self.convert_16_bit = float(2**15)
@@ -38,13 +45,17 @@ class Meep(QIODevice):
     
     
     def start(self):
-        
+        """ Initialize playback with the device. """
         # Call QIODevices open
         # making this object readable
         self.open(QIODevice.ReadOnly)
     
 
     def generateData(self, format, samples):
+        """ 
+        Returns a formatted string of the generated data from the active generator. 
+        Takes in the audio format and number of samples to generate. 
+        """
         
         result_buffer = self.generator.genBuffer(samples)
         result_buffer = np.int16( result_buffer * (self.convert_16_bit-1) )
@@ -52,7 +63,11 @@ class Meep(QIODevice):
 
     
     def readData(self, bytes):
-
+        """ 
+        Returns a formatted string of the generated data from the generateData method. 
+        Takes in the number of bytes to generate.
+        """
+        
         if bytes > 2 * Meep.SAMPLES_PER_READ:
             bytes = 2 * Meep.SAMPLES_PER_READ
         return self.generateData(self.format,

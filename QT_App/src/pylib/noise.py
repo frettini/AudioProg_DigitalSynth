@@ -51,7 +51,7 @@ class FilteredNoise(Generator):
 
         self.gpass = 9
         self.gstop = 10
-        self.bw = 50
+        self.bw = 1
 
         # init filterchain and white noise gen
         # give init coefficients
@@ -87,21 +87,21 @@ class FilteredNoise(Generator):
         if freq != 0:
             self._frequency = freq
         
-        wp = [self._frequency*2/self._sampleRate, (self._frequency+1)*2/self._sampleRate ]    # multiply by two for nyquist frequency
-        ws = [(self._frequency-self.bw)*2/self._sampleRate, (self._frequency-self.bw)*2/self._sampleRate ]
+        wp = [self._frequency*2/self._sampleRate, (self._frequency+self.bw)*2/self._sampleRate ]    # multiply by two for nyquist frequency
+        ws = [(self._frequency-50)*2/self._sampleRate, (self._frequency-50)*2/self._sampleRate ]
         coefs = scipy.signal.iirdesign(wp,ws,self.gpass,self.gstop,output='sos', ftype='ellip')
         return coefs
 
-    def setQ(self, gstop):
+    def setQ(self, bw):
         """
         Update the sharpness of the filter by taking the gstop value and resetting the frequency.
         """
         if gstop > 100:
-            self.gstop = 100
+            self.bw = 100
         elif gstop < 10:
-            self.gstop = 10
+            self.bw = 1
         else:
-            self.gstop = gstop
+            self.bw = bw
 
         self.setFreq(self._frequency)
 

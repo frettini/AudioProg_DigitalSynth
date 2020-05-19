@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.8.1" />
-<title>src.pylib.meep API documentation</title>
+<title>src.pylib.midi API documentation</title>
 <meta name="description" content="" />
 <link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
 <link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
@@ -17,72 +17,61 @@
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>src.pylib.meep</code></h1>
+<h1 class="title">Module <code>src.pylib.midi</code></h1>
 </header>
 <section id="section-intro">
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">from PyQt5.QtCore import QIODevice, QByteArray
-from PyQt5.QtMultimedia import QAudioFormat
-import numpy as np
+<pre><code class="python">import math
+import mido
+import rtmidi
+from PyQt5.QtCore import QObject, pyqtSignal
 
-class Meep(QIODevice):
-    
-    SAMPLES_PER_READ = 2048
-    
-    def __init__(self, format, activeGen, parent = None):
 
-        QIODevice.__init__(self, parent)
-        self.data = QByteArray()
+class MidiPortReader(QObject):
+    &#34;&#34;&#34; 
+    MIDI listener Class.
+
+    This QObject establishes port connection with a MIDI device.
+    The listener methods waits and reads MIDI inputs. It uses 
+    pyqt signals to emit the information.
+    &#34;&#34;&#34;
+
+    # Create a signal for when a
+    # MIDI note_on happens
+    newNoteFrequency = pyqtSignal(float)
+    newNotePress = pyqtSignal(bool)
+    
+    # Object initialisation:
+    def __init__(self):
+        QObject.__init__(self)
+        mido.set_backend(&#39;mido.backends.rtmidi&#39;)
+        print(&#34;Using MIDI APIs: {}&#34;.format(mido.backend.module.get_api_names()))
         
-        # Preserve phase across calls
-        self.phase = 0
-        self.freq = 440
-
-        self.generator = activeGen
-
-        self.convert_16_bit = float(2**15)
-
-        # Check we can deal with the supplied
-        # sample format. We&#39;re supposed to be
-        # able to deal with any requested
-        # sample format. But this is a
-        # _minimal_ example, right?
-        if format.isValid() and \
-           format.sampleSize() == 16 and \
-           format.byteOrder() == \
-                QAudioFormat.LittleEndian and \
-           format.sampleType() == \
-                QAudioFormat.SignedInt and \
-           format.channelCount() == 1 :
-               print(
-                 &#34;Meep: Format compatible. Good.&#34;
-               )
-               self.format = format
     
-    
-    def start(self):
-        
-        # Call QIODevices open
-        # making this object readable
-        self.open(QIODevice.ReadOnly)
-    
+    # Define a function which is to
+    # run in its own thread
+    def listener(self):
+        &#34;&#34;&#34; Listen to the MIDI input and emit data using pyqt signals.&#34;&#34;&#34;
 
-    def generateData(self, format, samples):
-        
-        result_buffer = self.generator.genBuffer(samples)
-        result_buffer = np.int16( result_buffer * (self.convert_16_bit-1) )
-        return result_buffer.tostring()
+        with mido.open_input(virtual=False) as mip:
+            for mmsg in mip:
+                
+                # convert midi to frequency
+                freq = math.pow(2,(float(mmsg.bytes()[1])-69)/12)*440
 
-    
-    def readData(self, bytes):
-
-        if bytes &gt; 2 * Meep.SAMPLES_PER_READ:
-            bytes = 2 * Meep.SAMPLES_PER_READ
-        return self.generateData(self.format,
-                                 bytes//2)</code></pre>
+                # detect onsets and offsets
+                if mmsg.type == &#34;note_on&#34;:
+                    status = True
+                    # change frequency only on onsets
+                    self.newNoteFrequency.emit(float(freq))
+                if mmsg.type == &#34;note_off&#34;:
+                    status = False
+                    
+                # emit status
+                self.newNotePress.emit(status)</code></pre>
 </details>
 </section>
 <section>
@@ -94,137 +83,110 @@ class Meep(QIODevice):
 <section>
 <h2 class="section-title" id="header-classes">Classes</h2>
 <dl>
-<dt id="src.pylib.meep.Meep"><code class="flex name class">
-<span>class <span class="ident">Meep</span></span>
-<span>(</span><span>format, activeGen, parent=None)</span>
+<dt id="src.pylib.midi.MidiPortReader"><code class="flex name class">
+<span>class <span class="ident">MidiPortReader</span></span>
 </code></dt>
 <dd>
-<div class="desc"><p>QIODevice()
-QIODevice(QObject)</p></div>
+<div class="desc"><p>MIDI listener Class.</p>
+<p>This QObject establishes port connection with a MIDI device.
+The listener methods waits and reads MIDI inputs. It uses
+pyqt signals to emit the information.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">class Meep(QIODevice):
-    
-    SAMPLES_PER_READ = 2048
-    
-    def __init__(self, format, activeGen, parent = None):
+<pre><code class="python">class MidiPortReader(QObject):
+    &#34;&#34;&#34; 
+    MIDI listener Class.
 
-        QIODevice.__init__(self, parent)
-        self.data = QByteArray()
+    This QObject establishes port connection with a MIDI device.
+    The listener methods waits and reads MIDI inputs. It uses 
+    pyqt signals to emit the information.
+    &#34;&#34;&#34;
+
+    # Create a signal for when a
+    # MIDI note_on happens
+    newNoteFrequency = pyqtSignal(float)
+    newNotePress = pyqtSignal(bool)
+    
+    # Object initialisation:
+    def __init__(self):
+        QObject.__init__(self)
+        mido.set_backend(&#39;mido.backends.rtmidi&#39;)
+        print(&#34;Using MIDI APIs: {}&#34;.format(mido.backend.module.get_api_names()))
         
-        # Preserve phase across calls
-        self.phase = 0
-        self.freq = 440
-
-        self.generator = activeGen
-
-        self.convert_16_bit = float(2**15)
-
-        # Check we can deal with the supplied
-        # sample format. We&#39;re supposed to be
-        # able to deal with any requested
-        # sample format. But this is a
-        # _minimal_ example, right?
-        if format.isValid() and \
-           format.sampleSize() == 16 and \
-           format.byteOrder() == \
-                QAudioFormat.LittleEndian and \
-           format.sampleType() == \
-                QAudioFormat.SignedInt and \
-           format.channelCount() == 1 :
-               print(
-                 &#34;Meep: Format compatible. Good.&#34;
-               )
-               self.format = format
     
-    
-    def start(self):
-        
-        # Call QIODevices open
-        # making this object readable
-        self.open(QIODevice.ReadOnly)
-    
+    # Define a function which is to
+    # run in its own thread
+    def listener(self):
+        &#34;&#34;&#34; Listen to the MIDI input and emit data using pyqt signals.&#34;&#34;&#34;
 
-    def generateData(self, format, samples):
-        
-        result_buffer = self.generator.genBuffer(samples)
-        result_buffer = np.int16( result_buffer * (self.convert_16_bit-1) )
-        return result_buffer.tostring()
+        with mido.open_input(virtual=False) as mip:
+            for mmsg in mip:
+                
+                # convert midi to frequency
+                freq = math.pow(2,(float(mmsg.bytes()[1])-69)/12)*440
 
-    
-    def readData(self, bytes):
-
-        if bytes &gt; 2 * Meep.SAMPLES_PER_READ:
-            bytes = 2 * Meep.SAMPLES_PER_READ
-        return self.generateData(self.format,
-                                 bytes//2)</code></pre>
+                # detect onsets and offsets
+                if mmsg.type == &#34;note_on&#34;:
+                    status = True
+                    # change frequency only on onsets
+                    self.newNoteFrequency.emit(float(freq))
+                if mmsg.type == &#34;note_off&#34;:
+                    status = False
+                    
+                # emit status
+                self.newNotePress.emit(status)</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
-<li>PyQt5.QtCore.QIODevice</li>
 <li>PyQt5.QtCore.QObject</li>
 <li>sip.wrapper</li>
 <li>sip.simplewrapper</li>
 </ul>
-<h3>Class variables</h3>
-<dl>
-<dt id="src.pylib.meep.Meep.SAMPLES_PER_READ"><code class="name">var <span class="ident">SAMPLES_PER_READ</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-</dl>
 <h3>Methods</h3>
 <dl>
-<dt id="src.pylib.meep.Meep.generateData"><code class="name flex">
-<span>def <span class="ident">generateData</span></span>(<span>self, format, samples)</span>
+<dt id="src.pylib.midi.MidiPortReader.listener"><code class="name flex">
+<span>def <span class="ident">listener</span></span>(<span>self)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Listen to the MIDI input and emit data using pyqt signals.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def generateData(self, format, samples):
-    
-    result_buffer = self.generator.genBuffer(samples)
-    result_buffer = np.int16( result_buffer * (self.convert_16_bit-1) )
-    return result_buffer.tostring()</code></pre>
-</details>
-</dd>
-<dt id="src.pylib.meep.Meep.readData"><code class="name flex">
-<span>def <span class="ident">readData</span></span>(<span>self, bytes)</span>
-</code></dt>
-<dd>
-<div class="desc"><p>readData(self, int) -&gt; bytes</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def readData(self, bytes):
+<pre><code class="python">def listener(self):
+    &#34;&#34;&#34; Listen to the MIDI input and emit data using pyqt signals.&#34;&#34;&#34;
 
-    if bytes &gt; 2 * Meep.SAMPLES_PER_READ:
-        bytes = 2 * Meep.SAMPLES_PER_READ
-    return self.generateData(self.format,
-                             bytes//2)</code></pre>
+    with mido.open_input(virtual=False) as mip:
+        for mmsg in mip:
+            
+            # convert midi to frequency
+            freq = math.pow(2,(float(mmsg.bytes()[1])-69)/12)*440
+
+            # detect onsets and offsets
+            if mmsg.type == &#34;note_on&#34;:
+                status = True
+                # change frequency only on onsets
+                self.newNoteFrequency.emit(float(freq))
+            if mmsg.type == &#34;note_off&#34;:
+                status = False
+                
+            # emit status
+            self.newNotePress.emit(status)</code></pre>
 </details>
 </dd>
-<dt id="src.pylib.meep.Meep.start"><code class="name flex">
-<span>def <span class="ident">start</span></span>(<span>self)</span>
+<dt id="src.pylib.midi.MidiPortReader.newNoteFrequency"><code class="name flex">
+<span>def <span class="ident">newNoteFrequency</span></span>(<span>...)</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def start(self):
-    
-    # Call QIODevices open
-    # making this object readable
-    self.open(QIODevice.ReadOnly)</code></pre>
-</details>
+</dd>
+<dt id="src.pylib.midi.MidiPortReader.newNotePress"><code class="name flex">
+<span>def <span class="ident">newNotePress</span></span>(<span>...)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
 </dd>
 </dl>
 </dd>
@@ -245,12 +207,11 @@ QIODevice(QObject)</p></div>
 <li><h3><a href="#header-classes">Classes</a></h3>
 <ul>
 <li>
-<h4><code><a title="src.pylib.meep.Meep" href="#src.pylib.meep.Meep">Meep</a></code></h4>
+<h4><code><a title="src.pylib.midi.MidiPortReader" href="#src.pylib.midi.MidiPortReader">MidiPortReader</a></code></h4>
 <ul class="">
-<li><code><a title="src.pylib.meep.Meep.SAMPLES_PER_READ" href="#src.pylib.meep.Meep.SAMPLES_PER_READ">SAMPLES_PER_READ</a></code></li>
-<li><code><a title="src.pylib.meep.Meep.generateData" href="#src.pylib.meep.Meep.generateData">generateData</a></code></li>
-<li><code><a title="src.pylib.meep.Meep.readData" href="#src.pylib.meep.Meep.readData">readData</a></code></li>
-<li><code><a title="src.pylib.meep.Meep.start" href="#src.pylib.meep.Meep.start">start</a></code></li>
+<li><code><a title="src.pylib.midi.MidiPortReader.listener" href="#src.pylib.midi.MidiPortReader.listener">listener</a></code></li>
+<li><code><a title="src.pylib.midi.MidiPortReader.newNoteFrequency" href="#src.pylib.midi.MidiPortReader.newNoteFrequency">newNoteFrequency</a></code></li>
+<li><code><a title="src.pylib.midi.MidiPortReader.newNotePress" href="#src.pylib.midi.MidiPortReader.newNotePress">newNotePress</a></code></li>
 </ul>
 </li>
 </ul>

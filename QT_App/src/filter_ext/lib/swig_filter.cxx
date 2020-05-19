@@ -12,6 +12,7 @@ Filter::Filter(const double* in, std::size_t in_size): d(2){
 void Filter::setCoef(const double* in, std::size_t in_size){
     //implementation of the filter
 
+    //assign coefficient to a and b arrays
     for(size_t i = 0; i<in_size; i++){
         if (i<3){
             m_a[i] = *(in+i);
@@ -25,8 +26,10 @@ void Filter::modBuffer(double* out, std::size_t out_size, const double* in, std:
     double middle = 0;
     double result = 0;
     
+    // for each value of the input array
     for(size_t i = 0; i<in_size; i++){
-        
+
+        // iir magic formula        
         middle = *(in+i) - m_b[1]* d.get(0) - m_b[2] * d.get(1);
         result = middle * m_a[0] + m_a[1]* d.get(0) + m_a[2]* d.get(1);
         
@@ -46,6 +49,7 @@ FilterChain::FilterChain(const double* in,
     size = in_size1;
     filterBank.reserve(in_size1);
 
+    // for each set of coefficient given, add a filter to the fitlerbank
     for(int i = 0; i < in_size1; i++){
         filterBank.push_back(Filter(in+i*in_size2, in_size2));
     }
@@ -54,7 +58,7 @@ FilterChain::FilterChain(const double* in,
 
 void FilterChain::modBuffer(double* out, std::size_t out_size,
                           const double* in, std::size_t in_size){
-    
+    // call the modbuffer of each filter
     for (size_t i = 0; i < size; i++)
     {
         filterBank[i].modBuffer(out, out_size, in, in_size);

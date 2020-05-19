@@ -41,36 +41,49 @@ class ActiveGen(Generator):
 
     Contains the usual generator methods such as genBuffer to generate a buffer and
     setFreq to set the generator&#39;s frequency. Those methods call the genBuffer and 
-    setFreq of the generator contained in the activeGen variable. The 
+    setFreq of the generator contained in the activeGen variable. The active generator
+    can be changed using the setActive method.
     &#34;&#34;&#34;
 
-    # initialize all the generators 
-    # initialize all the modifiers
     def __init__(self, freq=440, sampleRate = 44100, samplePerRead = 2048):
         self._frequency = freq
 
+        # initialise all the generators
         self.recOsc = RecOsc(self._frequency)
         self.wNoise = WhiteNoise(self._frequency)
         self.fNoise = FilteredNoise(self._frequency)
+        # store the generators in a list
         self.genLst = [self.fNoise, self.recOsc, self.wNoise]
 
+        # initialise all the modifiers
         self.master = Gain(1)
         self.adsr = ADSR_V2(2048)
         
-        
+        # set the active generator with a initial generator value
         self.activeGen = self.genLst[0]
 
-    # generate buffer using the active generator
+
     def genBuffer(self, bufferSize):
+        &#34;&#34;&#34; 
+        Return an array of size bufferSize containing audio samples generated
+        from the active generator. The modifiers affect the buffer using the modBuffer method 
+        &#34;&#34;&#34;
         return self.modBuffer(self.activeGen.genBuffer(bufferSize))
 
     # apply modifiers contained in the class
     def modBuffer(self, inBuffer):
+        &#34;&#34;&#34;
+        Returns the modified input array. Each modifier is called here and modify
+        the buffer one at a time using their own modBuffer
+        &#34;&#34;&#34;
         outBuffer = self.adsr.modBuffer(inBuffer)
         return self.master.modBuffer(outBuffer)
 
-    # set Frequency of the generator currently in use
     def setFreq(self, freq):
+        &#34;&#34;&#34; 
+        Updates the active generator&#39;s frequency using its own setFreq.
+        freq is the new frequency which has to be between 0 and the nyquist frequency
+        &#34;&#34;&#34;
         # change frequency only if necessary
         if freq != self._frequency:
             self._frequency= freq
@@ -80,6 +93,10 @@ class ActiveGen(Generator):
     # set active generator, make sure the index matches the sliders
     # to ensure knowledge of view is not required,a dictionary is best
     def setActive(self, index):
+        &#34;&#34;&#34;
+        Set the active generator.
+        index is an integer which accesses the generator list
+        &#34;&#34;&#34;
         self.activeGen = self.genLst[index]
         self.setFreq(self._frequency)
 
@@ -119,7 +136,8 @@ if __name__ == &#34;__main__&#34;:
 <div class="desc"><p>Generator which contains multiple generators and enables selection between them.</p>
 <p>Contains the usual generator methods such as genBuffer to generate a buffer and
 setFreq to set the generator's frequency. Those methods call the genBuffer and
-setFreq of the generator contained in the activeGen variable. The</p></div>
+setFreq of the generator contained in the activeGen variable. The active generator
+can be changed using the setActive method.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -130,36 +148,49 @@ setFreq of the generator contained in the activeGen variable. The</p></div>
 
     Contains the usual generator methods such as genBuffer to generate a buffer and
     setFreq to set the generator&#39;s frequency. Those methods call the genBuffer and 
-    setFreq of the generator contained in the activeGen variable. The 
+    setFreq of the generator contained in the activeGen variable. The active generator
+    can be changed using the setActive method.
     &#34;&#34;&#34;
 
-    # initialize all the generators 
-    # initialize all the modifiers
     def __init__(self, freq=440, sampleRate = 44100, samplePerRead = 2048):
         self._frequency = freq
 
+        # initialise all the generators
         self.recOsc = RecOsc(self._frequency)
         self.wNoise = WhiteNoise(self._frequency)
         self.fNoise = FilteredNoise(self._frequency)
+        # store the generators in a list
         self.genLst = [self.fNoise, self.recOsc, self.wNoise]
 
+        # initialise all the modifiers
         self.master = Gain(1)
         self.adsr = ADSR_V2(2048)
         
-        
+        # set the active generator with a initial generator value
         self.activeGen = self.genLst[0]
 
-    # generate buffer using the active generator
+
     def genBuffer(self, bufferSize):
+        &#34;&#34;&#34; 
+        Return an array of size bufferSize containing audio samples generated
+        from the active generator. The modifiers affect the buffer using the modBuffer method 
+        &#34;&#34;&#34;
         return self.modBuffer(self.activeGen.genBuffer(bufferSize))
 
     # apply modifiers contained in the class
     def modBuffer(self, inBuffer):
+        &#34;&#34;&#34;
+        Returns the modified input array. Each modifier is called here and modify
+        the buffer one at a time using their own modBuffer
+        &#34;&#34;&#34;
         outBuffer = self.adsr.modBuffer(inBuffer)
         return self.master.modBuffer(outBuffer)
 
-    # set Frequency of the generator currently in use
     def setFreq(self, freq):
+        &#34;&#34;&#34; 
+        Updates the active generator&#39;s frequency using its own setFreq.
+        freq is the new frequency which has to be between 0 and the nyquist frequency
+        &#34;&#34;&#34;
         # change frequency only if necessary
         if freq != self._frequency:
             self._frequency= freq
@@ -169,6 +200,10 @@ setFreq of the generator contained in the activeGen variable. The</p></div>
     # set active generator, make sure the index matches the sliders
     # to ensure knowledge of view is not required,a dictionary is best
     def setActive(self, index):
+        &#34;&#34;&#34;
+        Set the active generator.
+        index is an integer which accesses the generator list
+        &#34;&#34;&#34;
         self.activeGen = self.genLst[index]
         self.setFreq(self._frequency)</code></pre>
 </details>
@@ -179,16 +214,39 @@ setFreq of the generator contained in the activeGen variable. The</p></div>
 </ul>
 <h3>Methods</h3>
 <dl>
+<dt id="src.pylib.active_gen.ActiveGen.genBuffer"><code class="name flex">
+<span>def <span class="ident">genBuffer</span></span>(<span>self, bufferSize)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Return an array of size bufferSize containing audio samples generated
+from the active generator. The modifiers affect the buffer using the modBuffer method</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def genBuffer(self, bufferSize):
+    &#34;&#34;&#34; 
+    Return an array of size bufferSize containing audio samples generated
+    from the active generator. The modifiers affect the buffer using the modBuffer method 
+    &#34;&#34;&#34;
+    return self.modBuffer(self.activeGen.genBuffer(bufferSize))</code></pre>
+</details>
+</dd>
 <dt id="src.pylib.active_gen.ActiveGen.modBuffer"><code class="name flex">
 <span>def <span class="ident">modBuffer</span></span>(<span>self, inBuffer)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Returns the modified input array. Each modifier is called here and modify
+the buffer one at a time using their own modBuffer</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def modBuffer(self, inBuffer):
+    &#34;&#34;&#34;
+    Returns the modified input array. Each modifier is called here and modify
+    the buffer one at a time using their own modBuffer
+    &#34;&#34;&#34;
     outBuffer = self.adsr.modBuffer(inBuffer)
     return self.master.modBuffer(outBuffer)</code></pre>
 </details>
@@ -197,26 +255,43 @@ setFreq of the generator contained in the activeGen variable. The</p></div>
 <span>def <span class="ident">setActive</span></span>(<span>self, index)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Set the active generator.
+index is an integer which accesses the generator list</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def setActive(self, index):
+    &#34;&#34;&#34;
+    Set the active generator.
+    index is an integer which accesses the generator list
+    &#34;&#34;&#34;
     self.activeGen = self.genLst[index]
     self.setFreq(self._frequency)</code></pre>
 </details>
 </dd>
+<dt id="src.pylib.active_gen.ActiveGen.setFreq"><code class="name flex">
+<span>def <span class="ident">setFreq</span></span>(<span>self, freq)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Updates the active generator's frequency using its own setFreq.
+freq is the new frequency which has to be between 0 and the nyquist frequency</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def setFreq(self, freq):
+    &#34;&#34;&#34; 
+    Updates the active generator&#39;s frequency using its own setFreq.
+    freq is the new frequency which has to be between 0 and the nyquist frequency
+    &#34;&#34;&#34;
+    # change frequency only if necessary
+    if freq != self._frequency:
+        self._frequency= freq
+        self.activeGen.setFreq(self._frequency)</code></pre>
+</details>
+</dd>
 </dl>
-<h3>Inherited members</h3>
-<ul class="hlist">
-<li><code><b><a title="src.pylib.gen.Generator" href="gen.html#src.pylib.gen.Generator">Generator</a></b></code>:
-<ul class="hlist">
-<li><code><a title="src.pylib.gen.Generator.genBuffer" href="gen.html#src.pylib.gen.Generator.genBuffer">genBuffer</a></code></li>
-<li><code><a title="src.pylib.gen.Generator.setFreq" href="gen.html#src.pylib.gen.Generator.setFreq">setFreq</a></code></li>
-</ul>
-</li>
-</ul>
 </dd>
 </dl>
 </section>
@@ -237,8 +312,10 @@ setFreq of the generator contained in the activeGen variable. The</p></div>
 <li>
 <h4><code><a title="src.pylib.active_gen.ActiveGen" href="#src.pylib.active_gen.ActiveGen">ActiveGen</a></code></h4>
 <ul class="">
+<li><code><a title="src.pylib.active_gen.ActiveGen.genBuffer" href="#src.pylib.active_gen.ActiveGen.genBuffer">genBuffer</a></code></li>
 <li><code><a title="src.pylib.active_gen.ActiveGen.modBuffer" href="#src.pylib.active_gen.ActiveGen.modBuffer">modBuffer</a></code></li>
 <li><code><a title="src.pylib.active_gen.ActiveGen.setActive" href="#src.pylib.active_gen.ActiveGen.setActive">setActive</a></code></li>
+<li><code><a title="src.pylib.active_gen.ActiveGen.setFreq" href="#src.pylib.active_gen.ActiveGen.setFreq">setFreq</a></code></li>
 </ul>
 </li>
 </ul>

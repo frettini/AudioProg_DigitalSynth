@@ -1,13 +1,276 @@
 from abc import ABC, abstractmethod
 import numpy as np
 
-# import os,sys,inspect
-# current_dir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-# parent_dir = os.path.dirname(current_dir)
-# sys.path.insert(0, parent_dir) 
-# import filter_ext.swig_filter as sf
 
 from ..filter_ext import swig_filter as sf
+
+
+#-------------------------------------------------------------------
+# Second implementation of ADSR using a State Machine
+#-------------------------------------------------------------------
+class ADSRState(ABC):
+    """
+    Abstract Base class for the state of the adsr state machine.
+
+    Each states needs a sample rate and number of samples per read (buffer size).
+    The process method calculates the adsr buffer and returns the final amplitude,
+    next state and adsr buffer. The time taken for each state to reach their final 
+    value can be calculated using the setTime method.
+    """
+
+    def __init__(self, sampleRate, samplePerRead):
+        self.sampleRate = sampleRate
+        self.samplePerRead = samplePerRead
+
+    # generate the buffer of values
+    @abstractmethod
+    def process(self, amplitude):
+        """ Calculate the adsr buffer from a base amplitude and return the final amplitude,
+        next state and adsr buffer. """
+        pass
+
+    # time: time in seconds for each steps
+    # internally steps the amplitude step for the state
+    @abstractmethod
+    def setTime(self, time):
+        """ Calculate the time the state takes to reach its final value. """
+        pass
+
+class AState(ADSRState):
+    """ 
+    The attack state describes the envelope of a note at its onset
+    """
+    
+    def __init__(self, sampleRate, samplePerRead, time=1):
+        super().__init__(sampleRate, samplePerRead)
+        self.setTime(time)
+
+    def process(self, amp):
+        """ Return the envelope buffer, new amplitude and next State value.
+        
+        The new amplitude is calculated using the amplitude step calculated in
+        setTime. The next possible states are decay or attack.  """
+
+        # calculate the amplitude we want to get to
+        newAmp = amp + self.step
+        # if it is higher thank 1, clamp and set the next state to decay        
+        if newAmp >= 1:
+            newAmp = 1
+            nextState = "decay"
+        else:
+            nextState = "attack"
+        
+        # generate the buffer
+        result = np.linspace(amp, newAmp, self.samplePerRead)
+
+        return newAmp, nextState, result
+
+    def setTime(self, time):
+        """
+        Calculate the slope and thus amplitude steps taken at each process call 
+        from a time (in seconds) value.
+        """
+        self.step = self.samplePerRead / (self.sampleRate*time) 
+
+
+
+class DState(ADSRState):
+    """ 
+    The decay state describes the envelope of a note when once it reaches max amplitude
+    and reduces to the sustain amplitude value.
+    """
+    
+    def __init__(self, sampleRate, samplePerRead, time=1, sustain=0.7):
+        super().__init__(sampleRate, samplePerRead) 
+        self.sustain = sustain
+        self.setTime(time, self.sustain)
+
+    def process(self, amp):
+        """ 
+        Return the envelope buffer, new amplitude and next State value.
+        
+        The new amplitude is calculated using the amplitude step calculated in
+        setTime. The next possible states are sustain or decay. 
+        """
+
+        #calculate new amplitude
+        newAmp = amp + self.step
+
+        if newAmp < self.sustain:
+            newAmp = self.sustain
+            nextState = "sustain"
+        else:
+            nextState = "decay"
+
+        result = np.linspace(amp, newAmp, self.samplePerRead)
+
+        return newAmp, nextState, result
+
+    def setTime(self, time, sustain):
+        """
+        Calculate the slope and thus amplitude steps taken at each process call 
+        from a time (in seconds) and sustain value.
+        """
+        self.step = self.samplePerRead * (self.sustain - 1)/(self.sampleRate * time)
+
+
+
+class SState(ADSRState):
+    """ 
+    The sustain state describes the envelope of a note when the note is 
+    maintained longer than the attack and delay states
+    """
+    
+    def __init__(self, sampleRate, samplePerRead, sustain=0.7):
+        super().__init__(sampleRate, samplePerRead)
+        self.setSustain(sustain)
+
+    def process(self, amplitude):
+        """ 
+        Return the envelope buffer, new amplitude and next State value.
+        
+        The new amplitude is calculated using the amplitude step calculated in
+        setTime. The next possible states is sustain.  
+        """
+
+        newAmp = self.sustain
+        nextState = "sustain"
+        result = np.full(self.samplePerRead, self.sustain)
+        return newAmp, nextState, result
+
+    # needs a reference to the sustain value of the DState
+    # or it is taken care of in the ADSR class
+    def setSustain(self, sustain):
+        """ Set the sustain value which is a float value between 0 and 1"""
+        if sustain > 1:
+            self.sustain = 1
+        elif sustain < 0:
+            self.sustain = 0
+        else:
+            self.sustain = sustain
+
+    def setTime(self, time):
+        return 0
+
+
+class RState(ADSRState):
+    """ 
+    The release state describes the envelope of a note at the offset of the note.
+    The release state decreases the value of the amplitude from the sustain amplitude
+    to 0.
+    """
+
+    def __init__(self, sampleRate, samplePerRead, time=2, sustain=0.7):
+        super().__init__(sampleRate, samplePerRead)
+        self.setTime(time, sustain)
+
+    def process(self, amp):
+        """ 
+        Return the envelope buffer, new amplitude and next State value.
+        
+        The new amplitude is calculated using the amplitude step calculated in
+        setTime. The next possible states is release. 
+        """
+
+        newAmp = amp + self.step
+
+        if newAmp < 0 :
+            newAmp = 0
+
+        nextState = "release"
+        result = np.linspace(amp, newAmp, self.samplePerRead)
+        return newAmp, nextState, result
+
+    def setTime(self, time, sustain=0.7):
+        """
+        Calculate the slope and thus amplitude steps taken at each process call 
+        from a time (in seconds) and sustain value.
+        """
+        self.sustain = sustain
+        self.step = self.samplePerRead * (-self.sustain)/(self.sampleRate * time)
+
+
+# ADSR modifier and state manager
+class ADSR_V2(sf.Modifier):
+    """
+    The second version of the ADSR Modifier implementing a state machine.
+
+    This modifier generates an ADSR envelope depending on the onset and
+    offset of the note, toggled using the setNote method. Each time a 
+    modBuffer is called, the envelope is calculated according to the 
+    amplitude and current state of the envelope. The timings of each states
+    can be updated using the setADSR method.
+    """
+
+    def __init__(self, samplePerRead = 2048, sampleRate = 44100, A=1,D=1,S=0.7,R=2):
+        self.samplePerRead = samplePerRead
+        self.sampleRate = sampleRate
+        self.noteOn = False
+        self.amplitude = 0.0
+        self.R = R
+        
+        aState = AState(self.sampleRate, self.samplePerRead, A)
+        dState = DState(self.sampleRate, self.samplePerRead, D, S)
+        sState = SState(self.sampleRate, self.samplePerRead, S)
+        rState = RState(self.sampleRate, self.samplePerRead, R, S)
+
+        self.states = {
+            "attack"  : aState, 
+            "decay"   : dState, 
+            "sustain" : sState,
+            "release" : rState 
+                       }
+        
+        self.currentState = self.states["release"]
+
+    def modBuffer(self, input_arr):
+        """ Return the multiplication of the input array with the generated ADSR envelope."""
+        
+        self.amplitude, nextState, modifier = self.currentState.process(self.amplitude)
+        
+        if self.currentState != self.states[nextState]:
+            self.currentState = self.states[nextState]
+
+        return modifier * input_arr
+
+    def setADSR(self, A, D, S, R):
+        """ Set the time and ampitude values of the ADSR states. """
+
+        self.R = R
+
+        self.states["attack"].setTime(A)
+        self.states["decay"].setTime(D, S)
+        self.states["sustain"].setSustain(S)
+        self.states["release"].setTime(R)
+
+
+    def setNote(self, status):
+        """ Set the note on or off whenever on onset or offset is detected. """
+        self.noteOn = status
+        if self.noteOn is True:
+            self.currentState = self.states["attack"]
+
+        if self.noteOn is False:
+            self.currentState = self.states["release"]
+            #ensure equal release time from any amplitude
+            self.currentState.setTime(self.R , self.amplitude)
+
+
+# Simple Gain Class that multiplies buffer with a set value
+class Gain(sf.Modifier):
+    """ The gain modifier controls the amplitude of the input buffers."""
+    
+    def __init__(self, gain):
+        self.setGain(gain)
+        
+    def setGain(self, gain):
+        """ Set the gain value (float)."""
+        self.gain = gain
+
+    def modBuffer(self, input_arr):
+        """ Multiplies the input buffer with the gain. """
+        return  input_arr * self.gain
+
 
 
 # Delay Class implemented using Python 
@@ -40,17 +303,6 @@ class PyDelay:
         return self.process_arr
 
 
-# Simple Gain Class that multiplies buffer with a set value
-class Gain(sf.Modifier):
-
-    def __init__(self, gain):
-        self.setGain(gain)
-        
-    def setGain(self, gain):
-        self.gain = gain
-
-    def modBuffer(self, input_arr):
-        return  input_arr * self.gain
 
 
 # ADSR envelope Mod
@@ -150,179 +402,6 @@ class ADSR(sf.Modifier):
     def setNote(self):
         self.noteOn = not self.noteOn
         self.index = 0
-
-#-------------------------------------------------------------------
-# Second implementation of ADSR using a State Machine
-#-------------------------------------------------------------------
-class ADSRState(ABC):
-    def __init__(self, sampleRate, samplePerRead):
-        self.sampleRate = sampleRate
-        self.samplePerRead = samplePerRead
-
-    # generate the buffer of values
-    @abstractmethod
-    def process(self, amplitude):
-        pass
-
-    # time: time in seconds for each steps
-    # internally steps the amplitude step for the state
-    @abstractmethod
-    def setTime(self, time):
-        pass
-
-class AState(ADSRState):
-    
-    def __init__(self, sampleRate, samplePerRead, time=1):
-        super().__init__(sampleRate, samplePerRead)
-        self.setTime(time)
-
-    def process(self, amp):
-        # calculate the amplitude we want to get to
-        newAmp = amp + self.step
-        # if it is higher thank 1, clamp and set the next state to decay        
-        if newAmp >= 1:
-            newAmp = 1
-            nextState = "decay"
-        else:
-            nextState = "attack"
-        
-        # generate the buffer
-        result = np.linspace(amp, newAmp, self.samplePerRead)
-
-        return newAmp, nextState, result
-
-    def setTime(self, time):
-        self.step = self.samplePerRead / (self.sampleRate*time) 
-        print("A: " + str(self.step))
-
-
-
-class DState(ADSRState):
-    
-    def __init__(self, sampleRate, samplePerRead, time=1, sustain=0.7):
-        super().__init__(sampleRate, samplePerRead) 
-        self.sustain = sustain
-        self.setTime(time, self.sustain)
-
-    def process(self, amp):
-        newAmp = amp + self.step
-
-        if newAmp < self.sustain:
-            newAmp = self.sustain
-            nextState = "sustain"
-        else:
-            nextState = "decay"
-
-        result = np.linspace(amp, newAmp, self.samplePerRead)
-
-        return newAmp, nextState, result
-
-    def setTime(self, time, sustain):
-        self.step = self.samplePerRead * (self.sustain - 1)/(self.sampleRate * time)
-        print("D: " + str(self.step))
-
-
-
-class SState(ADSRState):
-    
-    def __init__(self, sampleRate, samplePerRead, sustain=0.7):
-        super().__init__(sampleRate, samplePerRead)
-        self.setSustain(sustain)
-
-    def process(self, amplitude):
-        newAmp = self.sustain
-        nextState = "sustain"
-        result = np.full(self.samplePerRead, self.sustain)
-        return newAmp, nextState, result
-
-    # needs a reference to the sustain value of the DState
-    # or it is taken care of in the ADSR class
-    def setSustain(self, sustain):
-        if sustain > 1:
-            self.sustain = 1
-        elif sustain < 0:
-            self.sustain = 0
-        else:
-            self.sustain = sustain
-
-    def setTime(self, time):
-        return 0
-
-
-class RState(ADSRState):
-    
-    def __init__(self, sampleRate, samplePerRead, time=2, sustain=0.7):
-        super().__init__(sampleRate, samplePerRead)
-        self.setTime(time, sustain)
-
-    def process(self, amp):
-        newAmp = amp + self.step
-
-        if newAmp < 0 :
-            newAmp = 0
-
-        nextState = "release"
-        result = np.linspace(amp, newAmp, self.samplePerRead)
-        return newAmp, nextState, result
-
-    def setTime(self, time, sustain=0.7):
-        self.sustain = sustain
-        self.step = self.samplePerRead * (-self.sustain)/(self.sampleRate * time)
-        print("R: " + str(self.step))
-
-# ADSR modifier and state manager
-class ADSR_V2(sf.Modifier):
-    
-    def __init__(self, samplePerRead = 2048, sampleRate = 44100, A=1,D=1,S=0.7,R=2):
-        self.samplePerRead = samplePerRead
-        self.sampleRate = sampleRate
-        self.noteOn = False
-        self.amplitude = 0.0
-        self.R = R
-        
-        aState = AState(self.sampleRate, self.samplePerRead, A)
-        dState = DState(self.sampleRate, self.samplePerRead, D, S)
-        sState = SState(self.sampleRate, self.samplePerRead, S)
-        rState = RState(self.sampleRate, self.samplePerRead, R, S)
-
-        self.states = {
-            "attack"  : aState, 
-            "decay"   : dState, 
-            "sustain" : sState,
-            "release" : rState 
-                       }
-        
-        self.currentState = self.states["release"]
-
-    def modBuffer(self, input_arr):
-        
-        self.amplitude, nextState, modifier = self.currentState.process(self.amplitude)
-        
-        if self.currentState != self.states[nextState]:
-            self.currentState = self.states[nextState]
-
-        return modifier * input_arr
-
-    def setADSR(self, A, D, S, R):
-        self.R = R
-
-        self.states["attack"].setTime(A)
-        self.states["decay"].setTime(D, S)
-        self.states["sustain"].setSustain(S)
-        self.states["release"].setTime(R)
-
-
-    def setNote(self, status):
-        
-        self.noteOn = status
-        if self.noteOn is True:
-            self.currentState = self.states["attack"]
-
-        if self.noteOn is False:
-            self.currentState = self.states["release"]
-            #ensure equal release time from any amplitude
-            self.currentState.setTime(self.R , self.amplitude)
-
 
 
 if __name__ == "__main__":

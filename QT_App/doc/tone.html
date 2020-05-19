@@ -1,0 +1,453 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.8.1" />
+<title>tone API documentation</title>
+<meta name="description" content="" />
+<link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
+<link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
+<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>tone</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">import sys
+from PyQt5.QtCore import Qt, QThread
+from PyQt5.QtWidgets import \
+    QApplication, QWidget, QLabel, \
+    QVBoxLayout, QHBoxLayout
+from PyQt5.QtMultimedia import QAudioFormat, QAudioOutput
+
+from src.view import sliders
+from src.pylib.active_gen import ActiveGen
+from src.pylib.midi import MidiPortReader
+from src.pylib.meep import Meep
+
+# define global variable for the audio format
+SAMPLE_RATE = 44100
+AUDIO_CHANS = 1
+SAMPLE_SIZE = 16
+CTRL_INTERVAL = 100 # milliseconds of audio
+
+
+class ToneWindow(QWidget):
+    &#34;&#34;&#34;
+    Central Widget of the application.
+    
+    Defines the format of the audio channel and initializes the midi listener, 
+    generators and modifiers. The midi listener is operated on separate thread 
+    handled by a Qthread. The view components are initialized and put together 
+    in a general layout using the CreateUI method.
+    &#34;&#34;&#34;
+
+    def __init__(self, parent=None):
+        print(&#34;Tone Widget inst&#34;)
+        QWidget.__init__(self, parent)
+
+
+        self.activeGen = ActiveGen(sampleRate=SAMPLE_RATE, samplePerRead=Meep.SAMPLES_PER_READ)
+        self.createUI(parent)
+
+        # Meep playback format initialization
+        format = QAudioFormat()
+        format.setChannelCount(AUDIO_CHANS)
+        format.setSampleRate(SAMPLE_RATE)
+        format.setSampleSize(SAMPLE_SIZE)
+        format.setCodec(&#34;audio/pcm&#34;)
+        format.setByteOrder(
+            QAudioFormat.LittleEndian
+        )
+        format.setSampleType(
+            QAudioFormat.SignedInt
+        )
+
+        # Audio Output init
+        self.output = QAudioOutput(format, self)
+        output_buffer_size = \
+            int(2*SAMPLE_RATE \
+                 *CTRL_INTERVAL/1000)
+        self.output.setBufferSize(
+            output_buffer_size
+        )
+        
+        # initialize and start the audio playback
+        self.generator = Meep(format, self.activeGen, self )        
+        self.generator.start()
+        self.output.start(self.generator)
+
+
+        # Create the port reader object
+        self.midiListener = MidiPortReader()
+        # Create a thread which will read it
+        self.listenerThread = QThread()
+
+        # Take the object and move it
+        # to the new thread (it isn&#39;t running yet)
+        self.midiListener.moveToThread(
+            self.listenerThread
+        )
+
+        # Connect the signals to slot functions
+        self.midiListener.newNoteFrequency.connect(
+            self.activeGen.setFreq
+        )
+        self.midiListener.newNotePress.connect(
+            self.activeGen.adsr.setNote
+        )
+
+        # Tell Qt the function to call
+        # when it starts the thread 
+        self.listenerThread.started.connect(
+            self.midiListener.listener
+        )
+        # start the thread
+        self.listenerThread.start()
+
+
+
+    def createUI(self, parent):
+
+        &#34;&#34;&#34;Receives a parent QWidget and produces the view in it&#34;&#34;&#34;
+
+        print(&#34;Create UI&#34;)
+        slidLayout = QHBoxLayout()
+        vLayout = QVBoxLayout(self)
+        vLayout.setSpacing(10)
+
+        # initialize title label and UI constraints
+        self.title = QLabel(self)
+        self.title.setText(&#34;Tone Generator&#34;)
+        self.title.setMargin(10)
+        self.title.setFixedHeight(50)
+        self.title.setFixedWidth(400)
+        self.title.setAlignment(Qt.AlignCenter)
+
+        # set title style
+        self.title.setStyleSheet(&#34;&#34;&#34;
+                font-family : &#34;Lucida Console&#34;;
+                font-size: 20px;
+                color : #F2F2F2;
+                border: 2px solid green;
+                border-radius: 4px;
+                border-color: #082126;
+                padding: 2px;
+                background-color : #0E3740 ;
+        &#34;&#34;&#34;)
+        # set background color
+        self.setStyleSheet(
+            &#34; background-color : #082126 ; &#34;
+        )
+
+        # initialize the view components
+        filtSlider = sliders.FiltSlider(self.activeGen, self).createUI(parent)
+        adsrSlider = sliders.ADSRSlider(self.activeGen, self).createUI(parent)
+        masterSlider = sliders.MasterSlider(self.activeGen, self).createUI(parent)
+        genSlider = sliders.GenSlider(self.activeGen, self).createUI(parent)
+
+        # add the two sliders and ADSR layout in a horizontal layout
+        slidLayout.addStretch(1)
+        slidLayout.addWidget(filtSlider)
+        slidLayout.addStretch(1)
+        slidLayout.addWidget(adsrSlider, Qt.AlignHCenter)    
+        slidLayout.addStretch(1)    
+        slidLayout.addWidget(masterSlider)
+        slidLayout.addStretch(1)
+
+        # put all components in the vertical layout    
+        vLayout.addWidget(self.title)
+        vLayout.setAlignment(self.title,Qt.AlignCenter)
+        vLayout.addSpacing(20)
+        vLayout.addLayout(slidLayout)
+        vLayout.addSpacing(20)
+        vLayout.addWidget(genSlider)
+        vLayout.setAlignment(genSlider,Qt.AlignCenter)
+
+
+
+if __name__ == &#34;__main__&#34;:
+    
+    app = QApplication(sys.argv)
+    app.setStyle(&#34;Fusion&#34;)
+
+    window = ToneWindow()
+    window.setWindowTitle(&#34;Tone Generator&#34;)
+    window.show()
+    sys.exit(app.exec_())</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="tone.ToneWindow"><code class="flex name class">
+<span>class <span class="ident">ToneWindow</span></span>
+<span>(</span><span>parent=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Central Widget of the application.</p>
+<p>Defines the format of the audio channel and initializes the midi listener,
+generators and modifiers. The midi listener is operated on separate thread
+handled by a Qthread. The view components are initialized and put together
+in a general layout using the CreateUI method.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class ToneWindow(QWidget):
+    &#34;&#34;&#34;
+    Central Widget of the application.
+    
+    Defines the format of the audio channel and initializes the midi listener, 
+    generators and modifiers. The midi listener is operated on separate thread 
+    handled by a Qthread. The view components are initialized and put together 
+    in a general layout using the CreateUI method.
+    &#34;&#34;&#34;
+
+    def __init__(self, parent=None):
+        print(&#34;Tone Widget inst&#34;)
+        QWidget.__init__(self, parent)
+
+
+        self.activeGen = ActiveGen(sampleRate=SAMPLE_RATE, samplePerRead=Meep.SAMPLES_PER_READ)
+        self.createUI(parent)
+
+        # Meep playback format initialization
+        format = QAudioFormat()
+        format.setChannelCount(AUDIO_CHANS)
+        format.setSampleRate(SAMPLE_RATE)
+        format.setSampleSize(SAMPLE_SIZE)
+        format.setCodec(&#34;audio/pcm&#34;)
+        format.setByteOrder(
+            QAudioFormat.LittleEndian
+        )
+        format.setSampleType(
+            QAudioFormat.SignedInt
+        )
+
+        # Audio Output init
+        self.output = QAudioOutput(format, self)
+        output_buffer_size = \
+            int(2*SAMPLE_RATE \
+                 *CTRL_INTERVAL/1000)
+        self.output.setBufferSize(
+            output_buffer_size
+        )
+        
+        # initialize and start the audio playback
+        self.generator = Meep(format, self.activeGen, self )        
+        self.generator.start()
+        self.output.start(self.generator)
+
+
+        # Create the port reader object
+        self.midiListener = MidiPortReader()
+        # Create a thread which will read it
+        self.listenerThread = QThread()
+
+        # Take the object and move it
+        # to the new thread (it isn&#39;t running yet)
+        self.midiListener.moveToThread(
+            self.listenerThread
+        )
+
+        # Connect the signals to slot functions
+        self.midiListener.newNoteFrequency.connect(
+            self.activeGen.setFreq
+        )
+        self.midiListener.newNotePress.connect(
+            self.activeGen.adsr.setNote
+        )
+
+        # Tell Qt the function to call
+        # when it starts the thread 
+        self.listenerThread.started.connect(
+            self.midiListener.listener
+        )
+        # start the thread
+        self.listenerThread.start()
+
+
+
+    def createUI(self, parent):
+
+        &#34;&#34;&#34;Receives a parent QWidget and produces the view in it&#34;&#34;&#34;
+
+        print(&#34;Create UI&#34;)
+        slidLayout = QHBoxLayout()
+        vLayout = QVBoxLayout(self)
+        vLayout.setSpacing(10)
+
+        # initialize title label and UI constraints
+        self.title = QLabel(self)
+        self.title.setText(&#34;Tone Generator&#34;)
+        self.title.setMargin(10)
+        self.title.setFixedHeight(50)
+        self.title.setFixedWidth(400)
+        self.title.setAlignment(Qt.AlignCenter)
+
+        # set title style
+        self.title.setStyleSheet(&#34;&#34;&#34;
+                font-family : &#34;Lucida Console&#34;;
+                font-size: 20px;
+                color : #F2F2F2;
+                border: 2px solid green;
+                border-radius: 4px;
+                border-color: #082126;
+                padding: 2px;
+                background-color : #0E3740 ;
+        &#34;&#34;&#34;)
+        # set background color
+        self.setStyleSheet(
+            &#34; background-color : #082126 ; &#34;
+        )
+
+        # initialize the view components
+        filtSlider = sliders.FiltSlider(self.activeGen, self).createUI(parent)
+        adsrSlider = sliders.ADSRSlider(self.activeGen, self).createUI(parent)
+        masterSlider = sliders.MasterSlider(self.activeGen, self).createUI(parent)
+        genSlider = sliders.GenSlider(self.activeGen, self).createUI(parent)
+
+        # add the two sliders and ADSR layout in a horizontal layout
+        slidLayout.addStretch(1)
+        slidLayout.addWidget(filtSlider)
+        slidLayout.addStretch(1)
+        slidLayout.addWidget(adsrSlider, Qt.AlignHCenter)    
+        slidLayout.addStretch(1)    
+        slidLayout.addWidget(masterSlider)
+        slidLayout.addStretch(1)
+
+        # put all components in the vertical layout    
+        vLayout.addWidget(self.title)
+        vLayout.setAlignment(self.title,Qt.AlignCenter)
+        vLayout.addSpacing(20)
+        vLayout.addLayout(slidLayout)
+        vLayout.addSpacing(20)
+        vLayout.addWidget(genSlider)
+        vLayout.setAlignment(genSlider,Qt.AlignCenter)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>PyQt5.QtWidgets.QWidget</li>
+<li>PyQt5.QtCore.QObject</li>
+<li>sip.wrapper</li>
+<li>PyQt5.QtGui.QPaintDevice</li>
+<li>sip.simplewrapper</li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="tone.ToneWindow.createUI"><code class="name flex">
+<span>def <span class="ident">createUI</span></span>(<span>self, parent)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Receives a parent QWidget and produces the view in it</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def createUI(self, parent):
+
+    &#34;&#34;&#34;Receives a parent QWidget and produces the view in it&#34;&#34;&#34;
+
+    print(&#34;Create UI&#34;)
+    slidLayout = QHBoxLayout()
+    vLayout = QVBoxLayout(self)
+    vLayout.setSpacing(10)
+
+    # initialize title label and UI constraints
+    self.title = QLabel(self)
+    self.title.setText(&#34;Tone Generator&#34;)
+    self.title.setMargin(10)
+    self.title.setFixedHeight(50)
+    self.title.setFixedWidth(400)
+    self.title.setAlignment(Qt.AlignCenter)
+
+    # set title style
+    self.title.setStyleSheet(&#34;&#34;&#34;
+            font-family : &#34;Lucida Console&#34;;
+            font-size: 20px;
+            color : #F2F2F2;
+            border: 2px solid green;
+            border-radius: 4px;
+            border-color: #082126;
+            padding: 2px;
+            background-color : #0E3740 ;
+    &#34;&#34;&#34;)
+    # set background color
+    self.setStyleSheet(
+        &#34; background-color : #082126 ; &#34;
+    )
+
+    # initialize the view components
+    filtSlider = sliders.FiltSlider(self.activeGen, self).createUI(parent)
+    adsrSlider = sliders.ADSRSlider(self.activeGen, self).createUI(parent)
+    masterSlider = sliders.MasterSlider(self.activeGen, self).createUI(parent)
+    genSlider = sliders.GenSlider(self.activeGen, self).createUI(parent)
+
+    # add the two sliders and ADSR layout in a horizontal layout
+    slidLayout.addStretch(1)
+    slidLayout.addWidget(filtSlider)
+    slidLayout.addStretch(1)
+    slidLayout.addWidget(adsrSlider, Qt.AlignHCenter)    
+    slidLayout.addStretch(1)    
+    slidLayout.addWidget(masterSlider)
+    slidLayout.addStretch(1)
+
+    # put all components in the vertical layout    
+    vLayout.addWidget(self.title)
+    vLayout.setAlignment(self.title,Qt.AlignCenter)
+    vLayout.addSpacing(20)
+    vLayout.addLayout(slidLayout)
+    vLayout.addSpacing(20)
+    vLayout.addWidget(genSlider)
+    vLayout.setAlignment(genSlider,Qt.AlignCenter)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="tone.ToneWindow" href="#tone.ToneWindow">ToneWindow</a></code></h4>
+<ul class="">
+<li><code><a title="tone.ToneWindow.createUI" href="#tone.ToneWindow.createUI">createUI</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.8.1</a>.</p>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad()</script>
+</body>
+</html>
