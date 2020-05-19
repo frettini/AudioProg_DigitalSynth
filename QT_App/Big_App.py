@@ -1,127 +1,20 @@
 import sys
-from PyQt5.QtCore import \
-    Qt, pyqtSlot, pyqtSignal, QObject, QThread, QByteArray, QIODevice
+from PyQt5.QtCore import Qt, QThread
 from PyQt5.QtWidgets import \
-    QApplication, QWidget, \
-    QSlider, QPushButton, QLabel, \
-    QMessageBox, \
-    QVBoxLayout, QHBoxLayout, QGroupBox
+    QApplication, QWidget, QLabel, \
+    QVBoxLayout, QHBoxLayout
 from PyQt5.QtMultimedia import QAudioFormat, QAudioOutput
-
-import numpy as np
-import math
-import mido
-import rtmidi
 
 from src.view import sliders
 from src.pylib.active_gen import ActiveGen
-# import scipy.signal
+from src.pylib.midi import MidiPortReader
+from src.pylib.meep import Meep
 
-# from swig_module import swig_filter as sf
-# from swig_module.modules import noise
 
 SAMPLE_RATE = 44100
 AUDIO_CHANS = 1
 SAMPLE_SIZE = 16
 CTRL_INTERVAL = 100 # milliseconds of audio
-
-
-class MidiPortReader(QObject):
-
-    # Create a signal for when a
-    # MIDI note_on happens
-    newNoteFrequency = pyqtSignal(float)
-    newNotePress = pyqtSignal(bool)
-    
-    # Object initialisation:
-    def __init__(self):
-        QObject.__init__(self)
-        mido.set_backend('mido.backends.rtmidi')
-        print("Using MIDI APIs: {}".format(mido.backend.module.get_api_names()))
-        
-    
-    # Define a function which is to
-    # run in its own thread
-    def listener(self):
-        with mido.open_input(virtual=False) as mip:
-            for mmsg in mip:
-                # print(mmsg.type)
-                # print(mmsg.bytes())
-                
-                # convert midi to frequency
-                freq = math.pow(2,(float(mmsg.bytes()[1])-69)/12)*440
-
-                # Only communicate via the Qt signal
-                # Qt will stop us hurting ourselves
-                
-                
-                if mmsg.type == "note_on":
-                    status = True
-                    # change frequency only on onsets
-                    self.newNoteFrequency.emit(float(freq))
-                if mmsg.type == "note_off":
-                    status = False
-                    
-                self.newNotePress.emit(status)
-
-
-class Meep(QIODevice):
-    
-    SAMPLES_PER_READ = 2048
-    
-    def __init__(self, format, activeGen, parent = None):
-
-        QIODevice.__init__(self, parent)
-        self.data = QByteArray()
-        
-        # Preserve phase across calls
-        self.phase = 0
-        self.freq = 440
-
-        self.generator = activeGen
-
-        self.convert_16_bit = float(2**15)
-
-        # Check we can deal with the supplied
-        # sample format. We're supposed to be
-        # able to deal with any requested
-        # sample format. But this is a
-        # _minimal_ example, right?
-        if format.isValid() and \
-           format.sampleSize() == 16 and \
-           format.byteOrder() == \
-                QAudioFormat.LittleEndian and \
-           format.sampleType() == \
-                QAudioFormat.SignedInt and \
-           format.channelCount() == 1 :
-               print(
-                 "Meep: Format compatible. Good."
-               )
-               self.format = format
-    
-    
-    def start(self):
-        
-        # Call QIODevices open
-        # making this object readable
-        self.open(QIODevice.ReadOnly)
-    
-
-    def generateData(self, format, samples):
-        
-        result_buffer = self.generator.genBuffer(samples)
-        result_buffer = np.int16( result_buffer * (self.convert_16_bit-1) )
-        return result_buffer.tostring()
-
-    
-    def readData(self, bytes):
-
-        if bytes > 2 * Meep.SAMPLES_PER_READ:
-            bytes = 2 * Meep.SAMPLES_PER_READ
-        return self.generateData(self.format,
-                                 bytes//2)
-
-
 
 
 class ToneWindow(QWidget):
@@ -183,8 +76,7 @@ class ToneWindow(QWidget):
         self.listenerThread.started.connect(
             self.midiListener.listener
         )
-
-        # Fingers in ears, eyes tight shut...
+        # start the thread
         self.listenerThread.start()
 
 
@@ -229,8 +121,6 @@ class ToneWindow(QWidget):
         self.setStyleSheet(
             " background-color : #082126 ; "
         )
-        
-
 
         self.title.setFixedHeight(50)
         self.title.setFixedWidth(400)
@@ -256,14 +146,5 @@ if __name__ == "__main__":
 
     window = ToneWindow()
     window.setWindowTitle("Tone Generator")
-    
-    # window.setStyleSheet("background-color: black;")
-    # window.setStyleSheet("""
-    #     QGroupBox, QLabel {
-    #         background-color :  #0E3740;
-    #         border-color : #082126;
-    #         color : #F2F2F2;
-    #     }
-    #     """ )
     window.show()
     sys.exit(app.exec_())

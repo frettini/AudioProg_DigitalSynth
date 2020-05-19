@@ -313,6 +313,7 @@ class MasterSlider(QWidget):
     def __init__(self, activeGen, parent=None):
         QWidget.__init__(self,parent) 
         self.activeGen = activeGen
+        
     
     def createUI(self, parent):
         masterBox = QGroupBox("Master")
