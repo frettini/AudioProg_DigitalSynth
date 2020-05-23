@@ -3,7 +3,7 @@ from PyQt5.QtCore import Qt, QThread
 from PyQt5.QtWidgets import \
     QApplication, QWidget, QLabel, \
     QVBoxLayout, QHBoxLayout
-from PyQt5.QtMultimedia import QAudioFormat, QAudioOutput
+from PyQt5.QtMultimedia import QAudioFormat, QAudioOutput, QAudioDeviceInfo
 
 from src.view import sliders
 from src.pylib.active_gen import ActiveGen
@@ -33,7 +33,7 @@ class ToneWindow(QWidget):
 
 
         self.activeGen = ActiveGen(sampleRate=SAMPLE_RATE, samplePerRead=Meep.SAMPLES_PER_READ)
-        self.createUI(parent)
+        self.createUI(self)
 
         # Meep playback format initialization
         format = QAudioFormat()
@@ -48,6 +48,13 @@ class ToneWindow(QWidget):
             QAudioFormat.SignedInt
         )
 
+
+        # check compatibility of format with device
+        info = QAudioDeviceInfo(QAudioDeviceInfo.defaultOutputDevice())
+        if info.isFormatSupported(format) is False:
+            print("Raw audio format not supported by backend, cannot play audio.")
+            return None
+        
         # Audio Output init
         self.output = QAudioOutput(format, self)
         output_buffer_size = \
@@ -56,7 +63,6 @@ class ToneWindow(QWidget):
         self.output.setBufferSize(
             output_buffer_size
         )
-        
         # initialize and start the audio playback
         self.generator = Meep(format, self.activeGen, self )        
         self.generator.start()
@@ -68,8 +74,7 @@ class ToneWindow(QWidget):
         # Create a thread which will read it
         self.listenerThread = QThread()
 
-        # Take the object and move it
-        # to the new thread (it isn't running yet)
+        # move QObjet to a new thread
         self.midiListener.moveToThread(
             self.listenerThread
         )
@@ -79,7 +84,7 @@ class ToneWindow(QWidget):
             self.activeGen.setFreq
         )
         self.midiListener.newNotePress.connect(
-            self.activeGen.adsr.setNote
+            self.activeGen.setNote
         )
 
         # Tell Qt the function to call
@@ -126,10 +131,10 @@ class ToneWindow(QWidget):
         )
 
         # initialize the view components
-        filtSlider = sliders.FiltSlider(self.activeGen, self).createUI(parent)
-        adsrSlider = sliders.ADSRSlider(self.activeGen, self).createUI(parent)
-        masterSlider = sliders.MasterSlider(self.activeGen, self).createUI(parent)
-        genSlider = sliders.GenSlider(self.activeGen, self).createUI(parent)
+        filtSlider = sliders.FiltSlider(self.activeGen, parent).createUI(parent)
+        adsrSlider = sliders.ADSRSlider(self.activeGen, parent).createUI(parent)
+        masterSlider = sliders.MasterSlider(self.activeGen, parent).createUI(parent)
+        genSlider = sliders.GenSlider(self.activeGen, parent).createUI(parent)
 
         # add the two sliders and ADSR layout in a horizontal layout
         slidLayout.addStretch(1)

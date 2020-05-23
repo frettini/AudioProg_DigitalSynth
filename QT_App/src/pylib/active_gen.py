@@ -1,4 +1,4 @@
-from PyQt5.QtCore import pyqtSlot
+from PyQt5.QtCore import pyqtSlot, QObject
 import numpy as np
 
 from .gen import Generator
@@ -9,7 +9,7 @@ from .noise import WhiteNoise, FilteredNoise
 
 # The currently active generator
 # This is an interface Class to communicate with the Meep and view
-class ActiveGen(Generator):
+class ActiveGen(QObject):
     """
     Generator which contains multiple generators and enables selection between them.
 
@@ -20,6 +20,7 @@ class ActiveGen(Generator):
     """
 
     def __init__(self, freq=440, sampleRate = 44100, samplePerRead = 2048):
+        QObject.__init__(self)
         self._frequency = freq
 
         # initialise all the generators
@@ -53,6 +54,7 @@ class ActiveGen(Generator):
         outBuffer = self.adsr.modBuffer(inBuffer)
         return self.master.modBuffer(outBuffer)
 
+    @pyqtSlot(float)
     def setFreq(self, freq):
         """ 
         Updates the active generator's frequency using its own setFreq.
@@ -66,6 +68,7 @@ class ActiveGen(Generator):
             
     # set active generator, make sure the index matches the sliders
     # to ensure knowledge of view is not required,a dictionary is best
+    @pyqtSlot(int)
     def setActive(self, index):
         """
         Set the active generator.
@@ -73,6 +76,14 @@ class ActiveGen(Generator):
         """
         self.activeGen = self.genLst[index]
         self.setFreq(self._frequency)
+
+    @pyqtSlot(bool)
+    def setNote(self, status):
+        """ 
+        Interface the setNote of adsr to ensure thread safety
+        at the cost of call overhead 
+        """
+        self.adsr.setNote(status)
 
     
 

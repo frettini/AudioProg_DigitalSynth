@@ -96,9 +96,9 @@ class FilteredNoise(Generator):
         """
         Update the sharpness of the filter by taking the gstop value and resetting the frequency.
         """
-        if gstop > 100:
+        if bw > 100:
             self.bw = 100
-        elif gstop < 10:
+        elif bw < 10:
             self.bw = 1
         else:
             self.bw = bw

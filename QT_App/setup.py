@@ -34,7 +34,7 @@ try:
 except AttributeError:
     numpy_include = numpy.get_numpy_include()
 
-# create the module, interface and wrapper names
+# create the module, and interface names
 mod_name = "_" + name
 interface = name + ".i"
 

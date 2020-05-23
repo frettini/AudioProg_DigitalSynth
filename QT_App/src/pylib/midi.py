@@ -1,6 +1,6 @@
 import math
 import mido
-import rtmidi
+# import rtmidi
 from PyQt5.QtCore import QObject, pyqtSignal
 
 

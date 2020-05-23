@@ -8,6 +8,73 @@ from ..filter_ext import swig_filter as sf
 #-------------------------------------------------------------------
 # Second implementation of ADSR using a State Machine
 #-------------------------------------------------------------------
+
+# ADSR modifier and state manager
+class ADSR_V2(sf.Modifier):
+    """
+    The second version of the ADSR Modifier implementing a state machine.
+
+    This modifier generates an ADSR envelope depending on the onset and
+    offset of the note, toggled using the setNote method. Each time a 
+    modBuffer is called, the envelope is calculated according to the 
+    amplitude and current state of the envelope. The timings of each states
+    can be updated using the setADSR method.
+    """
+
+    def __init__(self, samplePerRead = 2048, sampleRate = 44100, A=1,D=1,S=0.7,R=2):
+        self.samplePerRead = samplePerRead
+        self.sampleRate = sampleRate
+        self.noteOn = False
+        self.amplitude = 0.0
+        self.R = R
+        
+        aState = AState(self.sampleRate, self.samplePerRead, A)
+        dState = DState(self.sampleRate, self.samplePerRead, D, S)
+        sState = SState(self.sampleRate, self.samplePerRead, S)
+        rState = RState(self.sampleRate, self.samplePerRead, R, S)
+
+        self.states = {
+            "attack"  : aState, 
+            "decay"   : dState, 
+            "sustain" : sState,
+            "release" : rState 
+                       }
+        
+        self.currentState = self.states["release"]
+
+    def modBuffer(self, input_arr):
+        """ Return the multiplication of the input array with the generated ADSR envelope."""
+        
+        self.amplitude, nextState, modifier = self.currentState.process(self.amplitude)
+        
+        if self.currentState != self.states[nextState]:
+            self.currentState = self.states[nextState]
+
+        return modifier * input_arr
+
+    def setADSR(self, A, D, S, R):
+        """ Set the time and ampitude values of the ADSR states. """
+
+        self.R = R
+
+        self.states["attack"].setTime(A)
+        self.states["decay"].setTime(D, S)
+        self.states["sustain"].setSustain(S)
+        self.states["release"].setTime(R)
+
+
+    def setNote(self, status):
+        """ Set the note on or off whenever on onset or offset is detected. """
+        self.noteOn = status
+        if self.noteOn is True:
+            self.currentState = self.states["attack"]
+
+        if self.noteOn is False:
+            self.currentState = self.states["release"]
+            #ensure equal release time from any amplitude
+            self.currentState.setTime(self.R , self.amplitude)
+
+
 class ADSRState(ABC):
     """
     Abstract Base class for the state of the adsr state machine.
@@ -190,70 +257,6 @@ class RState(ADSRState):
         self.step = self.samplePerRead * (-self.sustain)/(self.sampleRate * time)
 
 
-# ADSR modifier and state manager
-class ADSR_V2(sf.Modifier):
-    """
-    The second version of the ADSR Modifier implementing a state machine.
-
-    This modifier generates an ADSR envelope depending on the onset and
-    offset of the note, toggled using the setNote method. Each time a 
-    modBuffer is called, the envelope is calculated according to the 
-    amplitude and current state of the envelope. The timings of each states
-    can be updated using the setADSR method.
-    """
-
-    def __init__(self, samplePerRead = 2048, sampleRate = 44100, A=1,D=1,S=0.7,R=2):
-        self.samplePerRead = samplePerRead
-        self.sampleRate = sampleRate
-        self.noteOn = False
-        self.amplitude = 0.0
-        self.R = R
-        
-        aState = AState(self.sampleRate, self.samplePerRead, A)
-        dState = DState(self.sampleRate, self.samplePerRead, D, S)
-        sState = SState(self.sampleRate, self.samplePerRead, S)
-        rState = RState(self.sampleRate, self.samplePerRead, R, S)
-
-        self.states = {
-            "attack"  : aState, 
-            "decay"   : dState, 
-            "sustain" : sState,
-            "release" : rState 
-                       }
-        
-        self.currentState = self.states["release"]
-
-    def modBuffer(self, input_arr):
-        """ Return the multiplication of the input array with the generated ADSR envelope."""
-        
-        self.amplitude, nextState, modifier = self.currentState.process(self.amplitude)
-        
-        if self.currentState != self.states[nextState]:
-            self.currentState = self.states[nextState]
-
-        return modifier * input_arr
-
-    def setADSR(self, A, D, S, R):
-        """ Set the time and ampitude values of the ADSR states. """
-
-        self.R = R
-
-        self.states["attack"].setTime(A)
-        self.states["decay"].setTime(D, S)
-        self.states["sustain"].setSustain(S)
-        self.states["release"].setTime(R)
-
-
-    def setNote(self, status):
-        """ Set the note on or off whenever on onset or offset is detected. """
-        self.noteOn = status
-        if self.noteOn is True:
-            self.currentState = self.states["attack"]
-
-        if self.noteOn is False:
-            self.currentState = self.states["release"]
-            #ensure equal release time from any amplitude
-            self.currentState.setTime(self.R , self.amplitude)
 
 
 # Simple Gain Class that multiplies buffer with a set value
@@ -407,6 +410,7 @@ class ADSR(sf.Modifier):
 if __name__ == "__main__":
 
     import matplotlib.pyplot as plot
+    import time
 
     d = PyDelay(10, 10)
     d.process(1)
@@ -417,23 +421,16 @@ if __name__ == "__main__":
     print("Gain modifier")
     print(g.modBuffer(d.process_arr))
 
-    adsrmod = ADSR_V2(20, 60, S=0.2)
-    random =  np.random.standard_normal(360)
+    adsrmod = ADSR_V2(2048, 44100, S=0.2)
+    random =  np.random.standard_normal(2048)
     result = np.zeros(360)
     
     adsrmod.setNote(True)
-    for i in range(0,100,20):
-        result[i:i+20] = adsrmod.modBuffer(random[i:i+20])
-    adsrmod.setNote(False)
-    for i in range(100,140,20):
-        result[i:i+20] = adsrmod.modBuffer(random[i:i+20])
-    adsrmod.setNote(True)
-    for i in range(140,200,20):
-        result[i:i+20] = adsrmod.modBuffer(random[i:i+20])
-    adsrmod.setNote(False)
-    for i in range(200,360,20):
-        result[i:i+20] = adsrmod.modBuffer(random[i:i+20])
+    start = time.time()
+    adsrmod.modBuffer(random)
+    end = time.time()
     
+    print("time taken: " + str(end-start))
 
     plot.plot(result)
     plot.show()
