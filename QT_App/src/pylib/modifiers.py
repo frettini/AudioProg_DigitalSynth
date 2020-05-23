@@ -27,7 +27,8 @@ class ADSR_V2(sf.Modifier):
         self.noteOn = False
         self.amplitude = 0.0
         self.R = R
-        
+        self.count = 0
+
         aState = AState(self.sampleRate, self.samplePerRead, A)
         dState = DState(self.sampleRate, self.samplePerRead, D, S)
         sState = SState(self.sampleRate, self.samplePerRead, S)
@@ -67,12 +68,22 @@ class ADSR_V2(sf.Modifier):
         """ Set the note on or off whenever on onset or offset is detected. """
         self.noteOn = status
         if self.noteOn is True:
+            self.count += 1 
             self.currentState = self.states["attack"]
 
         if self.noteOn is False:
-            self.currentState = self.states["release"]
-            #ensure equal release time from any amplitude
-            self.currentState.setTime(self.R , self.amplitude)
+            self.count -= 1 
+
+            # make sure not to release if more than one
+            # key is pressed
+            if self.count == 0:
+                self.currentState = self.states["release"]
+                #ensure equal release time from any amplitude
+                self.currentState.setTime(self.R , self.amplitude)
+
+        print(self.count)
+        if self.count < 0:
+            self.count = 0
 
 
 class ADSRState(ABC):

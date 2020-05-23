@@ -124,26 +124,26 @@ class ADSRSlider(QWidget):
     @pyqtSlot()
     def AReleased(self):
         # range from 0 to 2
-        print("A value changed to {}".format(self.ASlid.value()))
+        print("A value changed to {}".format(self.ASlid.value()/50))
         self.sendADSR()
         
     @pyqtSlot()
     def DReleased(self):
         # range from 0 to 2
-        print("D value changed to {}".format(self.DSlid.value()))
+        print("D value changed to {}".format(self.DSlid.value()/50))
         self.sendADSR()
 
     @pyqtSlot()
     def SReleased(self):
         # range from 0 to 1
-        print("S value changed to {}".format(self.SSlid.value()))
+        print("S value changed to {}".format(self.SSlid.value()/100))
         self.sendADSR()
 
 
     @pyqtSlot()
     def RReleased(self):
         # range from 0 ro 5 s
-        print("R value changed to {}".format(self.RSlid.value()))
+        print("R value changed to {}".format(self.RSlid.value()/20))
         self.sendADSR()
 
     def sendADSR(self):
@@ -210,7 +210,7 @@ class FiltSlider(QWidget):
         """ Update the filter generator with a modified value of the slider. """
 
 
-        print("Filter value changed to {}".format(self.filterSlid.value()))
+        print("Filter value changed to {}".format(self.filterSlid.value()*-1 + 100))
         self.activeGen.fNoise.setQ(self.filterSlid.value()*-1 + 100)
 
 
@@ -240,7 +240,7 @@ class MasterSlider(QWidget):
         # initialize the slider, its range and value
         self.masterSlid = QSlider(Qt.Vertical)
         self.masterSlid.setRange(0,100)
-        self.masterSlid.setValue(70)
+        self.masterSlid.setValue(100)
 
         # connect the release signal to the update function
         self.masterSlid.sliderReleased.connect(
